@@ -1,21 +1,44 @@
-# React + TypeScript + Vite + shadcn/ui
+# Open Studio — Web Client
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+The frontend interface for **Open Studio**, built with React 19, Vite, Tailwind CSS v4, and shadcn/ui.
 
-## Adding components
+## Tech Stack
 
-To add components to your app, run the following command:
+- **Framework:** [React 19](https://react.dev/)
+- **Bundler:** [Vite](https://vitejs.dev/)
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+- **UI Primitives:** [@base-ui/react](https://base-ui.com/) & [shadcn/ui](https://ui.shadcn.com/)
+- **Icons:** [lucide-react](https://lucide.dev/)
+- **Type Checking:** [TypeScript](https://www.typescriptlang.org/)
+
+## Development
 
 ```bash
-npx shadcn@latest add button
+# Install dependencies
+pnpm install
+
+# Start local dev server
+pnpm dev
+
+# Type check
+pnpm typecheck
+
+# Lint source files
+pnpm lint
+
+# Build production bundle
+pnpm build
+
+# Preview production build
+pnpm preview
 ```
 
-This will place the ui components in the `src/components` directory.
+## Adding UI Components
 
-## Using components
+Open Studio uses `shadcn/ui` configured with `@base-ui/react` primitives. To add components:
 
-To use the components in your app, import them as follows:
-
-```tsx
-import { Button } from "@/components/ui/button"
+```bash
+pnpm dlx shadcn@latest add <component-name>
 ```
+
+Components are installed into `src/components/ui/`.
