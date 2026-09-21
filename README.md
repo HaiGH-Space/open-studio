@@ -10,7 +10,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Submodule](https://img.shields.io/badge/Submodule-open--design--core--resources-blueviolet?style=flat-square)](https://github.com/HaiGH-Space/open-design-core-resources)
 
-[Overview](#overview) • [Why Open Studio?](#why-open-studio) • [Core Features](#core-features) • [Workflow](#workflow) • [Design Resources](#design-resources) • [Getting Started](#getting-started) • [Tóm tắt tiếng Việt](#tóm-tắt-tiếng-việt)
+[Overview](#overview) • [Why Open Studio?](#why-open-studio) • [Core Features](#core-features) • [Workflow](#workflow) • [Design Resources](#design-resources) • [Getting Started](#getting-started)
 
 </div>
 
