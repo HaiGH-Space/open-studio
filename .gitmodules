@@ -1,0 +1,3 @@
+[submodule "opendesign-core-resources"]
+	path = opendesign-core-resources
+	url = https://github.com/HaiGH-Space/opendesign-core-resources.git
