@@ -14,7 +14,7 @@ import type {
 } from "../src/lib/catalog/catalog-types"
 
 describe("Catalog TypeScript Contracts & Schema", () => {
-  const schemaPath = path.resolve(__dirname, "../public/schemas/catalog-index.schema.json")
+  const schemaPath = path.resolve(import.meta.dirname, "../public/schemas/catalog-index.schema.json")
 
   it("should have the catalog-index.schema.json file present and valid JSON", () => {
     expect(fs.existsSync(schemaPath)).toBe(true)
