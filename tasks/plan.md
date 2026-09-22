@@ -49,15 +49,15 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Implement `scripts/generate-catalog.ts` to scan `open-design-core-resources`, extract taxonomy, swatches, and token metrics, and generate `web/public/catalog-index.json` plus `web/public/data/`.
 **Acceptance criteria:**
 
-- [ ] Scans 153 design systems, 13 craft rules, 163 skills, and 114 design templates from `open-design-core-resources/`.
-- [ ] Extracts color swatches (`primary`, `background`, `accent`, `foreground`, `muted`) parsing HEX, RGB, and OKLCH CSS values.
-- [ ] Analyzes `tokens.css` to compute `totalCssVariables`, `condensedCssVariablesCount`, and top 8 preview declarations.
-- [ ] Copies referenced Markdown docs and CSS files into `web/public/data/` for on-demand lazy loading.
-- [ ] Registered as `catalog:generate` script in `web/package.json` and root script.
+- [x] Scans 153 design systems, 13 craft rules, 163 skills, and 114 design templates from `open-design-core-resources/`.
+- [x] Extracts color swatches (`primary`, `background`, `accent`, `foreground`, `muted`) parsing HEX, RGB, and OKLCH CSS values.
+- [x] Analyzes `tokens.css` to compute `totalCssVariables`, `condensedCssVariablesCount`, and top 8 preview declarations.
+- [x] Copies referenced Markdown docs and CSS files into `web/public/data/` for on-demand lazy loading.
+- [x] Registered as `catalog:generate` script in `web/package.json` and root script.
       **Verification:**
-- [ ] Tests pass: `tsx scripts/generate-catalog.ts` executes in < 2 seconds.
-- [ ] Build succeeds: Generated `web/public/catalog-index.json` is valid JSON and contains all 153 systems.
-- [ ] Manual check: Swatches for known design systems (e.g. `linear-app`, `stripe`) match their CSS tokens.
+- [x] Tests pass: `tsx scripts/generate-catalog.ts` executes in < 2 seconds.
+- [x] Build succeeds: Generated `web/public/catalog-index.json` is valid JSON and contains all 153 systems.
+- [x] Manual check: Swatches for known design systems (e.g. `linear-app`, `stripe`) match their CSS tokens.
       **Dependencies:** Task 1
       **Files likely touched:**
 - `scripts/generate-catalog.ts`
@@ -72,13 +72,13 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Add comprehensive unit tests and automated JSON Schema validation for `generate-catalog.ts` and its generated output.
 **Acceptance criteria:**
 
-- [ ] Vitest unit test verifies swatch extraction from various CSS formats (HEX, RGB, HSL, OKLCH).
-- [ ] Vitest unit test validates generated `catalog-index.json` against `catalog-index.schema.json`.
-- [ ] Tests verify condensed token generation strips private/internal utility variables while preserving brand tokens.
+- [x] Vitest unit test verifies swatch extraction from various CSS formats (HEX, RGB, HSL, OKLCH).
+- [x] Vitest unit test validates generated `catalog-index.json` against `catalog-index.schema.json`.
+- [x] Tests verify condensed token generation strips private/internal utility variables while preserving brand tokens.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/catalog-indexer.test.ts`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: All assertions in `catalog-indexer.test.ts` pass without warnings.
+- [x] Tests pass: `pnpm --filter web test tests/catalog-indexer.test.ts`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: All assertions in `catalog-indexer.test.ts` pass without warnings.
       **Dependencies:** Task 2
       **Files likely touched:**
 - `web/tests/catalog-indexer.test.ts`
@@ -89,9 +89,9 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 
 ### Checkpoint 1: Catalog Indexing Foundation
 
-- [ ] `pnpm --filter web run catalog:generate` runs in < 2 seconds and produces valid `web/public/catalog-index.json`.
-- [ ] Schema validation and indexer unit tests pass 100%.
-- [ ] `web/public/data/` populated with static asset files for on-demand fetching.
+- [x] `pnpm --filter web run catalog:generate` runs in < 2 seconds and produces valid `web/public/catalog-index.json`.
+- [x] Schema validation and indexer unit tests pass 100%.
+- [x] `web/public/data/` populated with static asset files for on-demand fetching.
 
 ---
 

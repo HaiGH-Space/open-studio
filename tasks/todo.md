@@ -2,13 +2,13 @@
 
 ## Phase 1: Foundations & Catalog Indexer (`catalog-indexer`)
 - [x] Task 1: Test Infrastructure (Vitest) & Catalog TypeScript Contracts
-- [ ] Task 2: Build-Time Catalog Indexer & Asset Bundler
-- [ ] Task 3: Unit Tests & Schema Validation for Catalog Indexer
+- [x] Task 2: Build-Time Catalog Indexer & Asset Bundler
+- [x] Task 3: Unit Tests & Schema Validation for Catalog Indexer
 
 ## Checkpoint: Catalog Indexing Foundation
-- [ ] `pnpm --filter web run catalog:generate` runs in < 2 seconds and produces valid `web/public/catalog-index.json`
-- [ ] Schema validation and indexer unit tests pass 100%
-- [ ] `web/public/data/` populated with static asset files for on-demand fetching
+- [x] `pnpm --filter web run catalog:generate` runs in < 2 seconds and produces valid `web/public/catalog-index.json`
+- [x] Schema validation and indexer unit tests pass 100%
+- [x] `web/public/data/` populated with static asset files for on-demand fetching
 
 ## Phase 2: Core Domain Logic & Clarification Engine (`prompt-composer`)
 - [ ] Task 4: In-Browser Token Counter Service
