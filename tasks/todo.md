@@ -13,12 +13,12 @@
 ## Phase 2: Core Domain Logic & Clarification Engine (`prompt-composer`)
 - [x] Task 4: In-Browser Token Counter Service
 - [x] Task 5: `<question-form>` AST Parser & Answer Serializer
-- [ ] Task 6: 9-Layer Prompt Composer Core Engine & Compilers
+- [x] Task 6: 9-Layer Prompt Composer Core Engine & Compilers
 
 ## Checkpoint: Prompt Engine & Clarification AST
-- [ ] `prompt-composer` compiles all 9 layers deterministically in < 20ms
-- [ ] `question-form-parser` parses complex multi-field XML and produces clean `<clarification-answers>`
-- [ ] In-browser token estimation calculates layer breakdowns accurately with Vitest coverage > 90%
+- [x] `prompt-composer` compiles all 9 layers deterministically in < 20ms
+- [x] `question-form-parser` parses complex multi-field XML and produces clean `<clarification-answers>`
+- [x] In-browser token estimation calculates layer breakdowns accurately with Vitest coverage > 90%
 
 ## Phase 3: Exporters, Catalog Service & State Pipeline
 - [ ] Task 7: Agent-Specific Export Formatters

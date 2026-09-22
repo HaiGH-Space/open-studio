@@ -147,15 +147,15 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Build the in-memory 9-layer prompt synthesis engine that resolves layer configuration, enforces precedence, sanitizes user input, and compiles XML/Markdown prompt output.
 **Acceptance criteria:**
 
-- [ ] `web/src/lib/composer/composer-types.ts` implements `ComposerConfig`, `LayerCompilationResult`, and `CompiledPromptResult`.
-- [ ] `web/src/lib/composer/layer-compilers.ts` contains dedicated compiler functions for Layers 1 through 9.
-- [ ] `web/src/lib/composer/prompt-composer.ts` compiles full prompt, calculates per-layer token breakdown, and formats system/user blocks.
-- [ ] Enforces authority hierarchy: L3 Constraints > L8/L9 User Brief > L5 Brand Contract > L6 Craft > L7 Skills.
-- [ ] Unit tests verify deterministic output, layer toggling, condensed tokens formatting, and token calculation.
+- [x] `web/src/lib/composer/composer-types.ts` implements `ComposerConfig`, `LayerCompilationResult`, and `CompiledPromptResult`.
+- [x] `web/src/lib/composer/layer-compilers.ts` contains dedicated compiler functions for Layers 1 through 9.
+- [x] `web/src/lib/composer/prompt-composer.ts` compiles full prompt, calculates per-layer token breakdown, and formats system/user blocks.
+- [x] Enforces authority hierarchy: L3 Constraints > L8/L9 User Brief > L5 Brand Contract > L6 Craft > L7 Skills.
+- [x] Unit tests verify deterministic output, layer toggling, condensed tokens formatting, and token calculation.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/prompt-composer.test.ts`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: All 9 layer tags (`<security-guardrails>`, `<brand-contract>`, etc.) are well-formed and non-empty.
+- [x] Tests pass: `pnpm --filter web test tests/prompt-composer.test.ts`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: All 9 layer tags (`<security-guardrails>`, `<brand-contract>`, etc.) are well-formed and non-empty.
       **Dependencies:** Tasks 4, 5
       **Files likely touched:**
 - `web/src/lib/composer/composer-types.ts`
@@ -168,9 +168,9 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 
 ### Checkpoint 2: Prompt Engine & Clarification AST
 
-- [ ] `prompt-composer` compiles all 9 layers deterministically in < 20ms.
-- [ ] `question-form-parser` parses complex multi-field XML and produces clean `<clarification-answers>`.
-- [ ] In-browser token estimation calculates layer breakdowns accurately with Vitest coverage > 90%.
+- [x] `prompt-composer` compiles all 9 layers deterministically in < 20ms.
+- [x] `question-form-parser` parses complex multi-field XML and produces clean `<clarification-answers>`.
+- [x] In-browser token estimation calculates layer breakdowns accurately with Vitest coverage > 90%.
 
 ---
 
