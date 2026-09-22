@@ -102,3 +102,25 @@ export interface TemplateCatalogEntry {
   readonly surface: 'landing' | 'dashboard' | 'mobile' | 'deck' | 'form' | 'component' | 'media';
   readonly assetPath: string;
 }
+
+export interface DesignSystemBundle {
+  readonly usage?: string;
+  readonly designMd?: string;
+  readonly tokensCss?: string;
+  readonly componentsHtml?: string;
+}
+
+export interface ICatalogService {
+  /** Loads the cached catalog index or fetches from public/catalog-index.json */
+  loadCatalog(): Promise<CatalogIndex>;
+
+  /** Retrieves a raw Markdown, CSS, or JSON text file on demand */
+  fetchAssetContent(assetRelativePath: string): Promise<string>;
+
+  /** Retrieves full or condensed CSS tokens for a design system */
+  fetchDesignTokens(systemId: string, mode: 'full' | 'condensed'): Promise<string>;
+
+  /** Retrieves the bundled design system assets for composition */
+  fetchDesignSystemBundle(systemId: string): Promise<DesignSystemBundle>;
+}
+

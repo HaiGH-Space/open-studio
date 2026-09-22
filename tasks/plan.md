@@ -205,14 +205,14 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Implement `CatalogService` for fetching index/assets and `persistence.ts` for saving user preferences, memory directives, and draft briefs in `localStorage`.
 **Acceptance criteria:**
 
-- [ ] `web/src/lib/catalog/catalog-service.ts` implements `ICatalogService` with caching for `catalog-index.json` and static asset text.
-- [ ] `web/src/lib/storage/persistence.ts` provides typed getters/setters for user rules (Layer 8), dark mode theme, and draft brief auto-save.
-- [ ] Gracefully handles `localStorage` quota errors or non-browser environments.
-- [ ] Unit tests verify caching behavior and storage read/write serialization.
+- [x] `web/src/lib/catalog/catalog-service.ts` implements `ICatalogService` with caching for `catalog-index.json` and static asset text.
+- [x] `web/src/lib/storage/persistence.ts` provides typed getters/setters for user rules (Layer 8), dark mode theme, and draft brief auto-save.
+- [x] Gracefully handles `localStorage` quota errors or non-browser environments.
+- [x] Unit tests verify caching behavior and storage read/write serialization.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/catalog-service.test.ts tests/persistence.test.ts`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: Reloading simulated state restores saved user rules and draft text.
+- [x] Tests pass: `pnpm --filter web test tests/catalog-service.test.ts tests/persistence.test.ts`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: Reloading simulated state restores saved user rules and draft text.
       **Dependencies:** Tasks 1, 6
       **Files likely touched:**
 - `web/src/lib/catalog/catalog-service.ts`
