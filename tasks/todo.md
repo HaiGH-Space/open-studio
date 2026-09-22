@@ -11,7 +11,7 @@
 - [x] `web/public/data/` populated with static asset files for on-demand fetching
 
 ## Phase 2: Core Domain Logic & Clarification Engine (`prompt-composer`)
-- [ ] Task 4: In-Browser Token Counter Service
+- [x] Task 4: In-Browser Token Counter Service
 - [ ] Task 5: `<question-form>` AST Parser & Answer Serializer
 - [ ] Task 6: 9-Layer Prompt Composer Core Engine & Compilers
 
