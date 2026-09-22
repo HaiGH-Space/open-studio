@@ -195,6 +195,7 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
         name: "SaaS Landing Page",
         category: "design-template",
         description: "Conversion-optimized hero, features, and pricing",
+        surface: "landing",
         suggestedSystems: ["linear-app"],
         assetPath: "data/templates/saas-landing.md",
       },

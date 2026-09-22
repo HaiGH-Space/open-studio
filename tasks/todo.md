@@ -33,12 +33,12 @@
 ## Phase 4: UI Primitives & Navigation Cockpit (`studio-ui` part 1)
 - [x] Task 10: Atomic UI Components (Base UI + Tailwind v4)
 - [x] Task 11: App Header & Quick Command Palette (Cmd+K)
-- [ ] Task 12: Left Column: Resource Navigator & Brand Preview Modal
+- [x] Task 12: Left Column: Resource Navigator & Brand Preview Modal
 
 ## Checkpoint: Navigation, Discovery & UI Primitives
-- [ ] Resource Navigator renders cards for all design systems and craft rules smoothly
-- [ ] Search filter updates list at 60fps (< 16ms)
-- [ ] Cmd+K search modal and Design System Preview Modal open and operate smoothly
+- [x] Resource Navigator renders cards for all design systems and craft rules smoothly
+- [x] Search filter updates list at 60fps (< 16ms)
+- [x] Cmd+K search modal and Design System Preview Modal open and operate smoothly
 
 ## Phase 5: Composer Cockpit & Interactive Clarification Loop (`studio-ui` part 2)
 - [ ] Task 13: Center Column: 9-Layer Accordion Panels & Preset Action Bar

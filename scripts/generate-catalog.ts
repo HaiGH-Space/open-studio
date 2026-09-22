@@ -68,14 +68,14 @@ export function extractSwatches(css: string): ColorSwatches {
   const primary = findValue(["--primary", "--color-primary", "--accent", "--color-accent", "--brand", "--color-brand"])
   const muted = findValue(["--muted", "--color-muted", "--fg-2", "--text-muted", "--text-secondary", "--meta"])
 
-  const swatches: ColorSwatches = {}
+  const swatches: Record<string, string> = {}
   if (primary) swatches.primary = primary
   if (background) swatches.background = background
   if (foreground) swatches.foreground = foreground
   if (accent) swatches.accent = accent
   if (muted) swatches.muted = muted
 
-  return swatches
+  return swatches as ColorSwatches
 }
 
 /**
@@ -163,7 +163,7 @@ export function generateCondensedTokens(css: string): string {
 /**
  * Infers appropriate tags for a design system based on category, name, and background color.
  */
-export function inferTags(id: string, name: string, category: string, swatches: ColorSwatches, manifestTags?: readonly string[]): string[] {
+export function inferTags(id: string, _name: string, category: string, swatches: ColorSwatches, manifestTags?: readonly string[]): string[] {
   if (manifestTags && manifestTags.length > 0) {
     return Array.from(new Set(manifestTags.map((t) => t.toLowerCase())))
   }

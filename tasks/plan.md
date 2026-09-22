@@ -310,15 +310,15 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Build `ResourceNavigator` containing search bar, category dropdown, tag chips, resource tabs (Design Systems, Craft Rules, Skills), brand cards with swatches, and the `DesignSystemPreviewModal`.
 **Acceptance criteria:**
 
-- [ ] Real-time search and category filtering filters 153 design systems with < 16ms render response.
-- [ ] `DesignSystemCard` displays name, category, tags, token metrics, and `ColorSwatchBar` with primary/accent colors.
-- [ ] Clicking "Select" sets active brand for Layer 5; clicking "Preview" opens `DesignSystemPreviewModal`.
-- [ ] `DesignSystemPreviewModal` renders preview tabs (Tokens CSS, Typography, Components HTML) with syntax preview.
-- [ ] Craft Rules tab lists rules with instant enable/disable toggle switches.
+- [x] Real-time search and category filtering filters 153 design systems with < 16ms render response.
+- [x] `DesignSystemCard` displays name, category, tags, token metrics, and `ColorSwatchBar` with primary/accent colors.
+- [x] Clicking "Select" sets active brand for Layer 5; clicking "Preview" opens `DesignSystemPreviewModal`.
+- [x] `DesignSystemPreviewModal` renders preview tabs (Tokens CSS, Typography, Components HTML) with syntax preview.
+- [x] Craft Rules tab lists rules with instant enable/disable toggle switches.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/resource-navigator.test.tsx`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: Typing in search filters card list immediately; preview modal displays CSS variables.
+- [x] Tests pass: `pnpm --filter web test tests/resource-navigator.test.tsx`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: Typing in search filters card list immediately; preview modal displays CSS variables.
       **Dependencies:** Tasks 9, 10
       **Files likely touched:**
 - `web/src/components/cockpit/ResourceNavigator.tsx`
@@ -331,9 +331,9 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 
 ### Checkpoint 4: Navigation, Discovery & UI Primitives
 
-- [ ] Resource Navigator renders cards for all design systems and craft rules smoothly.
-- [ ] Search filter updates list at 60fps (< 16ms).
-- [ ] Cmd+K search modal and Design System Preview Modal open and operate smoothly.
+- [x] Resource Navigator renders cards for all design systems and craft rules smoothly.
+- [x] Search filter updates list at 60fps (< 16ms).
+- [x] Cmd+K search modal and Design System Preview Modal open and operate smoothly.
 
 ---
 
