@@ -289,12 +289,12 @@ od:
 
     it("verifies known brand swatches match their CSS tokens", () => {
       const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf-8"))
-      const linear = catalog.designSystems.find((ds: any) => ds.id === "linear-app")
+      const linear = catalog.designSystems.find((ds: { id: string }) => ds.id === "linear-app")
       expect(linear).toBeDefined()
       expect(linear.swatches.primary).toBe("#5e6ad2")
       expect(linear.swatches.background).toBe("#08090a")
 
-      const stripe = catalog.designSystems.find((ds: any) => ds.id === "stripe")
+      const stripe = catalog.designSystems.find((ds: { id: string }) => ds.id === "stripe")
       expect(stripe).toBeDefined()
       expect(stripe.swatches.primary).toBe("#533afd")
       expect(stripe.swatches.background).toBe("#ffffff")

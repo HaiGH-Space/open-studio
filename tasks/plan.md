@@ -262,13 +262,13 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Build accessible, themed atomic UI primitives using `@base-ui/react`, Tailwind CSS v4, and `cva`.
 **Acceptance criteria:**
 
-- [ ] Implements atomic components in `web/src/components/ui/`: `accordion.tsx`, `badge.tsx`, `dialog.tsx`, `input.tsx`, `select.tsx`, `switch.tsx`, `tabs.tsx`, `textarea.tsx`, `tooltip.tsx`.
-- [ ] All components follow dark-mode first, sleek styling with accessible keyboard navigation (Focus rings, ARIA roles).
-- [ ] Component tests verify open/close, select changes, and toggle switch behavior.
+- [x] Implements atomic components in `web/src/components/ui/`: `accordion.tsx`, `badge.tsx`, `dialog.tsx`, `input.tsx`, `select.tsx`, `switch.tsx`, `tabs.tsx`, `textarea.tsx`, `tooltip.tsx`.
+- [x] All components follow dark-mode first, sleek styling with accessible keyboard navigation (Focus rings, ARIA roles).
+- [x] Component tests verify open/close, select changes, and toggle switch behavior.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/ui-components.test.tsx`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: Components render cleanly with no CSS glitch or missing styles.
+- [x] Tests pass: `pnpm --filter web test tests/ui-components.test.tsx`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: Components render cleanly with no CSS glitch or missing styles.
       **Dependencies:** Task 1
       **Files likely touched:**
 - `web/src/components/ui/accordion.tsx`
