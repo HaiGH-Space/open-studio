@@ -32,7 +32,7 @@
 
 ## Phase 4: UI Primitives & Navigation Cockpit (`studio-ui` part 1)
 - [x] Task 10: Atomic UI Components (Base UI + Tailwind v4)
-- [ ] Task 11: App Header & Quick Command Palette (Cmd+K)
+- [x] Task 11: App Header & Quick Command Palette (Cmd+K)
 - [ ] Task 12: Left Column: Resource Navigator & Brand Preview Modal
 
 ## Checkpoint: Navigation, Discovery & UI Primitives

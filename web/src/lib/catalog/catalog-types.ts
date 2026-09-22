@@ -101,6 +101,7 @@ export interface TemplateCatalogEntry {
   readonly description: string;
   readonly surface: 'landing' | 'dashboard' | 'mobile' | 'deck' | 'form' | 'component' | 'media';
   readonly assetPath: string;
+  readonly suggestedSystems?: readonly string[];
 }
 
 export interface DesignSystemBundle {
@@ -122,5 +123,14 @@ export interface ICatalogService {
 
   /** Retrieves the bundled design system assets for composition */
   fetchDesignSystemBundle(systemId: string): Promise<DesignSystemBundle>;
+
+  /** Clears the in-memory cache for catalog index and assets */
+  clearCache(): void;
+
+  /** Returns whether a given asset path is currently cached */
+  hasAssetCached(assetRelativePath: string): boolean;
+
+  /** Synchronously returns the cached catalog index if already loaded, or null */
+  getLoadedCatalog(): CatalogIndex | null;
 }
 

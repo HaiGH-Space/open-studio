@@ -289,17 +289,18 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Build `AppHeader` featuring brand logo, active design system pill, token gauge summary, quick export button, and Cmd+K command search dialog.
 **Acceptance criteria:**
 
-- [ ] `AppHeader.tsx` displays logo, active brand badge, global token count, and quick export action.
-- [ ] `CommandMenuDialog.tsx` opens on `Cmd+K` or `Ctrl+K`, allowing instant search and activation of any design system or craft rule.
-- [ ] Keyboard shortcut listener cleans up properly on unmount.
+- [x] `AppHeader.tsx` displays logo, active brand badge, global token count, and quick export action.
+- [x] `CommandMenuDialog.tsx` opens on `Cmd+K` or `Ctrl+K`, allowing instant search and activation of any design system or craft rule.
+- [x] Keyboard shortcut listener cleans up properly on unmount.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/app-header.test.tsx`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: Pressing `Cmd+K` opens dialog; selecting an item sets active design system.
+- [x] Tests pass: `pnpm --filter web test tests/app-header.test.tsx`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: Pressing `Cmd+K` opens dialog; selecting an item sets active design system.
       **Dependencies:** Tasks 9, 10
       **Files likely touched:**
 - `web/src/components/cockpit/AppHeader.tsx`
 - `web/src/components/cockpit/CommandMenuDialog.tsx`
+- `web/tests/app-header.test.tsx`
   **Estimated scope:** Small: 2 files
 
 ---
