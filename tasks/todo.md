@@ -23,11 +23,11 @@
 ## Phase 3: Exporters, Catalog Service & State Pipeline
 - [x] Task 7: Agent-Specific Export Formatters
 - [x] Task 8: Catalog Client Service & LocalStorage Persistence
-- [ ] Task 9: Composer & Catalog React Contexts and Custom Hooks
+- [x] Task 9: Composer & Catalog React Contexts and Custom Hooks
 
 ## Checkpoint: Client Services & State Pipeline
 - [x] `CatalogService` successfully loads catalog and caches asset requests
-- [ ] `useComposer` updates prompt output and token counts reactively with 100ms debounce
+- [x] `useComposer` updates prompt output and token counts reactively with 100ms debounce
 - [x] Agent exporters generate valid `CLAUDE.md`, `.cursorrules`, and generic LLM outputs
 
 ## Phase 4: UI Primitives & Navigation Cockpit (`studio-ui` part 1)

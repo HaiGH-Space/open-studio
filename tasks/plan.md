@@ -228,14 +228,14 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Create React Context providers (`CatalogContext`, `ComposerContext`) and custom hooks (`useCatalog`, `useComposer`, `useTokenCount`) to drive reactive application state.
 **Acceptance criteria:**
 
-- [ ] `CatalogContext` manages catalog loading, error states, active search query, and category filters.
-- [ ] `ComposerContext` manages `ComposerConfig`, debounced (100ms) re-compilation, active agent target, and clarification rounds.
-- [ ] `useTokenCount` hook provides real-time token metrics and budget usage.
-- [ ] Component tests verify state updates propagate to compiled output within 100ms debounce.
+- [x] `CatalogContext` manages catalog loading, error states, active search query, and category filters.
+- [x] `ComposerContext` manages `ComposerConfig`, debounced (100ms) re-compilation, active agent target, and clarification rounds.
+- [x] `useTokenCount` hook provides real-time token metrics and budget usage.
+- [x] Component tests verify state updates propagate to compiled output within 100ms debounce.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/composer-context.test.tsx`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: Hook consumers receive updated prompt whenever config changes.
+- [x] Tests pass: `pnpm --filter web test tests/composer-context.test.tsx`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: Hook consumers receive updated prompt whenever config changes.
       **Dependencies:** Tasks 6, 8
       **Files likely touched:**
 - `web/src/context/CatalogContext.tsx`
@@ -249,9 +249,9 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 
 ### Checkpoint 3: Client Services & State Pipeline
 
-- [ ] `CatalogService` successfully loads catalog and caches asset requests.
-- [ ] `useComposer` updates prompt output and token counts reactively with 100ms debounce.
-- [ ] Agent exporters generate valid `CLAUDE.md`, `.cursorrules`, and generic LLM outputs.
+- [x] `CatalogService` successfully loads catalog and caches asset requests.
+- [x] `useComposer` updates prompt output and token counts reactively with 100ms debounce.
+- [x] Agent exporters generate valid `CLAUDE.md`, `.cursorrules`, and generic LLM outputs.
 
 ---
 
