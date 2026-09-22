@@ -1,7 +1,7 @@
 # Task List: Open Studio
 
 ## Phase 1: Foundations & Catalog Indexer (`catalog-indexer`)
-- [ ] Task 1: Test Infrastructure & Catalog TypeScript Contracts
+- [x] Task 1: Test Infrastructure (Vitest) & Catalog TypeScript Contracts
 - [ ] Task 2: Build-Time Catalog Indexer & Asset Bundler
 - [ ] Task 3: Unit Tests & Schema Validation for Catalog Indexer
 

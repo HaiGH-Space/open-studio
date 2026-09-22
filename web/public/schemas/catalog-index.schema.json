@@ -1,0 +1,381 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-studio.dev/schemas/catalog-index.json",
+  "title": "OpenStudioCatalogIndex",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "stats",
+    "taxonomies",
+    "designSystems",
+    "craftRules",
+    "skills",
+    "templates"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "open-studio-catalog/v1"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stats": {
+      "type": "object",
+      "required": [
+        "totalDesignSystems",
+        "totalCraftRules",
+        "totalSkills",
+        "totalTemplates"
+      ],
+      "properties": {
+        "totalDesignSystems": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "totalCraftRules": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "totalSkills": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "totalTemplates": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "taxonomies": {
+      "type": "object",
+      "required": [
+        "categories",
+        "tags",
+        "surfaces"
+      ],
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "surfaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "designSystems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "description",
+          "tags",
+          "swatches",
+          "tokenSummary",
+          "availableFiles",
+          "assetPaths"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "swatches": {
+            "type": "object",
+            "properties": {
+              "primary": {
+                "type": "string"
+              },
+              "background": {
+                "type": "string"
+              },
+              "foreground": {
+                "type": "string"
+              },
+              "accent": {
+                "type": "string"
+              },
+              "muted": {
+                "type": "string"
+              }
+            }
+          },
+          "tokenSummary": {
+            "type": "object",
+            "required": [
+              "totalCssVariables",
+              "hasColorRamps",
+              "hasRadiusTokens",
+              "hasTypographyTokens",
+              "condensedCssVariablesCount"
+            ],
+            "properties": {
+              "totalCssVariables": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "hasColorRamps": {
+                "type": "boolean"
+              },
+              "hasRadiusTokens": {
+                "type": "boolean"
+              },
+              "hasTypographyTokens": {
+                "type": "boolean"
+              },
+              "condensedCssVariablesCount": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "previewDeclarations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "craft": {
+            "type": "object",
+            "properties": {
+              "suggested": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "exemptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "availableFiles": {
+            "type": "object",
+            "required": [
+              "hasUsage",
+              "hasDesignMd",
+              "hasTokensCss",
+              "hasTailwindCss",
+              "hasComponentsHtml",
+              "hasComponentsManifest"
+            ],
+            "properties": {
+              "hasUsage": {
+                "type": "boolean"
+              },
+              "hasDesignMd": {
+                "type": "boolean"
+              },
+              "hasTokensCss": {
+                "type": "boolean"
+              },
+              "hasTailwindCss": {
+                "type": "boolean"
+              },
+              "hasComponentsHtml": {
+                "type": "boolean"
+              },
+              "hasComponentsManifest": {
+                "type": "boolean"
+              }
+            }
+          },
+          "assetPaths": {
+            "type": "object",
+            "required": [
+              "basePath"
+            ],
+            "properties": {
+              "basePath": {
+                "type": "string"
+              },
+              "usage": {
+                "type": "string"
+              },
+              "designMd": {
+                "type": "string"
+              },
+              "tokensCss": {
+                "type": "string"
+              },
+              "tailwindCss": {
+                "type": "string"
+              },
+              "componentsHtml": {
+                "type": "string"
+              },
+              "componentsManifest": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "craftRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "description",
+          "ruleCount",
+          "isDefaultEnabled",
+          "assetPath"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "discipline",
+              "typography",
+              "color",
+              "ux",
+              "accessibility",
+              "motion"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "ruleCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "isDefaultEnabled": {
+            "type": "boolean"
+          },
+          "assetPath": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "category",
+          "triggers",
+          "assetPath"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "triggers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "assetPath": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "templates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "description",
+          "surface",
+          "assetPath"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "design-template",
+              "prompt-template"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "surface": {
+            "type": "string",
+            "enum": [
+              "landing",
+              "dashboard",
+              "mobile",
+              "deck",
+              "form",
+              "component",
+              "media"
+            ]
+          },
+          "assetPath": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
