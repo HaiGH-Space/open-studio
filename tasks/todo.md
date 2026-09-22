@@ -41,7 +41,7 @@
 - [x] Cmd+K search modal and Design System Preview Modal open and operate smoothly
 
 ## Phase 5: Composer Cockpit & Interactive Clarification Loop (`studio-ui` part 2)
-- [ ] Task 13: Center Column: 9-Layer Accordion Panels & Preset Action Bar
+- [x] Task 13: Center Column: 9-Layer Accordion Panels & Preset Action Bar
 - [ ] Task 14: Interactive `<question-form>` Clarification Loop & Layer 9
 - [ ] Task 15: Right Column: Prompt Inspector, Token Breakdown & Exporters
 - [ ] Task 16: Complete Cockpit Integration & End-to-End Flow Verification

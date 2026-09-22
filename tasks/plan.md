@@ -344,16 +344,16 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Implement `ComposerManager` with quick preset buttons (SaaS, Fintech, Dashboard, Reset) and configuration panels for Layers 1 through 8.
 **Acceptance criteria:**
 
-- [ ] `ComposerManager.tsx` renders accordion items for L1 through L8 with active badges and toggles.
-- [ ] `Layer3Constraints.tsx` provides framework dropdown (React, Next.js, Vite, HTML Vanilla), CSS engine, and viewport switches.
-- [ ] `Layer5DesignSystem.tsx` shows active system, token mode toggle (Condensed vs. Full), and asset inclusion checkboxes (`tokens.css`, `DESIGN.md`, `USAGE.md`).
-- [ ] `Layer6CraftRules.tsx` renders recommended rules chip grid and custom craft directive input.
-- [ ] `Layer8UserRules.tsx` allows adding/removing persistent directives and negative constraints.
-- [ ] Preset actions (e.g. "SaaS Starter", "Fintech Dark") configure layers in 1-click.
+- [x] `ComposerManager.tsx` renders accordion items for L1 through L8 with active badges and toggles.
+- [x] `Layer3Constraints.tsx` provides framework dropdown (React, Next.js, Vite, HTML Vanilla), CSS engine, and viewport switches.
+- [x] `Layer5DesignSystem.tsx` shows active system, token mode toggle (Condensed vs. Full), and asset inclusion checkboxes (`tokens.css`, `DESIGN.md`, `USAGE.md`).
+- [x] `Layer6CraftRules.tsx` renders recommended rules chip grid and custom craft directive input.
+- [x] `Layer8UserRules.tsx` allows adding/removing persistent directives and negative constraints.
+- [x] Preset actions (e.g. "SaaS Starter", "Fintech Dark") configure layers in 1-click.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/composer-manager.test.tsx`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: Toggling accordion items and changing constraints immediately updates composer config.
+- [x] Tests pass: `pnpm --filter web test tests/composer-manager.test.tsx`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: Toggling accordion items and changing constraints immediately updates composer config.
       **Dependencies:** Tasks 9, 10
       **Files likely touched:**
 - `web/src/components/cockpit/ComposerManager.tsx`
