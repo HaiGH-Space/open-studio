@@ -155,6 +155,7 @@ describe("Storage Persistence", () => {
       clarificationAnswers: [
         {
           questionId: "tech-stack",
+          questionLabel: "What tech stack do you prefer?",
           selectedValues: ["react", "tailwind-v4"],
         },
       ],
