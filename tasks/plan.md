@@ -181,14 +181,14 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Implement export adapters for Claude Code (`CLAUDE.md`), Cursor (`.cursorrules` and `.cursor/rules/open-studio.mdc`), and Generic LLMs.
 **Acceptance criteria:**
 
-- [ ] `web/src/lib/export/claude-code-exporter.ts` produces prompt optimized for Claude 3.7 Sonnet reasoning mode + downloadable `CLAUDE.md`.
-- [ ] `web/src/lib/export/cursor-exporter.ts` splits System Rules vs. User Task and generates downloadable `.cursorrules`.
-- [ ] `web/src/lib/export/generic-llm-exporter.ts` provides clean Markdown copy-paste targets for ChatGPT, v0, Lovable, and Gemini.
-- [ ] Unit tests verify export format structure, file names, mime-types, and clipboard outputs.
+- [x] `web/src/lib/export/claude-code-exporter.ts` produces prompt optimized for Claude 3.7 Sonnet reasoning mode + downloadable `CLAUDE.md`.
+- [x] `web/src/lib/export/cursor-exporter.ts` splits System Rules vs. User Task and generates downloadable `.cursorrules`.
+- [x] `web/src/lib/export/generic-llm-exporter.ts` provides clean Markdown copy-paste targets for ChatGPT, v0, Lovable, and Gemini.
+- [x] Unit tests verify export format structure, file names, mime-types, and clipboard outputs.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/agent-exporters.test.ts`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: Downloadable file contents match expected agent conventions.
+- [x] Tests pass: `pnpm --filter web test tests/agent-exporters.test.ts`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: Downloadable file contents match expected agent conventions.
       **Dependencies:** Task 6
       **Files likely touched:**
 - `web/src/lib/export/export-types.ts`

@@ -21,7 +21,7 @@
 - [x] In-browser token estimation calculates layer breakdowns accurately with Vitest coverage > 90%
 
 ## Phase 3: Exporters, Catalog Service & State Pipeline
-- [ ] Task 7: Agent-Specific Export Formatters
+- [x] Task 7: Agent-Specific Export Formatters
 - [ ] Task 8: Catalog Client Service & LocalStorage Persistence
 - [ ] Task 9: Composer & Catalog React Contexts and Custom Hooks
 
