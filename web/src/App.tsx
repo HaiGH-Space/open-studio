@@ -1,8 +1,63 @@
 import { CatalogProvider } from "./context/CatalogContext"
 import { ComposerProvider } from "./context/ComposerContext"
+import { useComposer } from "./hooks/useComposer"
 import { AppHeader } from "./components/cockpit/AppHeader"
 import { ResourceNavigator } from "./components/cockpit/ResourceNavigator"
-import { Sparkles, Palette, Layers, Terminal } from "lucide-react"
+import { ComposerManager } from "./components/cockpit/ComposerManager"
+import { FileText, Copy, Check } from "lucide-react"
+import { useState } from "react"
+
+function CockpitContent() {
+  const { compiledPrompt } = useComposer()
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(compiledPrompt.fullPrompt)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="flex-1 flex overflow-hidden">
+      {/* Left Column: Resource Navigator & Brand Preview Modal */}
+      <ResourceNavigator />
+
+      {/* Center Column: 9-Layer Composer Manager (Task 13) */}
+      <ComposerManager className="flex-1 border-r border-border/70 min-w-0" />
+
+      {/* Right Column Preview: Live Prompt Inspector (Phase 5) */}
+      <aside className="w-80 lg:w-96 shrink-0 flex flex-col h-full bg-card/30 overflow-hidden border-l border-border/60">
+        <div className="p-3.5 border-b border-border/60 bg-background/40 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+            <FileText className="size-3.5 text-primary" />
+            <span>Compiled Prompt Preview</span>
+          </div>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-border/70 bg-input/20 hover:bg-input/40 text-xs font-medium text-foreground transition-all cursor-pointer"
+          >
+            {copied ? (
+              <>
+                <Check className="size-3 text-emerald-400" />
+                <span className="text-emerald-400">Copied</span>
+              </>
+            ) : (
+              <>
+                <Copy className="size-3" />
+                <span>Copy</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-3 font-mono text-[11px] leading-relaxed text-muted-foreground whitespace-pre-wrap select-text bg-muted/10">
+          {compiledPrompt.fullPrompt}
+        </div>
+      </aside>
+    </div>
+  )
+}
 
 export function App() {
   return (
@@ -13,61 +68,7 @@ export function App() {
           <AppHeader />
 
           {/* 3-Column Cockpit Workspace */}
-          <div className="flex-1 flex overflow-hidden">
-            {/* Left Column: Resource Navigator & Brand Preview Modal */}
-            <ResourceNavigator />
-
-            {/* Center & Right Column Preview Stage (Phases 5) */}
-            <main className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-muted/10 relative overflow-y-auto">
-              <div className="max-w-lg space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-xs font-medium text-primary">
-                  <Sparkles className="size-3.5" />
-                  <span>Open Studio Cockpit Active</span>
-                </div>
-
-                <div className="space-y-2">
-                  <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                    Design System &amp; Craft Navigator
-                  </h1>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Explore 153 curated design systems, 13 craft rules, and 163 skills in the Left Navigator. Click <strong className="text-foreground">Preview</strong> on any card to inspect tokens and typography, or press <kbd className="px-1.5 py-0.5 rounded bg-muted border border-border text-[11px] font-mono">⌘K</kbd> / <kbd className="px-1.5 py-0.5 rounded bg-muted border border-border text-[11px] font-mono">Ctrl+K</kbd> to trigger the quick command palette.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-left">
-                  <div className="p-3.5 rounded-xl border border-border/70 bg-card/80 space-y-1">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-                      <Palette className="size-3.5 text-primary" />
-                      <span>153 Systems</span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground">
-                      Linear, Stripe, Apple, Vercel &amp; more with color swatches &amp; CSS tokens.
-                    </p>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl border border-border/70 bg-card/80 space-y-1">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-                      <Layers className="size-3.5 text-primary" />
-                      <span>13 Craft Rules</span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground">
-                      Anti-AI-slop discipline, WCAG AAA contrast &amp; typography hierarchy.
-                    </p>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl border border-border/70 bg-card/80 space-y-1">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-                      <Terminal className="size-3.5 text-primary" />
-                      <span>9-Layer Engine</span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground">
-                      Center accordion and live prompt inspector coming in Phase 5.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </main>
-          </div>
+          <CockpitContent />
         </div>
       </ComposerProvider>
     </CatalogProvider>
