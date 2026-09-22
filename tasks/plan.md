@@ -124,15 +124,15 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Implement robust AST parser for `<question-form>` XML tags embedded in AI responses, with support for radio, checkbox, and text fields, plus answer serialization.
 **Acceptance criteria:**
 
-- [ ] `web/src/lib/clarification/question-form-types.ts` defines `QuestionFormAST`, `QuestionNode`, and `ClarificationAnswerEntry`.
-- [ ] `web/src/lib/clarification/question-form-parser.ts` parses valid `<question-form>` XML into AST.
-- [ ] Parser handles malformed or incomplete XML gracefully without throwing unhandled exceptions.
-- [ ] Serializer `serializeAnswers(answers)` formats user answers into `<clarification-answers>` XML block.
-- [ ] Unit tests cover radio, checkbox, text inputs, invalid XML fallbacks, and roundtrip serialization.
+- [x] `web/src/lib/clarification/question-form-types.ts` defines `QuestionFormAST`, `QuestionNode`, and `ClarificationAnswerEntry`.
+- [x] `web/src/lib/clarification/question-form-parser.ts` parses valid `<question-form>` XML into AST.
+- [x] Parser handles malformed or incomplete XML gracefully without throwing unhandled exceptions.
+- [x] Serializer `serializeAnswers(answers)` formats user answers into `<clarification-answers>` XML block.
+- [x] Unit tests cover radio, checkbox, text inputs, invalid XML fallbacks, and roundtrip serialization.
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/question-form-parser.test.ts`
-- [ ] Build succeeds: `pnpm --filter web typecheck`
-- [ ] Manual check: AST correctly captures checked attributes and default option values.
+- [x] Tests pass: `pnpm --filter web test tests/question-form-parser.test.ts`
+- [x] Build succeeds: `pnpm --filter web typecheck`
+- [x] Manual check: AST correctly captures checked attributes and default option values.
       **Dependencies:** Task 1
       **Files likely touched:**
 - `web/src/lib/clarification/question-form-types.ts`

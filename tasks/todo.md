@@ -12,7 +12,7 @@
 
 ## Phase 2: Core Domain Logic & Clarification Engine (`prompt-composer`)
 - [x] Task 4: In-Browser Token Counter Service
-- [ ] Task 5: `<question-form>` AST Parser & Answer Serializer
+- [x] Task 5: `<question-form>` AST Parser & Answer Serializer
 - [ ] Task 6: 9-Layer Prompt Composer Core Engine & Compilers
 
 ## Checkpoint: Prompt Engine & Clarification AST
