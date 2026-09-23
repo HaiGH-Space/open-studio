@@ -1,7 +1,7 @@
 # Open Studio Specification
 
 The formal, detailed specification for Open Studio is maintained under:
-👉 **[docs/specs/SPEC-open-studio.md](file:///d:/Dev/JS/open-studio/docs/specs/SPEC-open-studio.md)**
+👉 **[docs/specs/SPEC-open-studio.md](./docs/specs/SPEC-open-studio.md)**
 
 ## Summary Capability Map
 
@@ -13,4 +13,4 @@ The formal, detailed specification for Open Studio is maintained under:
 
 **Build Order:** `catalog-indexer` → `prompt-composer` → `studio-ui`
 
-Refer to [SPEC-open-studio.md](file:///d:/Dev/JS/open-studio/docs/specs/SPEC-open-studio.md) for full TypeScript contracts, JSON schema specifications, API boundaries, and the UI component hierarchy.
+Refer to [SPEC-open-studio.md](./docs/specs/SPEC-open-studio.md) for full TypeScript contracts, JSON schema specifications, API boundaries, and the UI component hierarchy.

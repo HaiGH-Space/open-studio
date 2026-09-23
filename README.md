@@ -5,13 +5,16 @@
 **Visual Multi-Layer Prompt Composer & Design System Studio for AI Code Generators**
 
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5%2B-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Base UI](https://img.shields.io/badge/Base_UI-Components-000000?style=flat-square)](https://base-ui.com/)
+[![Tests](https://img.shields.io/badge/Tests-303_passed-3c873a?style=flat-square)](https://vitest.dev/)
 [![Submodule](https://img.shields.io/badge/Submodule-open--design--core--resources-8B5CF6?style=flat-square)](https://github.com/HaiGH-Space/open-design-core-resources)
 
-[Overview](#overview) • [Why Open Studio?](#why-open-studio) • [The 9-Layer Prompt Pipeline](#the-9-layer-prompt-pipeline) • [Interactive Clarification Loop](#interactive-clarification-loop) • [Cockpit Interface](#cockpit-interface) • [Agent Export Presets](#agent-export-presets) • [Design Resources](#design-resources) • [Repository Structure](#repository-structure) • [Getting Started](#getting-started)
+[Overview](#overview) • [Why Open Studio?](#why-open-studio) • [The 9-Layer Prompt Pipeline](#the-9-layer-prompt-pipeline) • [Interactive Clarification Loop](#interactive-clarification-loop) • [Cockpit Interface](#cockpit-interface) • [Agent Export Presets](#agent-export-presets) • [Design Resources](#design-resources) • [Repository Structure](#repository-structure) • [Getting Started](#getting-started) • [Documentation](#documentation)
+
+> Client-side visual workspace that composes brand-grade design prompts, tokens, and clarification loops for Claude Code, Cursor, Windsurf, ChatGPT, and Antigravity.
 
 </div>
 
@@ -21,10 +24,10 @@
 
 **Open Studio** is a client-side web application inspired by [Open Design](https://github.com/nexu-io/open-design). It transforms curated design systems, universal UI/UX craft rules, and component blueprints into production-ready prompts for AI-assisted UI development.
 
-Instead of relying on fragile CLI agent wrappers or local background daemons prone to command buffer limits and process hangs, Open Studio provides a visual workspace. Browse and configure design systems, toggle craft guidelines, specify component shapes, resolve ambiguous requirements interactively, and export a structured prompt with one click—ready to be pasted into any AI chat or coding agent (Claude Code, Cursor, ChatGPT, Gemini, Antigravity IDE, Windsurf, v0, Lovable, Bolt, etc.).
+Instead of relying on terminal agent CLI daemons that suffer from command line buffer limits and child process hangs, Open Studio provides a visual workspace in your browser. Browse design systems, toggle craft guidelines, specify component shapes, resolve ambiguous requirements interactively, and export a structured prompt with one click—ready to paste into any AI chat or coding agent (Claude Code, Cursor, ChatGPT, Gemini, Antigravity IDE, Windsurf, v0, Lovable, Bolt, etc.).
 
 > [!NOTE]
-> Open Studio bundles the full catalog of design assets extracted from Open Design via the submodule [`open-design-core-resources`](./open-design-core-resources), featuring **153 curated design systems**, **13 universal craft rulebooks**, **114 design templates**, **107 prompt templates**, and **163 skills**.
+> Open Studio bundles the catalog of design assets extracted from Open Design via the submodule [`open-design-core-resources`](./open-design-core-resources), featuring **152 curated design systems**, **11 universal craft rulebooks**, **163 skills**, and **114 design templates**.
 
 ---
 
@@ -32,15 +35,15 @@ Instead of relying on fragile CLI agent wrappers or local background daemons pro
 
 ### The Inspiration: Open Design
 
-[Open Design](https://github.com/nexu-io/open-design) introduced a groundbreaking concept: converting generic coding agents into aesthetic design engines by providing machine-readable `DESIGN.md` guidelines, compiled CSS tokens, and curated UI templates.
+[Open Design](https://github.com/nexu-io/open-design) demonstrated that generic coding agents can produce exceptional UI/UX when anchored with machine-readable `DESIGN.md` guidelines, compiled CSS tokens, and curated component blueprints.
 
 ### The Bottleneck: Issue #7733
 
-Open Design relies on a local daemon executing terminal agents (such as Antigravity, Claude Code, or Codex) through child processes. In real-world usage:
+Open Design relies on a local daemon that executes terminal agents (such as Antigravity, Claude Code, or Codex) through child processes. In real-world usage:
 
-- **Command Line Length Failures (Issue #7733):** When composing multi-layer prompts with full token sets, typography rules, and HTML fixtures, the prompt size quickly exceeds OS command line or child process limits (`spawn ENAMETOOLONG` on Windows and macOS).
-- **Subprocess & Stdio Hangs:** Agent CLI child processes and stdio handshakes frequently freeze or crash, resulting in 503 daemon errors.
-- **High Setup Friction:** Requiring every team member to install, authenticate, and configure terminal-based CLI daemons creates unnecessary barriers for designers and developers.
+- **Command Line Length Failures (Issue #7733):** Composing multi-layer prompts with full token sets, typography ramps, and HTML fixtures quickly exceeds OS command line or child process limits (`spawn ENAMETOOLONG` on Windows and macOS).
+- **Subprocess and stdio Deadlocks:** Agent CLI child processes and standard I/O handshakes frequently freeze or crash, resulting in 503 daemon errors.
+- **Setup Overhead:** Requiring every team member to install, authenticate, and configure terminal-based CLI daemons creates friction for designers and frontend developers.
 
 ### The Open Studio Solution
 
@@ -49,10 +52,10 @@ Open Studio decouples **prompt synthesis** from **agent execution**:
 1. **Zero CLI Daemon Dependency:** Runs 100% in the browser. No background daemons, no terminal commands, and zero `ENAMETOOLONG` errors.
 2. **Universal Chat & Agent Compatibility:** Produces clean, XML/Markdown-tagged prompts compatible with any AI chat interface or editor pane.
 3. **Transparent & Inspectable:** Review and toggle every token, craft guideline, and requirement before sending it to your model.
-4. **Token Analytics & Optimization:** Live token estimation with a Condensed `:root` CSS mode that reduces token usage by ~65% while preserving essential brand tokens.
+4. **Token Analytics & Optimization:** Live in-browser token estimation with a Condensed `:root` CSS mode that reduces token usage by ~65% while preserving essential brand tokens.
 
 > [!TIP]
-> Frontier chat interfaces (such as Claude 3.7 Sonnet, GPT-4o / o3-mini, Gemini 2.5 Pro, and Antigravity chat) feature massive context windows. Pasting a structured, XML-tagged prompt directly into chat yields superior reasoning and styling results without agent spawn overhead.
+> Frontier chat interfaces (such as Claude 3.7 Sonnet, GPT-4o, Gemini 2.5 Pro, and Antigravity chat) feature large context windows. Pasting a structured, XML-tagged prompt directly into chat yields superior reasoning and styling results without agent spawn overhead.
 
 ---
 
@@ -120,7 +123,7 @@ Open Studio uses a desktop-first, 3-column cockpit workspace designed for rapid 
 +--------------------------+------------------------------+--------------------------+
 ```
 
-- **Resource Navigator:** Instant fuzzy search across 153 design systems and 13 craft rules. Preview color swatches, typography ramps, and CSS variables in a dedicated modal.
+- **Resource Navigator:** Instant fuzzy search across 152 design systems and 11 craft rules. Preview color swatches, typography ramps, and CSS variables in a dedicated modal.
 - **Composer Manager:** Toggle individual prompt layers, select presets (Landing, Dashboard, Mobile, Deck), edit the intent brief, and paste AI clarification responses.
 - **Prompt Inspector:** Monitor live token count and per-layer cost, switch export targets, inspect syntax-highlighted output, and copy or download generated prompts.
 
@@ -142,14 +145,13 @@ Open Studio formats compiled prompts specifically for your target coding workflo
 
 All foundational design data is maintained via the [`open-design-core-resources`](./open-design-core-resources) submodule:
 
-| Directory                                                                | Count | Description                                                                                      |
-| :----------------------------------------------------------------------- | :---: | :----------------------------------------------------------------------------------------------- |
-| [`design-systems/`](./open-design-core-resources/design-systems)         |  153  | Packaged brand styles containing `manifest.json`, `DESIGN.md`, and compiled `tokens.css`.        |
-| [`craft/`](./open-design-core-resources/craft)                           |  13   | Universal design rules covering typography, color restraint, motion, UX laws, and accessibility. |
-| [`design-templates/`](./open-design-core-resources/design-templates)     |  114  | Pre-defined artifact shapes (dashboards, landing pages, decks, forms, mobile flows).             |
-| [`prompt-templates/`](./open-design-core-resources/prompt-templates)     |  107  | Modular prompt blueprints for image and video generation workflows.                              |
-| [`skills/`](./open-design-core-resources/skills)                         |  163  | Functional agent capabilities and workflow definitions.                                          |
-| [`packages/contracts/`](./open-design-core-resources/packages/contracts) |   -   | TypeScript schemas for tokens, component manifests, and design system contracts.                 |
+| Directory | Count | Description |
+| :--- | :---: | :--- |
+| [`design-systems/`](./open-design-core-resources/design-systems) | 152 | Packaged brand styles containing `manifest.json`, `DESIGN.md`, and compiled `tokens.css`. |
+| [`craft/`](./open-design-core-resources/craft) | 11 | Universal design rules covering typography, color restraint, motion, UX laws, and accessibility. |
+| [`design-templates/`](./open-design-core-resources/design-templates) | 114 | Pre-defined artifact shapes (dashboards, landing pages, decks, forms, mobile flows). |
+| [`skills/`](./open-design-core-resources/skills) | 163 | Functional agent capabilities and workflow definitions. |
+| [`packages/contracts/`](./open-design-core-resources/packages/contracts) | - | TypeScript schemas for tokens, component manifests, and design system contracts. |
 
 ---
 
@@ -158,19 +160,25 @@ All foundational design data is maintained via the [`open-design-core-resources`
 ```
 open-studio/
 ├── .agents/                               # Agent skills & workflows
-├── docs/
-│   ├── images/                            # Documentation assets & project logo
+├── docs/                                  # Project documentation & architecture guides
+│   ├── codebase/                          # Verifiable codebase knowledge documents
+│   │   ├── ARCHITECTURE.md                # 9-layer pipeline & decoupled design
+│   │   ├── CONCERNS.md                    # Technical debt, linter warnings & known issues
+│   │   ├── CONVENTIONS.md                 # TypeScript, component & styling standards
+│   │   ├── INTEGRATIONS.md                # Submodule, storage & browser API contracts
+│   │   ├── STACK.md                       # Complete production & dev dependencies
+│   │   ├── STRUCTURE.md                   # Directory layout & entry points
+│   │   └── TESTING.md                     # Vitest test suite breakdown & running tests
 │   ├── intent/
-│   │   └── open-studio.md                 # Statement of intent & architecture decisions
+│   │   └── open-studio.md                 # Statement of intent & non-goals
 │   └── specs/
 │       └── SPEC-open-studio.md            # Detailed technical specification
 ├── open-design-core-resources/            # Git submodule (design assets & contracts)
 │   ├── craft/                             # Universal craft rules
-│   ├── design-systems/                    # 153 brand packages
+│   ├── design-systems/                    # 152 brand packages
 │   ├── design-templates/                  # UI blueprints
-│   ├── prompt-templates/                  # Image & video prompt blueprints
 │   ├── skills/                            # Agent skills
-│   └── packages/contracts/                # TypeScript schemas & contracts
+│   └── packages/contracts/                # Upstream TypeScript schemas
 ├── scripts/
 │   └── generate-catalog.ts                # Catalog indexing build tool
 ├── tasks/
@@ -181,12 +189,14 @@ open-studio/
 │   │   ├── catalog-index.json             # Generated searchable catalog metadata
 │   │   └── data/                          # On-demand static assets (design systems, craft)
 │   ├── src/
-│   │   ├── components/                    # UI primitives & layout components
+│   │   ├── components/                    # UI primitives, layers, & cockpit views
+│   │   ├── context/                       # React state providers
+│   │   ├── hooks/                         # Custom application hooks
 │   │   ├── lib/                           # Catalog, composer, & clarification engines
 │   │   ├── App.tsx                        # Application root
 │   │   ├── index.css                      # Tailwind CSS v4 styles
-│   │   └── main.tsx                       # Entry point
-│   ├── tests/                             # Vitest test suite
+│   │   └── main.tsx                       # Client entry point
+│   ├── tests/                             # Vitest test suite (16 files, 303 tests)
 │   ├── package.json
 │   └── vite.config.ts
 └── package.json                           # Root workspace scripts
@@ -199,7 +209,7 @@ open-studio/
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18.0 or higher recommended)
-- [pnpm](https://pnpm.io/) (or `npm`)
+- [pnpm](https://pnpm.io/) (v9 or higher recommended)
 - [Git](https://git-scm.com/) with submodule support
 
 ### Quick Start
@@ -250,3 +260,18 @@ open-studio/
    ```bash
    pnpm build
    ```
+
+---
+
+## Documentation
+
+For comprehensive technical documentation, refer to the following resources:
+
+- **[Architecture Deep Dive](docs/codebase/ARCHITECTURE.md)**: Detailed examination of the 9-layer engine, precedence rules, and decoupled design.
+- **[Technology Stack](docs/codebase/STACK.md)**: Full breakdown of production dependencies, dev tooling, and build scripts.
+- **[Codebase Structure](docs/codebase/STRUCTURE.md)**: In-depth directory layout and module boundary definitions.
+- **[Code Conventions](docs/codebase/CONVENTIONS.md)**: TypeScript typing guidelines, component slot standards, and styling patterns.
+- **[Testing Strategy](docs/codebase/TESTING.md)**: Overview of the 16 test suites, Vitest configuration, and running tests.
+- **[Technical Concerns & Debt](docs/codebase/CONCERNS.md)**: Recorded ESLint issues, build warnings, and optimization opportunities.
+- **[Integrations Contract](docs/codebase/INTEGRATIONS.md)**: External boundary definitions, submodule contracts, and browser storage.
+- **[Technical Specification](docs/specs/SPEC-open-studio.md)**: Formal engineering specification for Open Studio.
