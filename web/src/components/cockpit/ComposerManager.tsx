@@ -11,6 +11,7 @@ import { Layer5DesignSystem } from "../layers/Layer5DesignSystem"
 import { Layer6CraftRules } from "../layers/Layer6CraftRules"
 import { Layer7SkillTemplate } from "../layers/Layer7SkillTemplate"
 import { Layer8UserRules } from "../layers/Layer8UserRules"
+import { Layer9BriefClarification } from "../layers/Layer9BriefClarification"
 import {
   ShieldCheck,
   Code2,
@@ -23,6 +24,7 @@ import {
   RotateCcw,
   SlidersHorizontal,
   Flame,
+  FileText,
 } from "lucide-react"
 import { cn } from "cn"
 
@@ -192,7 +194,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         <Accordion
           type="multiple"
-          defaultValue={["l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8"]}
+          defaultValue={["l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9"]}
           className="border-border/70 bg-card/40 rounded-xl divide-y divide-border/60 overflow-hidden"
         >
           {/* L1: Security Guardrails */}
@@ -487,6 +489,35 @@ export function ComposerManager({ className }: ComposerManagerProps) {
             </div>
             <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
               <Layer8UserRules />
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* L9: Task Brief & Clarification Loop */}
+          <AccordionItem value="l9" data-slot="layer-accordion-l9">
+            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+              <div className="flex-1">
+                <AccordionTrigger className="p-3.5 hover:no-underline">
+                  <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
+                    <FileText className="size-4 text-primary shrink-0" />
+                    <span>L9: Brief &amp; Clarification</span>
+                    <Badge
+                      data-slot="layer-badge-l9"
+                      variant="default"
+                      className="ml-1 text-[10px] font-mono capitalize"
+                    >
+                      {config.layer9BriefAndClarification.featureRequirements.length > 0 ||
+                      config.layer9BriefAndClarification.clarificationAnswers.length > 0
+                        ? `${config.layer9BriefAndClarification.featureRequirements.length} reqs · ${config.layer9BriefAndClarification.clarificationAnswers.length} ans`
+                        : config.layer9BriefAndClarification.userObjective
+                        ? "Active"
+                        : "Ready"}
+                    </Badge>
+                  </div>
+                </AccordionTrigger>
+              </div>
+            </div>
+            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+              <Layer9BriefClarification />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
