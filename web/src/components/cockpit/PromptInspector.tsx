@@ -1,4 +1,4 @@
-import React from "react"
+import type { ComponentType } from "react"
 import { useComposer } from "../../hooks/useComposer"
 import { type ActiveAgentTarget } from "../../context/composer-context-def"
 import { TokenGaugeBar } from "./TokenGaugeBar"
@@ -23,7 +23,7 @@ interface AgentTabOption {
   readonly id: ActiveAgentTarget
   readonly label: string
   readonly dataSlot: string
-  readonly icon: React.ComponentType<{ className?: string }>
+  readonly icon: ComponentType<{ className?: string }>
   readonly hint: string
 }
 

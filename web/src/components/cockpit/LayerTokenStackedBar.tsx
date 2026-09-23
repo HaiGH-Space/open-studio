@@ -1,4 +1,3 @@
-import React from "react"
 import { cn } from "cn"
 import type { LayerCompilationResult } from "../../lib/composer/composer-types"
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react"
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from "react"
 import { cn } from "cn"
 import {
   Copy as CopyIcon,
@@ -63,7 +63,7 @@ export function PromptOutputViewer({
     if (!content) return null
     return content.split("\n").map((line, idx) => {
       const trimmed = line.trim()
-      let styledContent: React.ReactNode = line
+      let styledContent: ReactNode = line
 
       if (trimmed.startsWith("<!--") && trimmed.endsWith("-->")) {
         styledContent = <span className="text-muted-foreground/60 italic">{line}</span>

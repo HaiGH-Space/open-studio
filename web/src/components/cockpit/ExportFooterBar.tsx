@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import { useComposer } from "../../hooks/useComposer"
 import { claudeCodeExporter } from "../../lib/export/claude-code-exporter"
 import { cursorExporter } from "../../lib/export/cursor-exporter"
@@ -9,7 +9,6 @@ import {
   Check as CheckIcon,
   ChevronDown as ChevronDownIcon,
   FileCode as FileCodeIcon,
-  FileText as FileTextIcon,
   Archive as ArchiveIcon,
 } from "lucide-react"
 

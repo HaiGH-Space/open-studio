@@ -1,4 +1,4 @@
-import React, { act } from "react"
+import { act } from "react"
 import { createRoot } from "react-dom/client"
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
 import { LayerTokenStackedBar } from "../src/components/cockpit/LayerTokenStackedBar"
@@ -439,7 +439,7 @@ describe("Right Column: Prompt Inspector & Exporters (Task 15)", () => {
       act(() => {
         root.render(
           <CatalogProvider catalogService={mockService} autoLoad={false}>
-            <ComposerProvider catalogService={mockService} onDownload={onDownload}>
+            <ComposerProvider catalogService={mockService}>
               <ExportFooterBar onDownload={onDownload} />
             </ComposerProvider>
           </CatalogProvider>
