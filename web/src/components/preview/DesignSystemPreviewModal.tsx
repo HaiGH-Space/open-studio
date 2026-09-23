@@ -7,6 +7,7 @@ import {
   DialogDescription,
 } from "../ui/dialog"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs"
+import { ScrollArea } from "../ui/scroll-area"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { ColorSwatchBar } from "../cockpit/ColorSwatchBar"
@@ -176,7 +177,7 @@ export function DesignSystemPreviewModal({
         </DialogHeader>
 
         {/* Tabbed Content */}
-        <div className="flex-1 overflow-y-auto p-6 pt-4">
+        <ScrollArea className="flex-1 min-h-0" viewportClassName="p-6 pt-4">
           <Tabs defaultValue="tokens" className="w-full">
             <TabsList className="mb-4">
               <TabsTrigger
@@ -339,7 +340,7 @@ export function DesignSystemPreviewModal({
               )}
             </TabsContent>
           </Tabs>
-        </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )

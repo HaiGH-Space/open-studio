@@ -34,6 +34,7 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "../src/components/ui/tooltip"
+import { ScrollArea, ScrollBar } from "../src/components/ui/scroll-area"
 
 declare global {
   var IS_REACT_ACT_ENVIRONMENT: boolean
@@ -453,6 +454,66 @@ describe("Atomic UI Components (Task 10)", () => {
       const trigger = container.querySelector("[data-slot='tooltip-trigger']") as HTMLElement
       expect(trigger).toBeTruthy()
       expect(trigger.textContent).toBe("Hover me")
+    })
+  })
+
+  describe("ScrollArea Component", () => {
+    it("renders scroll-area container and viewport with children", () => {
+      render(
+        <ScrollArea className="h-64 w-64" viewportClassName="p-4">
+          <div data-testid="scroll-content">Scrollable Content</div>
+        </ScrollArea>
+      )
+      const rootEl = container.querySelector("[data-slot='scroll-area']") as HTMLElement
+      expect(rootEl).toBeTruthy()
+      expect(rootEl.className).toContain("h-64")
+
+      const viewportEl = container.querySelector("[data-slot='scroll-area-viewport']") as HTMLElement
+      expect(viewportEl).toBeTruthy()
+      expect(viewportEl.className).toContain("p-4")
+
+      const content = container.querySelector("[data-testid='scroll-content']")
+      expect(content).toBeTruthy()
+      expect(content?.textContent).toBe("Scrollable Content")
+    })
+
+    it("renders vertical scrollbar by default", () => {
+      render(
+        <ScrollArea className="h-64">
+          <div>Vertical Content</div>
+        </ScrollArea>
+      )
+      const scrollbars = container.querySelectorAll("[data-slot='scroll-area-scrollbar']")
+      expect(scrollbars.length).toBe(1)
+      expect(scrollbars[0].getAttribute("data-orientation")).toBe("vertical")
+
+      const thumb = container.querySelector("[data-slot='scroll-area-thumb']")
+      expect(thumb).toBeTruthy()
+    })
+
+    it("renders both vertical and horizontal scrollbars when orientation is both", () => {
+      render(
+        <ScrollArea className="h-64 w-64" orientation="both">
+          <div style={{ width: "1000px" }}>Wide Content</div>
+        </ScrollArea>
+      )
+      const scrollbars = container.querySelectorAll("[data-slot='scroll-area-scrollbar']")
+      expect(scrollbars.length).toBe(2)
+      const orientations = Array.from(scrollbars).map((sb) => sb.getAttribute("data-orientation"))
+      expect(orientations).toContain("vertical")
+      expect(orientations).toContain("horizontal")
+    })
+
+    it("renders standalone ScrollBar component with specified orientation", () => {
+      render(
+        <ScrollArea className="h-64">
+          <div>Horizontal Content</div>
+          <ScrollBar orientation="horizontal" data-slot="custom-scrollbar" />
+        </ScrollArea>
+      )
+      const scrollbar = container.querySelector("[data-slot='custom-scrollbar']")
+      expect(scrollbar).toBeTruthy()
+      expect(scrollbar?.getAttribute("data-orientation")).toBe("horizontal")
     })
   })
 })

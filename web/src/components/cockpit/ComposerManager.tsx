@@ -1,6 +1,7 @@
 import { useComposer } from "../../hooks/useComposer"
 import { useCatalog } from "../../hooks/useCatalog"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../ui/accordion"
+import { ScrollArea } from "../ui/scroll-area"
 import { Badge } from "../ui/badge"
 import { Switch } from "../ui/switch"
 import { Layer1Security } from "../layers/Layer1Security"
@@ -190,8 +191,8 @@ export function ComposerManager({ className }: ComposerManagerProps) {
         </div>
       </div>
 
-      {/* Accordion Panels (Scrollable) */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {/* Accordion Panels (Scrollable with shadcn ScrollArea) */}
+      <ScrollArea className="flex-1 min-h-0" viewportClassName="p-4 space-y-4">
         <Accordion
           type="multiple"
           defaultValue={["l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9"]}
@@ -521,7 +522,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-      </div>
+      </ScrollArea>
     </section>
   )
 }

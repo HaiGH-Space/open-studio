@@ -5,6 +5,7 @@ import { Input } from "../ui/input"
 import { Badge } from "../ui/badge"
 import { Switch } from "../ui/switch"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs"
+import { ScrollArea } from "../ui/scroll-area"
 import { DesignSystemCard } from "./DesignSystemCard"
 import { DesignSystemPreviewModal } from "../preview/DesignSystemPreviewModal"
 import {
@@ -225,141 +226,147 @@ export function ResourceNavigator({
         <TabsContent
           value="systems"
           data-slot="tab-content-systems"
-          className="flex-1 overflow-y-auto p-3 space-y-2.5 outline-none"
+          className="flex-1 min-h-0 outline-none"
         >
-          {filteredDesignSystems.length === 0 ? (
-            <div
-              data-slot="empty-systems"
-              className="py-12 px-4 text-center text-xs text-muted-foreground space-y-1.5"
-            >
-              <PaletteIcon className="size-6 text-muted-foreground/40 mx-auto" />
-              <p className="font-medium text-foreground/80">No design systems found</p>
-              <p className="text-[11px]">Try adjusting your search query or filters</p>
-            </div>
-          ) : (
-            filteredDesignSystems.map((ds) => (
-              <DesignSystemCard
-                key={ds.id}
-                system={ds}
-                isSelected={activeSystemId === ds.id}
-                onSelect={handleSelectSystem}
-                onPreview={handlePreviewSystem}
-              />
-            ))
-          )}
+          <ScrollArea className="h-full" viewportClassName="p-3 space-y-2.5">
+            {filteredDesignSystems.length === 0 ? (
+              <div
+                data-slot="empty-systems"
+                className="py-12 px-4 text-center text-xs text-muted-foreground space-y-1.5"
+              >
+                <PaletteIcon className="size-6 text-muted-foreground/40 mx-auto" />
+                <p className="font-medium text-foreground/80">No design systems found</p>
+                <p className="text-[11px]">Try adjusting your search query or filters</p>
+              </div>
+            ) : (
+              filteredDesignSystems.map((ds) => (
+                <DesignSystemCard
+                  key={ds.id}
+                  system={ds}
+                  isSelected={activeSystemId === ds.id}
+                  onSelect={handleSelectSystem}
+                  onPreview={handlePreviewSystem}
+                />
+              ))
+            )}
+          </ScrollArea>
         </TabsContent>
 
         {/* Tab 2: Craft Rules */}
         <TabsContent
           value="rules"
           data-slot="tab-content-rules"
-          className="flex-1 overflow-y-auto p-3 space-y-2 outline-none"
+          className="flex-1 min-h-0 outline-none"
         >
-          {filteredCraftRules.length === 0 ? (
-            <div
-              data-slot="empty-rules"
-              className="py-12 px-4 text-center text-xs text-muted-foreground space-y-1.5"
-            >
-              <RuleIcon className="size-6 text-muted-foreground/40 mx-auto" />
-              <p className="font-medium text-foreground/80">No craft rules found</p>
-              <p className="text-[11px]">Try clearing search filters</p>
-            </div>
-          ) : (
-            filteredCraftRules.map((cr) => {
-              const isEnabled = activeRuleIds.includes(cr.id)
-              return (
-                <div
-                  key={cr.id}
-                  data-slot="craft-rule-card"
-                  data-rule-id={cr.id}
-                  className={cn(
-                    "p-3 rounded-xl border transition-all duration-150 flex items-start justify-between gap-3 select-none",
-                    isEnabled
-                      ? "border-primary/50 bg-primary/5"
-                      : "border-border/70 bg-card/60 hover:bg-card/90 hover:border-border"
-                  )}
-                >
-                  <div className="space-y-1 min-w-0">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="font-medium text-xs text-foreground truncate">
-                        {cr.name}
-                      </span>
-                      <Badge variant="outline" className="text-[9px] py-0 px-1 h-3.5 capitalize">
-                        {cr.category}
-                      </Badge>
-                      <Badge variant="secondary" className="text-[9px] py-0 px-1 h-3.5 font-mono">
-                        {cr.ruleCount} rules
-                      </Badge>
+          <ScrollArea className="h-full" viewportClassName="p-3 space-y-2">
+            {filteredCraftRules.length === 0 ? (
+              <div
+                data-slot="empty-rules"
+                className="py-12 px-4 text-center text-xs text-muted-foreground space-y-1.5"
+              >
+                <RuleIcon className="size-6 text-muted-foreground/40 mx-auto" />
+                <p className="font-medium text-foreground/80">No craft rules found</p>
+                <p className="text-[11px]">Try clearing search filters</p>
+              </div>
+            ) : (
+              filteredCraftRules.map((cr) => {
+                const isEnabled = activeRuleIds.includes(cr.id)
+                return (
+                  <div
+                    key={cr.id}
+                    data-slot="craft-rule-card"
+                    data-rule-id={cr.id}
+                    className={cn(
+                      "p-3 rounded-xl border transition-all duration-150 flex items-start justify-between gap-3 select-none",
+                      isEnabled
+                        ? "border-primary/50 bg-primary/5"
+                        : "border-border/70 bg-card/60 hover:bg-card/90 hover:border-border"
+                    )}
+                  >
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-medium text-xs text-foreground truncate">
+                          {cr.name}
+                        </span>
+                        <Badge variant="outline" className="text-[9px] py-0 px-1 h-3.5 capitalize">
+                          {cr.category}
+                        </Badge>
+                        <Badge variant="secondary" className="text-[9px] py-0 px-1 h-3.5 font-mono">
+                          {cr.ruleCount} rules
+                        </Badge>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                        {cr.description}
+                      </p>
                     </div>
-                    <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
-                      {cr.description}
-                    </p>
-                  </div>
 
-                  <div className="shrink-0 pt-0.5">
-                    <Switch
-                      data-slot="craft-rule-switch"
-                      checked={isEnabled}
-                      onCheckedChange={() => composer.toggleCraftRule(cr.id)}
-                      size="sm"
-                      aria-label={`Toggle ${cr.name}`}
-                    />
+                    <div className="shrink-0 pt-0.5">
+                      <Switch
+                        data-slot="craft-rule-switch"
+                        checked={isEnabled}
+                        onCheckedChange={() => composer.toggleCraftRule(cr.id)}
+                        size="sm"
+                        aria-label={`Toggle ${cr.name}`}
+                      />
+                    </div>
                   </div>
-                </div>
-              )
-            })
-          )}
+                )
+              })
+            )}
+          </ScrollArea>
         </TabsContent>
 
         {/* Tab 3: Skills */}
         <TabsContent
           value="skills"
           data-slot="tab-content-skills"
-          className="flex-1 overflow-y-auto p-3 space-y-2 outline-none"
+          className="flex-1 min-h-0 outline-none"
         >
-          {filteredSkills.length === 0 ? (
-            <div
-              data-slot="empty-skills"
-              className="py-12 px-4 text-center text-xs text-muted-foreground space-y-1.5"
-            >
-              <ZapIcon className="size-6 text-muted-foreground/40 mx-auto" />
-              <p className="font-medium text-foreground/80">No skills found</p>
-              <p className="text-[11px]">Try clearing search filters</p>
-            </div>
-          ) : (
-            filteredSkills.map((sk) => (
+          <ScrollArea className="h-full" viewportClassName="p-3 space-y-2">
+            {filteredSkills.length === 0 ? (
               <div
-                key={sk.id}
-                data-slot="skill-card"
-                className="p-3 rounded-xl border border-border/70 bg-card/60 hover:bg-card/90 hover:border-border transition-all duration-150 space-y-1.5 select-none"
+                data-slot="empty-skills"
+                className="py-12 px-4 text-center text-xs text-muted-foreground space-y-1.5"
               >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-medium text-xs text-foreground truncate">
-                    {sk.name}
-                  </span>
-                  <Badge variant="outline" className="text-[9px] py-0 px-1.5 h-4">
-                    {sk.category}
-                  </Badge>
-                </div>
-                <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
-                  {sk.description}
-                </p>
-                {sk.triggers && sk.triggers.length > 0 && (
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    {sk.triggers.map((trig) => (
-                      <span
-                        key={trig}
-                        data-slot="skill-trigger-chip"
-                        className="text-[9px] px-1.5 py-0.2 rounded bg-muted/60 text-muted-foreground border border-border/40 font-mono"
-                      >
-                        {trig}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                <ZapIcon className="size-6 text-muted-foreground/40 mx-auto" />
+                <p className="font-medium text-foreground/80">No skills found</p>
+                <p className="text-[11px]">Try clearing search filters</p>
               </div>
-            ))
-          )}
+            ) : (
+              filteredSkills.map((sk) => (
+                <div
+                  key={sk.id}
+                  data-slot="skill-card"
+                  className="p-3 rounded-xl border border-border/70 bg-card/60 hover:bg-card/90 hover:border-border transition-all duration-150 space-y-1.5 select-none"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-medium text-xs text-foreground truncate">
+                      {sk.name}
+                    </span>
+                    <Badge variant="outline" className="text-[9px] py-0 px-1.5 h-4">
+                      {sk.category}
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                    {sk.description}
+                  </p>
+                  {sk.triggers && sk.triggers.length > 0 && (
+                    <div className="flex flex-wrap gap-1 pt-1">
+                      {sk.triggers.map((trig) => (
+                        <span
+                          key={trig}
+                          data-slot="skill-trigger-chip"
+                          className="text-[9px] px-1.5 py-0.2 rounded bg-muted/60 text-muted-foreground border border-border/40 font-mono"
+                        >
+                          {trig}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </ScrollArea>
         </TabsContent>
       </Tabs>
 

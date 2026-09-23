@@ -8,6 +8,7 @@ import {
 } from "../ui/dialog"
 import { Input } from "../ui/input"
 import { Badge } from "../ui/badge"
+import { ScrollArea } from "../ui/scroll-area"
 import { useCatalog } from "../../hooks/useCatalog"
 import { useComposer } from "../../hooks/useComposer"
 import {
@@ -141,7 +142,7 @@ export function CommandMenuDialog({
           />
         </div>
 
-        <div className="max-h-80 overflow-y-auto px-4 pb-4 space-y-4">
+        <ScrollArea className="max-h-80" viewportClassName="px-4 pb-4 space-y-4">
           {totalResults === 0 ? (
             <div
               data-slot="command-empty"
@@ -257,7 +258,7 @@ export function CommandMenuDialog({
               )}
             </>
           )}
-        </div>
+        </ScrollArea>
 
         <div className="border-t border-border/40 bg-muted/20 px-4 py-2 flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-3">

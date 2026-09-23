@@ -10,6 +10,7 @@ import {
 import { Button } from "../ui/button"
 import { Textarea } from "../ui/textarea"
 import { Badge } from "../ui/badge"
+import { ScrollArea } from "../ui/scroll-area"
 import { QuestionFieldRenderer } from "./QuestionFieldRenderer"
 import { questionFormParser } from "../../lib/clarification/question-form-parser"
 import type {
@@ -227,7 +228,7 @@ export function QuestionFormModal({
         </DialogHeader>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <ScrollArea className="flex-1 min-h-0" viewportClassName="p-4 space-y-4">
           {activeTab === "raw" ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -296,7 +297,7 @@ export function QuestionFormModal({
               <span>{validationError}</span>
             </div>
           )}
-        </div>
+        </ScrollArea>
 
         {/* Footer */}
         <DialogFooter className="p-3.5 border-t border-border/60 bg-muted/20 flex items-center justify-between sm:justify-between gap-2">

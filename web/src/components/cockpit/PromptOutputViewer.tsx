@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, type ReactNode } from "react"
 import { cn } from "cn"
+import { ScrollArea } from "../ui/scroll-area"
 import {
   Copy as CopyIcon,
   Check as CheckIcon,
@@ -189,14 +190,16 @@ export function PromptOutputViewer({
       </div>
 
       {/* Code Viewer Body */}
-      <div
-        className={cn(
-          "flex-1 overflow-auto p-3 font-mono text-[11px] text-foreground/90 select-text bg-muted/5",
-          wrapLines ? "whitespace-pre-wrap break-words" : "whitespace-pre overflow-x-auto"
+      <ScrollArea
+        className="flex-1 min-h-0 bg-muted/5"
+        orientation={wrapLines ? "vertical" : "both"}
+        viewportClassName={cn(
+          "p-3 font-mono text-[11px] text-foreground/90 select-text",
+          wrapLines ? "whitespace-pre-wrap break-words" : "whitespace-pre"
         )}
       >
         <div className="table w-full font-mono">{renderedLines}</div>
-      </div>
+      </ScrollArea>
 
       {/* Floating Toast Notification */}
       {toast && (
