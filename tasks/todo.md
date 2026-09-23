@@ -43,7 +43,7 @@
 ## Phase 5: Composer Cockpit & Interactive Clarification Loop (`studio-ui` part 2)
 - [x] Task 13: Center Column: 9-Layer Accordion Panels & Preset Action Bar
 - [x] Task 14: Interactive `<question-form>` Clarification Loop & Layer 9
-- [ ] Task 15: Right Column: Prompt Inspector, Token Breakdown & Exporters
+- [x] Task 15: Right Column: Prompt Inspector, Token Breakdown & Exporters
 - [ ] Task 16: Complete Cockpit Integration & End-to-End Flow Verification
 
 ## Checkpoint: Complete Open Studio Application
