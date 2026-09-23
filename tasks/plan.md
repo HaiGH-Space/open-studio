@@ -418,14 +418,14 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 **Description:** Assemble the 3-column `StudioCockpit` in `App.tsx`, wire all providers, and implement end-to-end integration tests covering the complete user journey.
 **Acceptance criteria:**
 
-- [ ] `StudioCockpit.tsx` coordinates Left (Resource Navigator), Center (Composer Manager), and Right (Prompt Inspector) panes in a responsive full-viewport layout (`100vh`).
-- [ ] `App.tsx` wraps tree with `ThemeProvider`, `CatalogProvider`, and `ComposerProvider`.
-- [ ] End-to-end integration test covers: Loading catalog → Selecting Linear design system → Toggling Anti-AI-Slop craft rule → Entering user brief → Pasting `<question-form>` XML → Answering question → Copying compiled prompt.
-- [ ] `pnpm --filter web build` builds clean production bundle under 300KB (gzipped).
+- [x] `StudioCockpit.tsx` coordinates Left (Resource Navigator), Center (Composer Manager), and Right (Prompt Inspector) panes in a responsive full-viewport layout (`100vh`).
+- [x] `App.tsx` wraps tree with `ThemeProvider`, `CatalogProvider`, and `ComposerProvider`.
+- [x] End-to-end integration test covers: Loading catalog → Selecting Linear design system → Toggling Anti-AI-Slop craft rule → Entering user brief → Pasting `<question-form>` XML → Answering question → Copying compiled prompt.
+- [x] `pnpm --filter web build` builds clean production bundle under 300KB (gzipped).
       **Verification:**
-- [ ] Tests pass: `pnpm --filter web test tests/cockpit-e2e.test.tsx`
-- [ ] Build succeeds: `pnpm --filter web build`
-- [ ] Manual check: Application loads in browser, all 3 columns scroll independently, prompt compiles reactively.
+- [x] Tests pass: `pnpm --filter web test tests/cockpit-e2e.test.tsx`
+- [x] Build succeeds: `pnpm --filter web build`
+- [x] Manual check: Application loads in browser, all 3 columns scroll independently, prompt compiles reactively.
       **Dependencies:** Tasks 11, 12, 13, 14, 15
       **Files likely touched:**
 - `web/src/components/cockpit/StudioCockpit.tsx`
@@ -437,9 +437,9 @@ Open Studio is a 100% client-side web application that decouples prompt synthesi
 
 ### Checkpoint 5: Complete Open Studio Application
 
-- [ ] Complete 3-column cockpit interface operates smoothly with zero console errors.
-- [ ] End-to-end flow from search to question form loop to export passes automated tests.
-- [ ] Static build (`pnpm --filter web build`) succeeds cleanly.
+- [x] Complete 3-column cockpit interface operates smoothly with zero console errors.
+- [x] End-to-end flow from search to question form loop to export passes automated tests.
+- [x] Static build (`pnpm --filter web build`) succeeds cleanly.
 
 ---
 
