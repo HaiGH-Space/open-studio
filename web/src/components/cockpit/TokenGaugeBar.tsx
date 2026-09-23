@@ -10,13 +10,13 @@ export interface TokenGaugeBarProps {
   readonly showCost?: boolean
 }
 
-export function getTokenGaugeStatus(tokens: number): TokenGaugeStatus {
+function getTokenGaugeStatus(tokens: number): TokenGaugeStatus {
   if (tokens < 30000) return "green"
   if (tokens <= 80000) return "amber"
   return "red"
 }
 
-export const STATUS_STYLE_MAP: Record<
+const STATUS_STYLE_MAP: Record<
   TokenGaugeStatus,
   {
     indicatorClass: string

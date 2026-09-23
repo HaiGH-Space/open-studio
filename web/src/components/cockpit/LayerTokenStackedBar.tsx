@@ -8,7 +8,7 @@ export interface LayerTokenStackedBarProps {
   readonly className?: string
 }
 
-export const LAYER_COLOR_MAP: Record<
+const LAYER_COLOR_MAP: Record<
   number,
   { bg: string; text: string; border: string; badge: string }
 > = {

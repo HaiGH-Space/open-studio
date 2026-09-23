@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback } from "react"
 import {
   Dialog,
   DialogContent,
@@ -34,6 +34,40 @@ export interface QuestionFormModalProps {
   readonly onAnswersSubmitted?: (answers: readonly ClarificationAnswerEntry[]) => void
 }
 
+function getInitialAnswers(
+  ast: QuestionFormAST | null,
+  clarificationAnswers: readonly ClarificationAnswerEntry[]
+): Record<string, string[]> {
+  if (!ast) return {}
+
+  const existingMap = new Map<string, readonly string[]>()
+  for (const a of clarificationAnswers) {
+    existingMap.set(a.questionId, a.selectedValues)
+  }
+
+  const initialAnswers: Record<string, string[]> = {}
+  for (const q of ast.questions) {
+    if (existingMap.has(q.id)) {
+      initialAnswers[q.id] = [...(existingMap.get(q.id) ?? [])]
+    } else if (q.options && q.options.length > 0) {
+      const defaultCheckedOptions = q.options.filter((o) => o.defaultChecked)
+      if (defaultCheckedOptions.length > 0) {
+        if (q.type === "radio") {
+          initialAnswers[q.id] = [defaultCheckedOptions[0].value]
+        } else {
+          initialAnswers[q.id] = defaultCheckedOptions.map((o) => o.value)
+        }
+      } else {
+        initialAnswers[q.id] = []
+      }
+    } else {
+      initialAnswers[q.id] = []
+    }
+  }
+
+  return initialAnswers
+}
+
 export function QuestionFormModal({
   open = false,
   onOpenChange,
@@ -48,57 +82,37 @@ export function QuestionFormModal({
   } = useComposer()
 
   const [rawText, setRawText] = useState<string>(() => initialRawText ?? rawAiResponse ?? "")
-  const [activeTab, setActiveTab] = useState<"form" | "raw">("form")
-  const [answers, setAnswers] = useState<Record<string, string[]>>({})
-  const [validationError, setValidationError] = useState<string | null>(null)
-
-  // Keep rawText synced if initialRawText changes
-  useEffect(() => {
-    if (initialRawText !== undefined) {
+  const [prevInitialRawText, setPrevInitialRawText] = useState<string | undefined>(initialRawText)
+  if (initialRawText !== prevInitialRawText) {
+    setPrevInitialRawText(initialRawText)
+    if (initialRawText !== undefined && initialRawText !== rawText) {
       setRawText(initialRawText)
     }
-  }, [initialRawText])
+  }
+
+  const [activeTab, setActiveTab] = useState<"form" | "raw">("form")
+  const [validationError, setValidationError] = useState<string | null>(null)
 
   // Parse raw text to QuestionFormAST
   const parsedAst: QuestionFormAST | null = useMemo(() => {
     return questionFormParser.parseForm(rawText)
   }, [rawText])
 
-  // Initialize answers when parsedAst changes or on mount
-  useEffect(() => {
-    if (!parsedAst) {
-      setAnswers({})
-      return
-    }
+  const clarificationAnswers = config.layer9BriefAndClarification.clarificationAnswers
 
-    // Pre-populate existing answers from Layer 9 if present, or defaults from AST
-    const existingMap = new Map<string, readonly string[]>()
-    for (const a of config.layer9BriefAndClarification.clarificationAnswers) {
-      existingMap.set(a.questionId, a.selectedValues)
-    }
+  const [answers, setAnswers] = useState<Record<string, string[]>>(() =>
+    getInitialAnswers(parsedAst, clarificationAnswers)
+  )
+  const [prevParsedAst, setPrevParsedAst] = useState<QuestionFormAST | null>(parsedAst)
+  const [prevOpen, setPrevOpen] = useState(open)
 
-    const initialAnswers: Record<string, string[]> = {}
-    for (const q of parsedAst.questions) {
-      if (existingMap.has(q.id)) {
-        initialAnswers[q.id] = [...(existingMap.get(q.id) ?? [])]
-      } else if (q.options && q.options.length > 0) {
-        const defaultCheckedOptions = q.options.filter((o) => o.defaultChecked)
-        if (defaultCheckedOptions.length > 0) {
-          if (q.type === "radio") {
-            initialAnswers[q.id] = [defaultCheckedOptions[0].value]
-          } else {
-            initialAnswers[q.id] = defaultCheckedOptions.map((o) => o.value)
-          }
-        } else {
-          initialAnswers[q.id] = []
-        }
-      } else {
-        initialAnswers[q.id] = []
-      }
-    }
-
-    setAnswers(initialAnswers)
-  }, [parsedAst, config.layer9BriefAndClarification.clarificationAnswers])
+  if (parsedAst !== prevParsedAst || (open && !prevOpen)) {
+    setPrevParsedAst(parsedAst)
+    setPrevOpen(open)
+    setAnswers(getInitialAnswers(parsedAst, clarificationAnswers))
+  } else if (open !== prevOpen) {
+    setPrevOpen(open)
+  }
 
   const handleFieldChange = useCallback((questionId: string, values: string[]) => {
     setAnswers((prev) => ({
