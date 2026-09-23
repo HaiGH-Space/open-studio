@@ -51,3 +51,10 @@
 - [x] End-to-end flow from search to question form loop to export passes automated tests
 - [x] Static build (`pnpm --filter web build`) succeeds cleanly
 
+## Phase 6: Scenario A (2-Turn External Roundtrip Loop)
+- [ ] Task 17: Turn Modes & Directives in Core Engine (`prompt-composer`)
+- [ ] Task 18: 5-State Discrete State Machine Pipeline (`useComposer` & `ComposerContext`)
+- [ ] Task 19: Stepper / Phase Header & Clarification Zone Components (`studio-ui`)
+- [ ] Task 20: Prompt Inspector Dynamic Turn Tabs & Token Breakdown
+- [ ] Task 21: Unit Tests & End-to-End Roundtrip Integration Tests
+

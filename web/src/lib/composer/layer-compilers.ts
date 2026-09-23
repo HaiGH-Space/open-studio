@@ -17,6 +17,7 @@ import type {
   Layer9BriefAndClarificationConfig,
   LayerCompilationResult,
   DesignSystemAssets,
+  TurnMode,
 } from "./composer-types"
 
 /**
@@ -258,10 +259,15 @@ export function compileLayer4WorkflowManifest(
 
 /**
  * Layer 5: Design System Brand Contract.
+ * In turn1_discovery (Discovery Token Diet):
+ * Strips tokens.css and components.html to save 5,000-15,000 tokens of CSS boilerplate,
+ * keeping only DESIGN.md brand guidelines and usage notes.
+ * In turn2_execution: Re-injects the complete CSS tokens and component catalog.
  */
 export function compileLayer5BrandContract(
   config: Layer5BrandContractConfig,
-  assets?: DesignSystemAssets
+  assets?: DesignSystemAssets,
+  turn: TurnMode = "turn2_execution"
 ): LayerCompilationResult {
   const layerIndex = 5
   const layerName = "Brand Contract"
@@ -274,8 +280,11 @@ export function compileLayer5BrandContract(
   const systemId = config.selectedSystemId || "custom"
   const lines: string[] = [`<${xmlTag} id="${systemId}">`]
 
-  // Tokens CSS
-  if (config.includeTokensCss && assets?.tokensCss) {
+  // Strip tokensCss and componentsHtml during turn1_discovery
+  const isTurn2 = turn === "turn2_execution"
+
+  // Tokens CSS (Turn 2 only)
+  if (isTurn2 && config.includeTokensCss && assets?.tokensCss) {
     const tokenMode = config.tokenMode
     const cssBody =
       tokenMode === "condensed"
@@ -287,18 +296,18 @@ export function compileLayer5BrandContract(
     }
   }
 
-  // Design Guidelines
+  // Design Guidelines (Both turns)
   if (config.includeDesignMd && assets?.designMd?.trim()) {
     lines.push("  <design-guidelines>", assets.designMd.trim(), "  </design-guidelines>")
   }
 
-  // Usage Notes
+  // Usage Notes (Both turns)
   if (config.includeUsage && assets?.usage?.trim()) {
     lines.push("  <usage-notes>", assets.usage.trim(), "  </usage-notes>")
   }
 
-  // Component Blueprints
-  if (config.includeComponentsHtml && assets?.componentsHtml?.trim()) {
+  // Component Blueprints (Turn 2 only)
+  if (isTurn2 && config.includeComponentsHtml && assets?.componentsHtml?.trim()) {
     lines.push("  <component-blueprints>", assets.componentsHtml.trim(), "  </component-blueprints>")
   }
 
@@ -417,11 +426,19 @@ export function compileLayer7SkillTemplate(
   }
 }
 
+export interface UserBriefInput {
+  readonly userObjective?: string
+  readonly featureRequirements?: readonly string[]
+}
+
 /**
  * Layer 8: Persistent User Rules & Memory Injection.
+ * Always present in both turn1_discovery and turn2_execution.
+ * Contains user objective, feature checklist, and persistent directives.
  */
 export function compileLayer8UserMemory(
-  config: Layer8UserMemoryConfig
+  config: Layer8UserMemoryConfig,
+  brief?: UserBriefInput
 ): LayerCompilationResult {
   const layerIndex = 8
   const layerName = "User Memory Rules"
@@ -432,6 +449,19 @@ export function compileLayer8UserMemory(
   }
 
   const lines: string[] = [`<${xmlTag}>`]
+
+  // Inject user objective and feature requirements if provided
+  if (brief?.userObjective && brief.userObjective.trim().length > 0) {
+    lines.push(`  <objective>${sanitizeXmlContent(brief.userObjective.trim())}</objective>`)
+  }
+
+  if (brief?.featureRequirements && brief.featureRequirements.length > 0) {
+    lines.push("  <requirements>")
+    for (const req of brief.featureRequirements) {
+      lines.push(`    - ${sanitizeXmlContent(req)}`)
+    }
+    lines.push("  </requirements>")
+  }
 
   if (config.persistentDirectives && config.persistentDirectives.length > 0) {
     lines.push("  USER PREFERENCES & PERSISTENT RULES:")
@@ -463,15 +493,55 @@ export function compileLayer8UserMemory(
 
 /**
  * Layer 9: Dynamic Brief, Clarification State & User Prompt.
+ * In turn1_discovery: completely omitted (0 tokens, enabled: false).
+ * In turn2_execution: strictly represents <clarification-answers>.
  */
 export function compileLayer9BriefAndClarification(
-  config: Layer9BriefAndClarificationConfig
+  config: Layer9BriefAndClarificationConfig,
+  turn?: TurnMode
 ): LayerCompilationResult {
   const layerIndex = 9
-  const layerName = "Task Brief & Clarification"
-  const xmlTag = "task-brief"
+  const layerName = "Clarification Answers"
+  const xmlTag = "clarification-answers"
 
-  const lines: string[] = [`<${xmlTag}>`]
+  // In turn 1 (Discovery), Layer 9 is completely omitted
+  if (turn === "turn1_discovery") {
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content: "",
+      tokenCount: 0,
+      enabled: false,
+    }
+  }
+
+  // In turn 2 (Execution), strictly serialize clarification answers
+  if (turn === "turn2_execution") {
+    if (!config.clarificationAnswers || config.clarificationAnswers.length === 0) {
+      return {
+        layerIndex,
+        layerName,
+        xmlTag,
+        content: "<clarification-answers />",
+        tokenCount: countTokens("<clarification-answers />"),
+        enabled: true,
+      }
+    }
+
+    const content = serializeAnswers(config.clarificationAnswers)
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content,
+      tokenCount: countTokens(content),
+      enabled: true,
+    }
+  }
+
+  // Standalone/fallback compilation
+  const lines: string[] = ["<task-brief>"]
 
   // Objective
   const sanitizedObjective = sanitizeXmlContent(config.userObjective?.trim() || "")
@@ -497,13 +567,13 @@ export function compileLayer9BriefAndClarification(
     )
   }
 
-  lines.push(`</${xmlTag}>`)
+  lines.push("</task-brief>")
   const content = lines.join("\n")
 
   return {
     layerIndex,
-    layerName,
-    xmlTag,
+    layerName: "Task Brief & Clarification",
+    xmlTag: "task-brief",
     content,
     tokenCount: countTokens(content),
     enabled: true,

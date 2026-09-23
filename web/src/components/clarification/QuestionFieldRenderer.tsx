@@ -64,7 +64,7 @@ export function QuestionFieldRenderer({
       </div>
 
       {/* Field Input based on QuestionType */}
-      {type === "radio" && (
+      {(type === "radio" || (type === "select" && options.length <= 4)) && (
         <div className="space-y-1.5 pt-1">
           {options.map((opt: QuestionOption) => {
             const isChecked = value.includes(opt.value)
@@ -95,6 +95,27 @@ export function QuestionFieldRenderer({
               </label>
             )
           })}
+        </div>
+      )}
+
+      {type === "select" && options.length > 4 && (
+        <div className="pt-1">
+          <select
+            id={`q-${id}`}
+            value={value[0] ?? ""}
+            disabled={disabled}
+            onChange={(e) => handleRadioChange(e.target.value)}
+            className="w-full text-xs h-8 px-2.5 rounded-lg border border-border/60 bg-background/80 text-foreground cursor-pointer focus:outline-hidden focus:ring-1 focus:ring-primary"
+          >
+            <option value="" disabled>
+              Select an option...
+            </option>
+            {options.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
         </div>
       )}
 

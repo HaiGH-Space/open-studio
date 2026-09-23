@@ -506,6 +506,64 @@ Task 1: Test Infra & TypeScript Contracts
 
 ---
 
+## Phase 6: Scenario A (2-Turn External Roundtrip Loop)
+
+### Task 17: Turn Modes & Directives in Core Engine (`prompt-composer`)
+- **Description:** Update `prompt-composer` to accept a mode parameter: `turn: 'turn1_discovery' | 'turn2_execution'`.
+- **Acceptance criteria:**
+  - `turn1_discovery`: Excludes Layer 9 `<clarification-answers>` and appends the authoritative Discovery Directive instructing the external AI to emit `<question-form>`.
+  - `turn2_execution`: Injects serialized `<clarification-answers>` into Layer 9 and appends the Final Production Directive (Execution Mandate).
+  - Export `composeSystemPrompt(config, turn?: TurnMode)`.
+- **Files touched:**
+  - `web/src/lib/composer/composer-types.ts`
+  - `web/src/lib/composer/prompt-composer.ts`
+  - `web/tests/prompt-composer.test.ts`
+
+### Task 18: 5-State Discrete State Machine Pipeline (`useComposer` & `ComposerContext`)
+- **Description:** Implement explicit client-side discrete state machine in React Context: `STEP_1_CONFIGURING` -> `STEP_1_PROMPT_READY` -> `AWAITING_AI_RESPONSE` -> `CLARIFICATION_ACTIVE` -> `STEP_2_PROMPT_READY`.
+- **Acceptance criteria:**
+  - Expose `roundtripStep`, `activeTurn`, and transitions (`parseAndIngestAiResponse`, `skipClarification`, `submitClarificationAnswers`, `setRoundtripStep`, `setActiveTurn`).
+  - Keep `compiledPrompt` in sync with active turn and state transitions.
+- **Files touched:**
+  - `web/src/context/composer-context-def.ts`
+  - `web/src/context/ComposerContext.tsx`
+  - `web/tests/composer-context.test.tsx`
+
+### Task 19: Stepper / Phase Header & Clarification Zone Components (`studio-ui`)
+- **Description:** Build `RoundtripPhaseHeader` and `ClarificationZone` components, integrating them into `ComposerManager`.
+- **Acceptance criteria:**
+  - Top phase stepper: 1. Setup & Discovery -> 2. Clarify & Answer -> 3. Final Code Prompt.
+  - In `AWAITING_AI_RESPONSE`: Ingestion dropzone/textarea, "Parse Questions" button, "Skip Clarification" button.
+  - In `CLARIFICATION_ACTIVE`: Interactive dynamic form with field validation.
+- **Files touched:**
+  - `web/src/components/cockpit/RoundtripPhaseHeader.tsx`
+  - `web/src/components/clarification/ClarificationZone.tsx`
+  - `web/src/components/cockpit/ComposerManager.tsx`
+
+### Task 20: Prompt Inspector Dynamic Turn Tabs & Token Breakdown
+- **Description:** Add Turn Mode toggle to `PromptInspector` (`[Turn 1: Discovery Prompt]` vs `[Turn 2: Execution Prompt]`).
+- **Acceptance criteria:**
+  - Toggle between Turn 1 and Turn 2 views.
+  - Token gauge and Layer breakdown reflect active turn (Turn 1 excludes Layer 9; Turn 2 includes Layer 9).
+  - Copy button dynamically copies active prompt.
+- **Files touched:**
+  - `web/src/components/cockpit/PromptInspector.tsx`
+  - `web/src/components/cockpit/PromptOutputViewer.tsx`
+  - `web/src/components/cockpit/ExportFooterBar.tsx`
+
+### Task 21: Unit Tests & End-to-End Roundtrip Integration Tests
+- **Description:** Add unit tests in `prompt-composer.test.ts` and update end-to-end integration tests in `cockpit-e2e.test.tsx`.
+- **Acceptance criteria:**
+  - All unit tests for turn modes pass.
+  - Full end-to-end roundtrip test passes.
+  - All 16 test files pass cleanly with zero regressions.
+- **Files touched:**
+  - `web/tests/prompt-composer.test.ts`
+  - `web/tests/composer-context.test.tsx`
+  - `web/tests/cockpit-e2e.test.tsx`
+
+---
+
 ## Open Questions
 
-- None blocking. All technical contracts, schemas, and UI layout specifications are completely resolved in `SPEC-open-studio.md`.
+- None blocking. All technical contracts, schemas, and UI layout specifications are completely resolved in `SPEC-open-studio.md` and `SPEC-2turn-roundtrip.md`.

@@ -27,6 +27,8 @@ import {
   Flame,
   FileText,
 } from "lucide-react"
+import { RoundtripPhaseHeader } from "./RoundtripPhaseHeader"
+import { ClarificationZone } from "../clarification/ClarificationZone"
 import { cn } from "cn"
 
 export interface ComposerManagerProps {
@@ -34,7 +36,14 @@ export interface ComposerManagerProps {
 }
 
 export function ComposerManager({ className }: ComposerManagerProps) {
-  const { config, setConfig, updateLayer, resetConfig } = useComposer()
+  const {
+    config,
+    setConfig,
+    updateLayer,
+    resetConfig,
+    roundtripStep,
+    setRoundtripStep,
+  } = useComposer()
   const { catalog } = useCatalog()
 
   // Apply SaaS Starter preset
@@ -137,7 +146,10 @@ export function ComposerManager({ className }: ComposerManagerProps) {
         className
       )}
     >
-      {/* Top Preset Action Bar */}
+      {/* Top Roundtrip Phase Stepper Header */}
+      <RoundtripPhaseHeader />
+
+      {/* Preset Action Bar */}
       <div
         data-slot="preset-action-bar"
         className="flex items-center justify-between p-3.5 border-b border-border/70 bg-card/60 backdrop-blur-sm shrink-0 gap-3"
@@ -191,8 +203,11 @@ export function ComposerManager({ className }: ComposerManagerProps) {
         </div>
       </div>
 
-      {/* Accordion Panels (Scrollable with shadcn ScrollArea) */}
+      {/* Accordion Panels & Clarification Zone (Scrollable with shadcn ScrollArea) */}
       <ScrollArea className="flex-1 min-h-0" viewportClassName="p-4 space-y-4">
+        {/* Interactive Clarification Center Panel */}
+        <ClarificationZone className="mb-4" />
+
         <Accordion
           type="multiple"
           defaultValue={["l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9"]}
@@ -522,6 +537,43 @@ export function ComposerManager({ className }: ComposerManagerProps) {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+
+        {/* Bottom Turn / Proceed Actions */}
+        <div className="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/50">
+          <div className="text-xs text-muted-foreground">
+            {roundtripStep === "STEP_1_CONFIGURING"
+              ? "Review configurations and generate your Turn 1 Discovery Prompt."
+              : roundtripStep === "STEP_1_PROMPT_READY"
+              ? "Turn 1 prompt ready. Proceed to external AI discovery."
+              : "Clarification loop in progress."}
+          </div>
+
+          <div className="flex items-center gap-2">
+            {roundtripStep === "STEP_1_CONFIGURING" && (
+              <button
+                type="button"
+                data-slot="generate-turn1-prompt-btn"
+                onClick={() => setRoundtripStep("STEP_1_PROMPT_READY")}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-all cursor-pointer shadow-xs"
+              >
+                <span>Generate Turn 1 Prompt</span>
+                <Sparkles className="size-3.5" />
+              </button>
+            )}
+
+            {roundtripStep === "STEP_1_PROMPT_READY" && (
+              <button
+                type="button"
+                data-slot="proceed-to-clarification-btn"
+                onClick={() => setRoundtripStep("AWAITING_AI_RESPONSE")}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-all cursor-pointer shadow-xs"
+              >
+                <span>Proceed to Clarification</span>
+                <Sparkles className="size-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
       </ScrollArea>
     </section>
   )

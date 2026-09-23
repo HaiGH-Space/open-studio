@@ -34,6 +34,8 @@ export type WorkflowPhase =
 
 export type TokenMode = "condensed" | "full"
 
+export type TurnMode = "turn1_discovery" | "turn2_execution"
+
 export interface Layer1SecurityConfig {
   readonly enabled: boolean;
   readonly strictMode: boolean;
@@ -136,10 +138,15 @@ export interface CompiledPromptResult {
   readonly totalTokens: number;
   readonly layerBreakdown: readonly LayerCompilationResult[];
   readonly generatedAt: string;
+  readonly turnMode: TurnMode;
 }
 
 export interface IPromptComposer {
-  compile(config: ComposerConfig, assets?: ComposerAssets): CompiledPromptResult;
+  compile(
+    config: ComposerConfig,
+    assets?: ComposerAssets,
+    turn?: TurnMode
+  ): CompiledPromptResult;
 }
 
 /**

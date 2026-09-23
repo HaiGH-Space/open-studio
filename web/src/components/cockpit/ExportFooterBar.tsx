@@ -33,7 +33,8 @@ export function ExportFooterBar({
   onDownload,
   className,
 }: ExportFooterBarProps) {
-  const { config, compiledPrompt, getExportOutput, agentTarget } = useComposer()
+  const { config, compiledPrompt, getExportOutput, agentTarget, activeTurn } =
+    useComposer()
   const [isCopied, setIsCopied] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -254,7 +255,11 @@ export function ExportFooterBar({
           ) : (
             <>
               <CopyIcon className="size-3.5" />
-              <span>Copy Prompt</span>
+              <span>
+                {activeTurn === "turn1_discovery"
+                  ? "Copy Turn 1 Discovery Prompt"
+                  : "Copy Turn 2 Execution Prompt"}
+              </span>
             </>
           )}
         </button>

@@ -752,4 +752,118 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       expect(result.current.budgetUsagePercent).toBe(11)
     })
   })
+
+  describe("Roundtrip State Machine & Turn Management", () => {
+    it("initializes in STEP_1_CONFIGURING with activeTurn as turn1_discovery", () => {
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <ComposerProvider catalogService={mockCatalogService}>
+          {children}
+        </ComposerProvider>
+      )
+
+      const { result } = renderHook(() => useComposer(), { wrapper })
+      expect(result.current.roundtripStep).toBe("STEP_1_CONFIGURING")
+      expect(result.current.activeTurn).toBe("turn1_discovery")
+    })
+
+    it("transitions across all 5 roundtrip steps via setRoundtripStep", () => {
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <ComposerProvider catalogService={mockCatalogService}>
+          {children}
+        </ComposerProvider>
+      )
+
+      const { result } = renderHook(() => useComposer(), { wrapper })
+
+      act(() => {
+        result.current.setRoundtripStep("STEP_1_PROMPT_READY")
+      })
+      expect(result.current.roundtripStep).toBe("STEP_1_PROMPT_READY")
+      expect(result.current.activeTurn).toBe("turn1_discovery")
+
+      act(() => {
+        result.current.setRoundtripStep("AWAITING_AI_RESPONSE")
+      })
+      expect(result.current.roundtripStep).toBe("AWAITING_AI_RESPONSE")
+
+      act(() => {
+        result.current.setRoundtripStep("CLARIFICATION_ACTIVE")
+      })
+      expect(result.current.roundtripStep).toBe("CLARIFICATION_ACTIVE")
+
+      act(() => {
+        result.current.setRoundtripStep("STEP_2_PROMPT_READY")
+      })
+      expect(result.current.roundtripStep).toBe("STEP_2_PROMPT_READY")
+      expect(result.current.activeTurn).toBe("turn2_execution")
+    })
+
+    it("skipClarification transitions to STEP_2_PROMPT_READY with turn2_execution active", () => {
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <ComposerProvider catalogService={mockCatalogService}>
+          {children}
+        </ComposerProvider>
+      )
+
+      const { result } = renderHook(() => useComposer(), { wrapper })
+
+      act(() => {
+        result.current.skipClarification()
+      })
+
+      expect(result.current.roundtripStep).toBe("STEP_2_PROMPT_READY")
+      expect(result.current.activeTurn).toBe("turn2_execution")
+      expect(result.current.compiledPrompt.turnMode).toBe("turn2_execution")
+    })
+
+    it("useSkillDefaultsAndProceed synthesizes default clarification answers and advances to Turn 2", () => {
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <ComposerProvider catalogService={mockCatalogService}>
+          {children}
+        </ComposerProvider>
+      )
+
+      const { result } = renderHook(() => useComposer(), { wrapper })
+
+      act(() => {
+        result.current.useSkillDefaultsAndProceed()
+      })
+
+      expect(result.current.roundtripStep).toBe("STEP_2_PROMPT_READY")
+      expect(result.current.activeTurn).toBe("turn2_execution")
+      expect(result.current.config.layer9BriefAndClarification.clarificationAnswers.length).toBeGreaterThan(0)
+      expect(result.current.compiledPrompt.turnMode).toBe("turn2_execution")
+    })
+
+    it("enterCustomClarifications stores custom items and advances to STEP_2_PROMPT_READY", () => {
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <ComposerProvider catalogService={mockCatalogService}>
+          {children}
+        </ComposerProvider>
+      )
+
+      const { result } = renderHook(() => useComposer(), { wrapper })
+
+      act(() => {
+        result.current.enterCustomClarifications([
+          {
+            questionId: "custom-auth",
+            questionLabel: "Auth method",
+            selectedValues: ["OAuth 2.0 PKCE"],
+          },
+        ])
+      })
+
+      expect(result.current.roundtripStep).toBe("STEP_2_PROMPT_READY")
+      expect(result.current.activeTurn).toBe("turn2_execution")
+      expect(result.current.config.layer9BriefAndClarification.clarificationAnswers).toEqual([
+        {
+          questionId: "custom-auth",
+          questionLabel: "Auth method",
+          selectedValues: ["OAuth 2.0 PKCE"],
+        },
+      ])
+    })
+  })
 })
+

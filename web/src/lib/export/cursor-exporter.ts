@@ -57,7 +57,17 @@ export class CursorExporter implements IAgentExporter {
     ) {
       return ""
     }
-    return result.userPromptBlock.trim()
+    if (result.userPromptBlock.trim().length > 0) {
+      return result.userPromptBlock.trim()
+    }
+    const parts: string[] = []
+    if (l9.userObjective.trim()) {
+      parts.push(l9.userObjective.trim())
+    }
+    if (l9.featureRequirements.length > 0) {
+      parts.push("\nRequirements:\n" + l9.featureRequirements.map((r) => `- ${r}`).join("\n"))
+    }
+    return parts.join("\n")
   }
 
   private buildCursorrules(result: CompiledPromptResult, config: ComposerConfig): string {

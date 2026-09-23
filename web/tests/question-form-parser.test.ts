@@ -49,10 +49,10 @@ describe("Question Form AST Parser & Answer Serializer", () => {
       expect(ast?.description).toBe("Select design details")
       expect(ast?.questions).toHaveLength(4)
 
-      // Question 1 (radio)
+      // Question 1 (radio aliased to select)
       const q1 = ast?.questions[0]
       expect(q1?.id).toBe("q1")
-      expect(q1?.type).toBe("radio")
+      expect(q1?.type).toBe("select")
       expect(q1?.required).toBe(true)
       expect(q1?.label).toBe("What visual theme should the analytics dashboard prioritize?")
       expect(q1?.options).toEqual([
@@ -176,7 +176,7 @@ Let me know once you submit!
       expect(ast?.questions[0].type).toBe("text")
     })
 
-    it("infers type='radio' when options are present but type is omitted", () => {
+    it("infers type='select' when options are present but type is omitted", () => {
       const xml = `
 <question-form id="test" title="Infer">
   <question id="q-infer">
@@ -187,7 +187,7 @@ Let me know once you submit!
 </question-form>
 `
       const ast = parseQuestionForm(xml)
-      expect(ast?.questions[0].type).toBe("radio")
+      expect(ast?.questions[0].type).toBe("select")
     })
 
     it("handles option value fallback to label text when value attribute is omitted", () => {
@@ -226,6 +226,93 @@ Let me know once you submit!
       const emptyForm = `<question-form id="empty" title="Nothing"></question-form>`
       const ast = parseQuestionForm(emptyForm)
       expect(ast).toBeNull()
+    })
+
+    it("pre-sanitizes unescaped ampersands inside attributes and label tags", () => {
+      const xml = `
+<question-form id="amp-test" title="Research & Development">
+  <field name="f1" type="select" label="UI & UX Strategy" options="Design & Strategy | Engineering & Ops" default="Design & Strategy" />
+  <question id="q2" type="text" placeholder="R&D Budget">
+    <label>Growth & Innovation</label>
+  </question>
+</question-form>`
+
+      const ast = parseQuestionForm(xml)
+      expect(ast).not.toBeNull()
+      expect(ast?.title).toBe("Research & Development")
+      expect(ast?.questions[0].label).toBe("UI & UX Strategy")
+      expect(ast?.questions[0].options?.[0].label).toBe("Design & Strategy")
+      expect(ast?.questions[1].label).toBe("Growth & Innovation")
+      expect(ast?.questions[1].placeholder).toBe("R&D Budget")
+    })
+
+    it("pre-sanitizes single quotes in attributes", () => {
+      const xml = `<question-form id='test-form' title='Single Quotes'><field name='theme' type='select' label='Visual Theme' options='Linear, Notion, Apple' default='Linear' /></question-form>`
+      const ast = parseQuestionForm(xml)
+      expect(ast).not.toBeNull()
+      expect(ast?.formId).toBe("test-form")
+      expect(ast?.title).toBe("Single Quotes")
+      expect(ast?.questions[0].id).toBe("theme")
+      expect(ast?.questions[0].options).toHaveLength(3)
+    })
+
+    it("handles self-closing tag discrepancies (<field ...> without trailing slash)", () => {
+      const xml = `
+<question-form id="unclosed-fields">
+  <field name="f1" type="text" label="First Field">
+  <field name="f2" type="textarea" label="Second Field" />
+</question-form>`
+
+      const ast = parseQuestionForm(xml)
+      expect(ast).not.toBeNull()
+      expect(ast?.questions).toHaveLength(2)
+      expect(ast?.questions[0].id).toBe("f1")
+      expect(ast?.questions[1].id).toBe("f2")
+    })
+
+    it("loosely aliases common LLM hallucinated field types", () => {
+      const xml = `
+<question-form id="aliased-types">
+  <field name="q_drop" type="dropdown" label="Dropdown" options="A, B" />
+  <field name="q_choice" type="choice" label="Choice" options="X, Y" />
+  <field name="q_single" type="single-select" label="Single Select" options="1, 2" />
+  <field name="q_para" type="paragraph" label="Paragraph" />
+  <field name="q_multi" type="multiline" label="Multiline" />
+  <field name="q_long" type="longtext" label="Longtext" />
+  <field name="q_str" type="string" label="String" />
+  <field name="q_inp" type="input" label="Input" />
+</question-form>`
+
+      const ast = parseQuestionForm(xml)
+      expect(ast).not.toBeNull()
+      expect(ast?.questions[0].type).toBe("select")
+      expect(ast?.questions[1].type).toBe("select")
+      expect(ast?.questions[2].type).toBe("select")
+      expect(ast?.questions[3].type).toBe("textarea")
+      expect(ast?.questions[4].type).toBe("textarea")
+      expect(ast?.questions[5].type).toBe("textarea")
+      expect(ast?.questions[6].type).toBe("text")
+      expect(ast?.questions[7].type).toBe("text")
+    })
+
+    it("parses comma-, pipe- (|), and semicolon-separated delimited options safely", () => {
+      const commaXml = `<question-form><field name="f_c" type="select" options="Alpha, Beta, Gamma" default="Beta" /></question-form>`
+      const pipeXml = `<question-form><field name="f_p" type="select" options="Compact (Linear) | Comfortable (Stripe) | Spacious (Apple)" default="Compact (Linear)" /></question-form>`
+      const semiXml = `<question-form><field name="f_s" type="select" options="Tier 1; Tier 2; Tier 3" default="Tier 3" /></question-form>`
+
+      const astC = parseQuestionForm(commaXml)
+      expect(astC?.questions[0].options).toHaveLength(3)
+      expect(astC?.questions[0].options?.[1].defaultChecked).toBe(true)
+
+      const astP = parseQuestionForm(pipeXml)
+      expect(astP?.questions[0].options).toHaveLength(3)
+      expect(astP?.questions[0].options?.[0].label).toBe("Compact (Linear)")
+      expect(astP?.questions[0].options?.[0].defaultChecked).toBe(true)
+
+      const astS = parseQuestionForm(semiXml)
+      expect(astS?.questions[0].options).toHaveLength(3)
+      expect(astS?.questions[0].options?.[2].label).toBe("Tier 3")
+      expect(astS?.questions[0].options?.[2].defaultChecked).toBe(true)
     })
   })
 

@@ -3,7 +3,12 @@
  * Conforms to SPEC-open-studio.md Section 7.4.
  */
 
-export type QuestionType = "radio" | "checkbox" | "text" | "textarea"
+export type QuestionType = "select" | "radio" | "checkbox" | "text" | "textarea"
+
+export interface ManualClarificationItem {
+  readonly key: string
+  readonly value: string
+}
 
 export interface QuestionOption {
   readonly value: string

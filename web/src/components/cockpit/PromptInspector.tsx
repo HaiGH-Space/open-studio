@@ -62,8 +62,14 @@ export function PromptInspector({
   className,
   modelLimit = 128000,
 }: PromptInspectorProps) {
-  const { compiledPrompt, agentTarget, setAgentTarget, getExportOutput } =
-    useComposer()
+  const {
+    compiledPrompt,
+    agentTarget,
+    setAgentTarget,
+    getExportOutput,
+    activeTurn,
+    setActiveTurn,
+  } = useComposer()
 
   const exportOutput = getExportOutput()
   const activeTabMeta = AGENT_TARGET_TABS.find((tab) => tab.id === agentTarget)
@@ -87,6 +93,39 @@ export function PromptInspector({
           <span className="text-[10px] text-muted-foreground font-mono">
             {compiledPrompt.totalTokens.toLocaleString()} tokens
           </span>
+        </div>
+
+        {/* Turn Mode Selector Toggle */}
+        <div
+          data-slot="turn-mode-toggle"
+          className="flex items-center rounded-lg bg-muted/40 p-0.5 border border-border/40 gap-1 text-[11px]"
+        >
+          <button
+            type="button"
+            data-slot="turn-mode-turn1-btn"
+            onClick={() => setActiveTurn("turn1_discovery")}
+            className={cn(
+              "flex-1 py-1 px-2 rounded-md font-medium text-center transition-all cursor-pointer truncate",
+              activeTurn === "turn1_discovery"
+                ? "bg-amber-500/15 text-amber-700 dark:text-amber-300 font-semibold shadow-2xs border border-amber-500/30"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Turn 1: Discovery Diet
+          </button>
+          <button
+            type="button"
+            data-slot="turn-mode-turn2-btn"
+            onClick={() => setActiveTurn("turn2_execution")}
+            className={cn(
+              "flex-1 py-1 px-2 rounded-md font-medium text-center transition-all cursor-pointer truncate",
+              activeTurn === "turn2_execution"
+                ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-semibold shadow-2xs border border-emerald-500/30"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Turn 2: Execution Ready
+          </button>
         </div>
 
         {/* Tab Pills */}

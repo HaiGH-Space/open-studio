@@ -59,7 +59,102 @@ function parseAttributes(tagAttributeString: string): Record<string, string> {
 }
 
 /**
+ * Pre-sanitizes raw XML string before parsing:
+ * 1. Auto-escapes unescaped ampersands in attributes or text (e.g. "Design & UX" -> "Design &amp; UX").
+ * 2. Normalizes single quotes in attributes (e.g. options='A, B' -> options="A, B").
+ * 3. Handles self-closing tag discrepancies for <field ...> without explicit closing tag or slash.
+ */
+export function preSanitizeXml(rawXml: string): string {
+  if (!rawXml) return ""
+
+  // 1. Auto-escape unescaped ampersands not part of valid XML entities
+  let sanitized = rawXml.replace(
+    /&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)/g,
+    "&amp;"
+  )
+
+  // 2. Normalize single quotes in attributes inside tag brackets
+  sanitized = sanitized.replace(/<[^>]+>/g, (tag) => {
+    return tag.replace(/([a-zA-Z0-9_-]+)='([^']*)'/g, '$1="$2"')
+  })
+
+  // 3. Handle self-closing tag discrepancies for <field ...> tags
+  sanitized = sanitized.replace(
+    /<field\b([^>/]*?)(?<!\/)>(?!\s*<\/field>)(?=\s*(?:<field\b|<\/question-form>|$))/gi,
+    '<field$1 />'
+  )
+
+  return sanitized
+}
+
+/**
+ * Loosely maps common LLM hallucinated field types to canonical QuestionType.
+ * radio, dropdown, choice, single-select -> select
+ * multiline, paragraph, longtext -> textarea
+ * string, input -> text
+ * checkbox, multi, multiselect -> checkbox
+ */
+export function normalizeQuestionType(
+  rawType: string | undefined,
+  hasOptions: boolean = false
+): QuestionType {
+  const t = rawType?.toLowerCase()?.trim()
+  switch (t) {
+    case "select":
+    case "radio":
+    case "dropdown":
+    case "choice":
+    case "single-select":
+      return "select"
+    case "checkbox":
+    case "multi":
+    case "multiselect":
+      return "checkbox"
+    case "textarea":
+    case "multiline":
+    case "paragraph":
+    case "longtext":
+      return "textarea"
+    case "text":
+    case "string":
+    case "input":
+      return "text"
+    default:
+      return hasOptions ? "select" : "text"
+  }
+}
+
+/**
+ * Parses comma-, pipe- (|), or semicolon-separated options strings safely, trimming whitespace.
+ */
+export function parseDelimitedOptions(
+  optionsStr?: string,
+  defaultValue?: string
+): QuestionOption[] {
+  if (!optionsStr || typeof optionsStr !== "string") return []
+
+  const tokens = optionsStr
+    .split(/[,|;]/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0)
+
+  const trimmedDefault = defaultValue?.trim()
+
+  return tokens.map((tok) => ({
+    value: tok,
+    label: tok,
+    ...(trimmedDefault &&
+    (trimmedDefault === tok || trimmedDefault.toLowerCase() === tok.toLowerCase())
+      ? { defaultChecked: true }
+      : {}),
+  }))
+}
+
+/**
  * Scans raw text response from AI for <question-form> and compiles AST.
+ * Supports both:
+ * 1. <field name="..." type="select|text" label="..." options="..." default="..." /> (Micro-schema)
+ * 2. <question id="..." type="..."> <label>...</label> <option>...</option> </question> (Legacy)
  * Returns null if no valid <question-form> with at least one question is found.
  */
 export function parseQuestionForm(
@@ -69,9 +164,11 @@ export function parseQuestionForm(
     return null
   }
 
+  const sanitized = preSanitizeXml(rawAiResponse)
+
   // Find <question-form> opening tag and content
   const rootTagRegex = /<question-form\b([^>]*)>([\s\S]*?)(?:<\/question-form>|$)/i
-  const rootMatch = rootTagRegex.exec(rawAiResponse)
+  const rootMatch = rootTagRegex.exec(sanitized)
   if (!rootMatch) {
     return null
   }
@@ -104,30 +201,29 @@ export function parseQuestionForm(
     }
   }
 
-  // Extract <question> tags
-  // Regex handles both properly closed </question> and unclosed questions bounded by next <question or end
-  const questionBlockRegex =
-    /<question\b([^>]*)>([\s\S]*?)(?:<\/question>|(?=<question\b|<\/question-form>|$))/gi
   const questions: QuestionNode[] = []
-
-  let qMatch: RegExpExecArray | null
   let qIndex = 1
 
-  while ((qMatch = questionBlockRegex.exec(rootInnerXml)) !== null) {
-    const qAttrs = parseAttributes(qMatch[1])
-    const qContent = qMatch[2]
+  // Extract <field ...> and <question ...> tags
+  const tagBlockRegex =
+    /<(field|question)\b([^>]*?)(?:\/>|>([\s\S]*?)<\/\1>|>([\s\S]*?)(?=<field\b|<question\b|<\/question-form>|$))/gi
 
-    const id = qAttrs.id?.trim() || `q-${qIndex}`
-    const rawType = qAttrs.type?.toLowerCase()?.trim()
+  let match: RegExpExecArray | null
+  while ((match = tagBlockRegex.exec(rootInnerXml)) !== null) {
+    const tagAttrs = parseAttributes(match[2])
+    const innerContent = match[3] ?? match[4] ?? ""
+
+    const id = tagAttrs.id?.trim() || tagAttrs.name?.trim() || `q-${qIndex}`
+    const rawType = tagAttrs.type?.toLowerCase()?.trim()
 
     const required =
-      qAttrs.required === "true" ||
-      (qAttrs.required !== undefined && qAttrs.required !== "false")
+      tagAttrs.required === "true" ||
+      (tagAttrs.required !== undefined && tagAttrs.required !== "false")
 
-    let placeholder = qAttrs.placeholder?.trim()
-    if (!placeholder) {
+    let placeholder = tagAttrs.placeholder?.trim()
+    if (!placeholder && innerContent) {
       const placeholderTagMatch = /<placeholder\b[^>]*>([\s\S]*?)<\/placeholder>/i.exec(
-        qContent
+        innerContent
       )
       if (placeholderTagMatch) {
         placeholder = decodeXmlEntities(placeholderTagMatch[1]).trim()
@@ -135,51 +231,53 @@ export function parseQuestionForm(
     }
 
     // Extract label
-    const labelMatch = /<label\b[^>]*>([\s\S]*?)(?:<\/label>|(?=<option|<placeholder|$))/i.exec(
-      qContent
-    )
-    const label = labelMatch
-      ? decodeXmlEntities(labelMatch[1]).trim()
-      : `Question ${qIndex}`
+    let label = tagAttrs.label?.trim()
+    if (!label && innerContent) {
+      const labelMatch = /<label\b[^>]*>([\s\S]*?)(?:<\/label>|(?=<option|<placeholder|$))/i.exec(
+        innerContent
+      )
+      if (labelMatch) {
+        label = decodeXmlEntities(labelMatch[1]).trim()
+      }
+    }
+    if (!label) {
+      label = `Question ${qIndex}`
+    }
 
     // Extract options
-    const optionRegex =
-      /<option\b([^>]*)>([\s\S]*?)(?:<\/option>|(?=<option\b|<\/question|$))/gi
-    const options: QuestionOption[] = []
-    let optMatch: RegExpExecArray | null
+    let options: QuestionOption[] = []
+    if (tagAttrs.options) {
+      options = parseDelimitedOptions(
+        tagAttrs.options,
+        tagAttrs.default ?? tagAttrs.value
+      )
+    } else if (innerContent) {
+      const optionRegex =
+        /<option\b([^>]*)>([\s\S]*?)(?:<\/option>|(?=<option\b|<\/question|$))/gi
+      let optMatch: RegExpExecArray | null
 
-    while ((optMatch = optionRegex.exec(qContent)) !== null) {
-      const optAttrs = parseAttributes(optMatch[1])
-      const optLabel = decodeXmlEntities(optMatch[2]).trim()
-      const optValue = optAttrs.value !== undefined ? optAttrs.value : optLabel
+      while ((optMatch = optionRegex.exec(innerContent)) !== null) {
+        const optAttrs = parseAttributes(optMatch[1])
+        const optLabel = decodeXmlEntities(optMatch[2]).trim()
+        const optValue = optAttrs.value !== undefined ? optAttrs.value : optLabel
 
-      const isChecked =
-        optAttrs.checked === "true" ||
-        optAttrs.selected === "true" ||
-        (optAttrs.checked !== undefined && optAttrs.checked !== "false") ||
-        (optAttrs.selected !== undefined && optAttrs.selected !== "false")
+        const isChecked =
+          optAttrs.checked === "true" ||
+          optAttrs.selected === "true" ||
+          (optAttrs.checked !== undefined && optAttrs.checked !== "false") ||
+          (optAttrs.selected !== undefined && optAttrs.selected !== "false") ||
+          (tagAttrs.default &&
+            (tagAttrs.default === optValue || tagAttrs.default === optLabel))
 
-      options.push({
-        value: optValue,
-        label: optLabel,
-        ...(isChecked ? { defaultChecked: true } : {}),
-      })
+        options.push({
+          value: optValue,
+          label: optLabel,
+          ...(isChecked ? { defaultChecked: true } : {}),
+        })
+      }
     }
 
-    // Determine question type
-    let type: QuestionType
-    if (
-      rawType === "radio" ||
-      rawType === "checkbox" ||
-      rawType === "text" ||
-      rawType === "textarea"
-    ) {
-      type = rawType
-    } else if (options.length > 0) {
-      type = "radio"
-    } else {
-      type = "text"
-    }
+    const type = normalizeQuestionType(rawType, options.length > 0)
 
     const node: QuestionNode = {
       id,

@@ -79,6 +79,7 @@ export function QuestionFormModal({
     setRawAiResponse,
     config,
     updateLayer,
+    submitClarificationAnswers,
   } = useComposer()
 
   const [rawText, setRawText] = useState<string>(() => initialRawText ?? rawAiResponse ?? "")
@@ -168,10 +169,14 @@ export function QuestionFormModal({
       selectedValues: answers[q.id] ?? [],
     }))
 
-    // Save answers into Layer 9
-    updateLayer("layer9BriefAndClarification", {
-      clarificationAnswers: entries,
-    })
+    // Save answers into Layer 9 and advance roundtrip
+    if (submitClarificationAnswers) {
+      submitClarificationAnswers(entries)
+    } else {
+      updateLayer("layer9BriefAndClarification", {
+        clarificationAnswers: entries,
+      })
+    }
 
     // Save raw response
     setRawAiResponse(rawText)

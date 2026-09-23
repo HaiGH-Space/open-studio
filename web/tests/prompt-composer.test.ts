@@ -337,7 +337,7 @@ describe("9-Layer Prompt Composer Core Engine & Compilers", () => {
       expect(result.fullPrompt).toMatch(/^<open-studio-directive version="1.0">[\s\S]*<\/open-studio-directive>$/)
       expect(result.layerBreakdown).toHaveLength(9)
 
-      // Check all 9 layers are present
+      // Turn 1 (default): Layers 1-8 present, Layer 9 omitted, Discovery Directive appended
       expect(result.fullPrompt).toContain("<security-guardrails>")
       expect(result.fullPrompt).toContain("<inspection-runtime-contract>")
       expect(result.fullPrompt).toContain("<authoritative-constraints>")
@@ -346,25 +346,82 @@ describe("9-Layer Prompt Composer Core Engine & Compilers", () => {
       expect(result.fullPrompt).toContain("<craft-discipline>")
       expect(result.fullPrompt).toContain('<skill-blueprint id="emilkowalski-motion">')
       expect(result.fullPrompt).toContain("<user-memory-rules>")
-      expect(result.fullPrompt).toContain("<task-brief>")
+      expect(result.fullPrompt).toContain("<objective>Design an executive dashboard</objective>")
+      expect(result.fullPrompt).toContain("<discovery-directive>")
+      expect(result.fullPrompt).toContain('<field name="field_name" type="select"')
+
+      // Turn 1 Discovery Token Diet: Layer 9 is omitted (0 tokens, disabled)
+      const l9 = result.layerBreakdown.find((l) => l.layerIndex === 9)
+      expect(l9?.enabled).toBe(false)
+      expect(l9?.tokenCount).toBe(0)
+      expect(result.fullPrompt).not.toContain("<clarification-answers>")
 
       // Token count checks
       expect(result.totalTokens).toBeGreaterThan(0)
-      for (const layer of result.layerBreakdown) {
-        expect(layer.tokenCount).toBeGreaterThan(0)
-      }
+      expect(result.turnMode).toBe("turn1_discovery")
 
-      // System vs User prompt blocks
+      // System prompt block contains security and constraints
       expect(result.systemPromptBlock).toContain("<security-guardrails>")
       expect(result.systemPromptBlock).toContain("<authoritative-constraints>")
-      expect(result.systemPromptBlock).not.toContain("<task-brief>")
-
-      expect(result.userPromptBlock).toContain("<task-brief>")
-      expect(result.userPromptBlock).toContain("<objective>Design an executive dashboard</objective>")
-      expect(result.userPromptBlock).not.toContain("<security-guardrails>")
 
       // Valid generatedAt date
       expect(new Date(result.generatedAt).getTime()).not.toBeNaN()
+    })
+
+    it("compiles Turn 2 Execution Prompt with full asset re-injection and Layer 9 answers", () => {
+      const config: ComposerConfig = {
+        ...createDefaultComposerConfig(),
+        layer5BrandContract: {
+          ...createDefaultComposerConfig().layer5BrandContract,
+          selectedSystemId: "linear-app",
+          includeTokensCss: true,
+          includeComponentsHtml: true,
+        },
+        layer9BriefAndClarification: {
+          userObjective: "Design an executive dashboard",
+          featureRequirements: ["Bento grid layout"],
+          clarificationAnswers: [
+            {
+              questionId: "q1",
+              questionLabel: "Theme priority",
+              selectedValues: ["Dark Slate"],
+            },
+          ],
+        },
+      }
+
+      const richAssets: ComposerAssets = {
+        ...sampleAssets,
+        designSystem: {
+          ...sampleAssets.designSystem,
+          tokensCss:
+            sampleTokensCss +
+            "\n" +
+            Array.from({ length: 40 }, (_, i) => `  --color-token-${i}: #10${i}20;`).join("\n"),
+        },
+      }
+
+      const turn1Result = compilePrompt(config, richAssets, "turn1_discovery")
+      const turn2Result = compilePrompt(config, richAssets, "turn2_execution")
+
+      // Turn 1 Discovery Token Diet: CSS tokens and component blueprints are stripped
+      expect(turn1Result.fullPrompt).not.toContain("<tokens mode=")
+      expect(turn1Result.fullPrompt).not.toContain("<component-blueprints>")
+      expect(turn1Result.fullPrompt).toContain("<discovery-directive>")
+      expect(turn1Result.fullPrompt).not.toContain("<execution-mandate>")
+
+      // Turn 2: Re-injects full asset payload (tokens.css, component blueprints)
+      expect(turn2Result.fullPrompt).toContain("<tokens mode=")
+      expect(turn2Result.fullPrompt).toContain("--bg: #0d0e11")
+      expect(turn2Result.fullPrompt).toContain("<component-blueprints>")
+      expect(turn2Result.fullPrompt).toContain("btn-linear")
+      expect(turn2Result.fullPrompt).toContain("<clarification-answers>")
+      expect(turn2Result.fullPrompt).toContain("<value>Dark Slate</value>")
+      expect(turn2Result.fullPrompt).toContain("<execution-mandate>")
+      expect(turn2Result.fullPrompt).not.toContain("<discovery-directive>")
+
+      // Turn 1 total tokens MUST be strictly less than Turn 2 total tokens
+      expect(turn1Result.totalTokens).toBeLessThan(turn2Result.totalTokens)
     })
 
     it("enforces strict authority hierarchy in compiled prompt", () => {
@@ -424,8 +481,8 @@ describe("9-Layer Prompt Composer Core Engine & Compilers", () => {
       const result = compilePrompt(config)
       expect(result.fullPrompt).not.toContain("</task-brief> <script>")
       expect(result.fullPrompt).not.toContain("Escape here: </open-studio-directive>")
-      expect(result.userPromptBlock).toContain("&lt;/task-brief&gt;")
-      expect(result.userPromptBlock).toContain("&lt;/open-studio-directive&gt;")
+      expect(result.fullPrompt).toContain("&lt;/task-brief&gt;")
+      expect(result.fullPrompt).toContain("&lt;/open-studio-directive&gt;")
     })
 
     it("handles completely empty brief and missing assets gracefully", () => {
@@ -434,7 +491,7 @@ describe("9-Layer Prompt Composer Core Engine & Compilers", () => {
 
       expect(result.fullPrompt).toBeDefined()
       expect(result.totalTokens).toBeGreaterThan(0)
-      expect(result.userPromptBlock).toContain("<task-brief>")
+      expect(result.fullPrompt).toContain("<discovery-directive>")
     })
 
     it("singleton promptComposer implements compilation method", () => {

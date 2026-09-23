@@ -5,6 +5,7 @@ import { ComposerProvider } from "../src/context/ComposerContext"
 import { CatalogProvider } from "../src/context/CatalogContext"
 import { QuestionFieldRenderer } from "../src/components/clarification/QuestionFieldRenderer"
 import { QuestionFormModal } from "../src/components/clarification/QuestionFormModal"
+import { ClarificationZone } from "../src/components/clarification/ClarificationZone"
 import { Layer9BriefClarification } from "../src/components/layers/Layer9BriefClarification"
 import { ComposerManager } from "../src/components/cockpit/ComposerManager"
 import type { QuestionNode, ClarificationAnswerEntry } from "../src/lib/clarification/question-form-types"
@@ -480,6 +481,195 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
       const l9Item = container.querySelector('[data-slot="layer-accordion-l9"]')
       expect(l9Item).not.toBeNull()
       expect(l9Item?.textContent).toContain("L9: Brief & Clarification")
+    })
+  })
+
+  describe("ClarificationZone & AI Disobedience Handling", () => {
+    it("handles AI disobedience (plain prose) by showing fallback escape hatches", () => {
+      renderWithProviders(<ClarificationZone />)
+
+      // Start in STEP_1_PROMPT_READY
+      const advanceBtn = container.querySelector(
+        'button[data-slot="advance-to-awaiting-ai-btn"]'
+      ) as HTMLButtonElement
+      if (advanceBtn) {
+        act(() => {
+          advanceBtn.click()
+        })
+      }
+
+      // We should be in AWAITING_AI_RESPONSE
+      const textarea = container.querySelector(
+        'textarea[data-slot="ai-response-paste-textarea"]'
+      ) as HTMLTextAreaElement
+      expect(textarea).not.toBeNull()
+
+      // Paste plain conversational prose (disobedient AI output without XML)
+      setNativeTextareaValue(
+        textarea,
+        "Here is the design plan: Use Tailwind with a 3-column layout. Let me know if you need changes!"
+      )
+
+      const parseBtn = container.querySelector(
+        'button[data-slot="parse-questions-btn"]'
+      ) as HTMLButtonElement
+      expect(parseBtn).not.toBeNull()
+
+      act(() => {
+        parseBtn.click()
+      })
+
+      // Must display disobedience warning banner with two escape hatches
+      const banner = container.querySelector('[data-slot="ai-disobedience-banner"]')
+      expect(banner).not.toBeNull()
+      expect(banner?.textContent).toContain("No structured question form detected")
+
+      const manualBtn = container.querySelector(
+        'button[data-slot="manual-clarifications-btn"]'
+      ) as HTMLButtonElement
+      expect(manualBtn).not.toBeNull()
+
+      const skillDefaultsBtn = container.querySelector(
+        'button[data-slot="use-skill-defaults-btn"]'
+      ) as HTMLButtonElement
+      expect(skillDefaultsBtn).not.toBeNull()
+    })
+
+    it("Fallback Path 1: manual clarification entry saves answers and advances to Turn 2", () => {
+      renderWithProviders(<ClarificationZone />)
+
+      // Advance to AWAITING_AI_RESPONSE
+      const advanceBtn = container.querySelector(
+        'button[data-slot="advance-to-awaiting-ai-btn"]'
+      ) as HTMLButtonElement
+      if (advanceBtn) {
+        act(() => {
+          advanceBtn.click()
+        })
+      }
+
+      const textarea = container.querySelector(
+        'textarea[data-slot="ai-response-paste-textarea"]'
+      ) as HTMLTextAreaElement
+      setNativeTextareaValue(textarea, "1. What is your audience? 2. Slide count?")
+
+      const parseBtn = container.querySelector(
+        'button[data-slot="parse-questions-btn"]'
+      ) as HTMLButtonElement
+      act(() => {
+        parseBtn.click()
+      })
+
+      // Click Enter Custom Clarifications Manually
+      const manualBtn = container.querySelector(
+        'button[data-slot="manual-clarifications-btn"]'
+      ) as HTMLButtonElement
+      act(() => {
+        manualBtn.click()
+      })
+
+      // Manual editor opens
+      const manualEditor = container.querySelector(
+        '[data-slot="manual-clarifications-editor"]'
+      )
+      expect(manualEditor).not.toBeNull()
+
+      // Click Apply Clarifications
+      const applyBtn = container.querySelector(
+        'button[data-slot="apply-manual-clarifications-btn"]'
+      ) as HTMLButtonElement
+      expect(applyBtn).not.toBeNull()
+
+      act(() => {
+        applyBtn.click()
+      })
+
+      // Advances to STEP_2_PROMPT_READY
+      expect(container.textContent).toContain("Turn 2 Execution Prompt Compiled")
+    })
+
+    it("Fallback Path 2: Use Skill Defaults & Proceed synthesizes answers and advances immediately", () => {
+      renderWithProviders(<ClarificationZone />)
+
+      // Advance to AWAITING_AI_RESPONSE
+      const advanceBtn = container.querySelector(
+        'button[data-slot="advance-to-awaiting-ai-btn"]'
+      ) as HTMLButtonElement
+      if (advanceBtn) {
+        act(() => {
+          advanceBtn.click()
+        })
+      }
+
+      const textarea = container.querySelector(
+        'textarea[data-slot="ai-response-paste-textarea"]'
+      ) as HTMLTextAreaElement
+      setNativeTextareaValue(textarea, "```typescript\nconst x = 1;\n```")
+
+      const parseBtn = container.querySelector(
+        'button[data-slot="parse-questions-btn"]'
+      ) as HTMLButtonElement
+      act(() => {
+        parseBtn.click()
+      })
+
+      // Click Use Skill Defaults & Proceed
+      const skillDefaultsBtn = container.querySelector(
+        'button[data-slot="use-skill-defaults-btn"]'
+      ) as HTMLButtonElement
+      act(() => {
+        skillDefaultsBtn.click()
+      })
+
+      // Advances immediately to STEP_2_PROMPT_READY
+      expect(container.textContent).toContain("Turn 2 Execution Prompt Compiled")
+    })
+
+    it("parses pre-sanitized micro-schema with pipe options and ampersands into interactive questions", () => {
+      renderWithProviders(<ClarificationZone />)
+
+      const advanceBtn = container.querySelector(
+        'button[data-slot="advance-to-awaiting-ai-btn"]'
+      ) as HTMLButtonElement
+      if (advanceBtn) {
+        act(() => {
+          advanceBtn.click()
+        })
+      }
+
+      const textarea = container.querySelector(
+        'textarea[data-slot="ai-response-paste-textarea"]'
+      ) as HTMLTextAreaElement
+      setNativeTextareaValue(
+        textarea,
+        `<question-form title="Brand & Design">
+          <field name="tech" type="select" label="UI & Design" options="Design & Ops | Engineering & Product" default="Design & Ops" />
+        </question-form>`
+      )
+
+      const parseBtn = container.querySelector(
+        'button[data-slot="parse-questions-btn"]'
+      ) as HTMLButtonElement
+      act(() => {
+        parseBtn.click()
+      })
+
+      // Form is now CLARIFICATION_ACTIVE
+      expect(container.textContent).toContain("Brand & Design")
+      expect(container.textContent).toContain("UI & Design")
+      expect(container.textContent).toContain("Design & Ops")
+
+      const submitBtn = container.querySelector(
+        'button[data-slot="submit-clarifications-btn"]'
+      ) as HTMLButtonElement
+      expect(submitBtn).not.toBeNull()
+
+      act(() => {
+        submitBtn.click()
+      })
+
+      // Transitions to STEP_2_PROMPT_READY
+      expect(container.textContent).toContain("Turn 2 Execution Prompt Compiled")
     })
   })
 })

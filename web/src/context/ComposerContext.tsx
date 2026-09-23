@@ -13,6 +13,7 @@ import {
   type ComposerConfig,
   type ComposerAssets,
   type CompiledPromptResult,
+  type TurnMode,
 } from "../lib/composer/composer-types"
 import { promptComposer } from "../lib/composer/prompt-composer"
 import {
@@ -29,12 +30,17 @@ import {
   exportPrompt,
   type AgentExportPackage,
 } from "../lib/export"
-import type { ClarificationAnswerEntry } from "../lib/clarification/question-form-types"
+import type {
+  ClarificationAnswerEntry,
+  QuestionFormAST,
+} from "../lib/clarification/question-form-types"
+import { parseQuestionForm } from "../lib/clarification/question-form-parser"
 import {
   ComposerContext,
   type ComposerContextValue,
   type ActiveAgentTarget,
   type ExportOutput,
+  type RoundtripStep,
 } from "./composer-context-def"
 
 export interface ComposerProviderProps {
@@ -80,12 +86,19 @@ export function ComposerProvider({
   const [agentTarget, setAgentTarget] = useState<ActiveAgentTarget>("generic-llm")
   const [rawAiResponse, setRawAiResponse] = useState<string>("")
   const [clarificationHistory] = useState<readonly string[]>([])
+  const [roundtripStep, setRoundtripStepState] = useState<RoundtripStep>("STEP_1_CONFIGURING")
+  const [activeTurn, setActiveTurnState] = useState<TurnMode>("turn1_discovery")
+  const [parsedFormAst, setParsedFormAst] = useState<QuestionFormAST | null>(null)
+  const [isDisobedientAi, setIsDisobedientAi] = useState<boolean>(false)
+  const [parseError, setParseError] = useState<string | null>(null)
 
   // Mutable refs to enable synchronous reads inside compileNow and update handlers
   const currentConfigRef = useRef<ComposerConfig>(config)
   const currentAssetsRef = useRef<ComposerAssets>(assets)
   const lastCompiledConfigRef = useRef<ComposerConfig>(config)
   const lastCompiledAssetsRef = useRef<ComposerAssets>(assets)
+  const activeTurnRef = useRef<TurnMode>(activeTurn)
+  const roundtripStepRef = useRef<RoundtripStep>(roundtripStep)
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isInitialMount = useRef<boolean>(true)
 
@@ -114,19 +127,20 @@ export function ComposerProvider({
 
   // Immediately compile initial state using initial values
   const [compiledPrompt, setCompiledPrompt] = useState<CompiledPromptResult>(() =>
-    promptComposer.compile(config, assets)
+    promptComposer.compile(config, assets, "turn1_discovery")
   )
   const [isDebouncing, setIsDebouncing] = useState<boolean>(false)
 
   // Synchronous compilation helper
-  const compileNow = useCallback((overrideConfig?: ComposerConfig) => {
+  const compileNow = useCallback((overrideConfig?: ComposerConfig, overrideTurn?: TurnMode) => {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current)
       debounceTimerRef.current = null
     }
     const configToCompile = overrideConfig ?? currentConfigRef.current
     const assetsToCompile = currentAssetsRef.current
-    const result = promptComposer.compile(configToCompile, assetsToCompile)
+    const turnToCompile = overrideTurn ?? activeTurnRef.current
+    const result = promptComposer.compile(configToCompile, assetsToCompile, turnToCompile)
     lastCompiledConfigRef.current = configToCompile
     lastCompiledAssetsRef.current = assetsToCompile
     setCompiledPrompt(result)
@@ -153,9 +167,13 @@ export function ComposerProvider({
       clearTimeout(debounceTimerRef.current)
     }
 
-    debounceTimerRef.current = setTimeout(() => {
+    if (debounceMs <= 0) {
       compileNow()
-    }, debounceMs)
+    } else {
+      debounceTimerRef.current = setTimeout(() => {
+        compileNow()
+      }, debounceMs)
+    }
 
     return () => {
       if (debounceTimerRef.current) {
@@ -321,6 +339,198 @@ export function ComposerProvider({
     })
   }, [updateLayer])
 
+  // Turn and Step management
+  const setActiveTurn = useCallback(
+    (turn: TurnMode) => {
+      activeTurnRef.current = turn
+      setActiveTurnState(turn)
+      compileNow(undefined, turn)
+    },
+    [compileNow]
+  )
+
+  const setRoundtripStep = useCallback(
+    (step: RoundtripStep) => {
+      roundtripStepRef.current = step
+      setRoundtripStepState(step)
+      if (step === "STEP_2_PROMPT_READY") {
+        activeTurnRef.current = "turn2_execution"
+        setActiveTurnState("turn2_execution")
+        compileNow(undefined, "turn2_execution")
+      } else if (step === "STEP_1_CONFIGURING" || step === "STEP_1_PROMPT_READY") {
+        activeTurnRef.current = "turn1_discovery"
+        setActiveTurnState("turn1_discovery")
+        compileNow(undefined, "turn1_discovery")
+      }
+    },
+    [compileNow]
+  )
+
+  // Resilient ingestion of external AI response
+  const parseAndIngestAiResponse = useCallback(
+    (rawText: string): boolean => {
+      setRawAiResponse(rawText)
+      if (!rawText || !rawText.trim()) {
+        setIsDisobedientAi(true)
+        setParseError("Please paste a response from the AI.")
+        return false
+      }
+
+      const ast = parseQuestionForm(rawText)
+      if (ast && ast.questions.length > 0) {
+        setParsedFormAst(ast)
+        setIsDisobedientAi(false)
+        setParseError(null)
+        setRoundtripStep("CLARIFICATION_ACTIVE")
+        return true
+      }
+
+      // AI Disobedience: Model responded with plain prose, numbered list, or code without <question-form>
+      setParsedFormAst(null)
+      setIsDisobedientAi(true)
+      setParseError("No structured <question-form> detected in AI response.")
+      return false
+    },
+    [setRoundtripStep]
+  )
+
+  // Fallback 1: Manual key-value / free-form clarification editor
+  const enterCustomClarifications = useCallback(
+    (answers: readonly ClarificationAnswerEntry[]) => {
+      const nextConfig: ComposerConfig = {
+        ...currentConfigRef.current,
+        layer9BriefAndClarification: {
+          ...currentConfigRef.current.layer9BriefAndClarification,
+          clarificationAnswers: answers,
+        },
+      }
+      currentConfigRef.current = nextConfig
+      setConfigState(nextConfig)
+      setIsDisobedientAi(false)
+      setParseError(null)
+      activeTurnRef.current = "turn2_execution"
+      setActiveTurnState("turn2_execution")
+      roundtripStepRef.current = "STEP_2_PROMPT_READY"
+      setRoundtripStepState("STEP_2_PROMPT_READY")
+      compileNow(nextConfig, "turn2_execution")
+    },
+    [compileNow]
+  )
+
+  // Fallback 2: Synthesize defaults from active skill and proceed
+  const useSkillDefaultsAndProceed = useCallback(() => {
+    const skillId =
+      currentConfigRef.current.layer7SkillTemplate.selectedSkillId ?? "general-ui"
+    const taskKind = currentConfigRef.current.layer4WorkflowManifest.taskKind
+    const defaultAnswers: ClarificationAnswerEntry[] = [
+      {
+        questionId: "skill-default-persona",
+        questionLabel: "Target Audience & Persona",
+        selectedValues: [`Standard persona for ${skillId} (${taskKind})`],
+      },
+      {
+        questionId: "skill-default-density",
+        questionLabel: "Visual Hierarchy & Density",
+        selectedValues: ["Balanced density following brand guidelines"],
+      },
+      {
+        questionId: "skill-default-scope",
+        questionLabel: "Scope & Functional Architecture",
+        selectedValues: ["Core MVP workflow specified in user brief"],
+      },
+    ]
+
+    const nextConfig: ComposerConfig = {
+      ...currentConfigRef.current,
+      layer9BriefAndClarification: {
+        ...currentConfigRef.current.layer9BriefAndClarification,
+        clarificationAnswers: defaultAnswers,
+      },
+    }
+    currentConfigRef.current = nextConfig
+    setConfigState(nextConfig)
+    setIsDisobedientAi(false)
+    setParseError(null)
+    activeTurnRef.current = "turn2_execution"
+    setActiveTurnState("turn2_execution")
+    roundtripStepRef.current = "STEP_2_PROMPT_READY"
+    setRoundtripStepState("STEP_2_PROMPT_READY")
+    compileNow(nextConfig, "turn2_execution")
+  }, [compileNow])
+
+  // Fallback 3: Skip clarification bypass
+  const skipClarification = useCallback(() => {
+    const skippedAnswer: ClarificationAnswerEntry = {
+      questionId: "skipped-clarification",
+      questionLabel: "Clarification status",
+      selectedValues: ["[Skipped by user - proceed with reasonable defaults]"],
+    }
+    const nextConfig: ComposerConfig = {
+      ...currentConfigRef.current,
+      layer9BriefAndClarification: {
+        ...currentConfigRef.current.layer9BriefAndClarification,
+        clarificationAnswers: [skippedAnswer],
+      },
+    }
+    currentConfigRef.current = nextConfig
+    setConfigState(nextConfig)
+    setIsDisobedientAi(false)
+    setParseError(null)
+    activeTurnRef.current = "turn2_execution"
+    setActiveTurnState("turn2_execution")
+    roundtripStepRef.current = "STEP_2_PROMPT_READY"
+    setRoundtripStepState("STEP_2_PROMPT_READY")
+    compileNow(nextConfig, "turn2_execution")
+  }, [compileNow])
+
+  // Submit clarified answers
+  const submitClarificationAnswers = useCallback(
+    (answers: readonly ClarificationAnswerEntry[]) => {
+      const nextConfig: ComposerConfig = {
+        ...currentConfigRef.current,
+        layer9BriefAndClarification: {
+          ...currentConfigRef.current.layer9BriefAndClarification,
+          clarificationAnswers: answers,
+        },
+      }
+      currentConfigRef.current = nextConfig
+      setConfigState(nextConfig)
+      setIsDisobedientAi(false)
+      setParseError(null)
+      activeTurnRef.current = "turn2_execution"
+      setActiveTurnState("turn2_execution")
+      roundtripStepRef.current = "STEP_2_PROMPT_READY"
+      setRoundtripStepState("STEP_2_PROMPT_READY")
+      compileNow(nextConfig, "turn2_execution")
+    },
+    [compileNow]
+  )
+
+  const STEPS_ORDER: readonly RoundtripStep[] = useMemo(
+    () => [
+      "STEP_1_CONFIGURING",
+      "STEP_1_PROMPT_READY",
+      "AWAITING_AI_RESPONSE",
+      "CLARIFICATION_ACTIVE",
+      "STEP_2_PROMPT_READY",
+    ],
+    []
+  )
+
+  const goToNextStep = useCallback(() => {
+    const currentIdx = STEPS_ORDER.indexOf(roundtripStepRef.current)
+    if (currentIdx >= 0 && currentIdx < STEPS_ORDER.length - 1) {
+      setRoundtripStep(STEPS_ORDER[currentIdx + 1])
+    }
+  }, [STEPS_ORDER, setRoundtripStep])
+
+  const goToPreviousStep = useCallback(() => {
+    const currentIdx = STEPS_ORDER.indexOf(roundtripStepRef.current)
+    if (currentIdx > 0) {
+      setRoundtripStep(STEPS_ORDER[currentIdx - 1])
+    }
+  }, [STEPS_ORDER, setRoundtripStep])
+
   // Export package generator
   const getExportOutput = useCallback((): ExportOutput => {
     if (agentTarget === "prompt-xml") {
@@ -360,6 +570,11 @@ export function ComposerProvider({
       agentTarget,
       rawAiResponse,
       clarificationHistory,
+      roundtripStep,
+      activeTurn,
+      parsedFormAst,
+      isDisobedientAi,
+      parseError,
       setConfig,
       setAssets,
       updateLayer,
@@ -372,6 +587,15 @@ export function ComposerProvider({
       clearClarificationAnswers,
       setRawAiResponse,
       setAgentTarget,
+      setRoundtripStep,
+      setActiveTurn,
+      parseAndIngestAiResponse,
+      enterCustomClarifications,
+      useSkillDefaultsAndProceed,
+      skipClarification,
+      submitClarificationAnswers,
+      goToNextStep,
+      goToPreviousStep,
       compileNow,
       getExportOutput,
     }),
@@ -383,6 +607,11 @@ export function ComposerProvider({
       agentTarget,
       rawAiResponse,
       clarificationHistory,
+      roundtripStep,
+      activeTurn,
+      parsedFormAst,
+      isDisobedientAi,
+      parseError,
       setConfig,
       setAssets,
       updateLayer,
@@ -393,6 +622,15 @@ export function ComposerProvider({
       setFeatureRequirements,
       addClarificationAnswer,
       clearClarificationAnswers,
+      setRoundtripStep,
+      setActiveTurn,
+      parseAndIngestAiResponse,
+      enterCustomClarifications,
+      useSkillDefaultsAndProceed,
+      skipClarification,
+      submitClarificationAnswers,
+      goToNextStep,
+      goToPreviousStep,
       compileNow,
       getExportOutput,
     ]
