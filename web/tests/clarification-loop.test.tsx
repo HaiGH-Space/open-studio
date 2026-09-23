@@ -7,7 +7,7 @@ import { QuestionFieldRenderer } from "../src/components/clarification/QuestionF
 import { QuestionFormModal } from "../src/components/clarification/QuestionFormModal"
 import { Layer9BriefClarification } from "../src/components/layers/Layer9BriefClarification"
 import { ComposerManager } from "../src/components/cockpit/ComposerManager"
-import type { QuestionNode } from "../src/lib/clarification/question-form-types"
+import type { QuestionNode, ClarificationAnswerEntry } from "../src/lib/clarification/question-form-types"
 import type { ComposerConfig } from "../src/lib/composer/composer-types"
 import { createDefaultComposerConfig } from "../src/lib/composer/composer-types"
 import type { ICatalogService, CatalogIndex } from "../src/lib/catalog/catalog-types"
@@ -347,10 +347,10 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
       const submittedAnswers = onSubmitted.mock.calls[0][0]
       expect(submittedAnswers.length).toBeGreaterThanOrEqual(3)
 
-      const themeAnswer = submittedAnswers.find((a: any) => a.questionId === "theme")
+      const themeAnswer = submittedAnswers.find((a: ClarificationAnswerEntry) => a.questionId === "theme")
       expect(themeAnswer.selectedValues).toEqual(["dark"])
 
-      const domainAnswer = submittedAnswers.find((a: any) => a.questionId === "custom-domain")
+      const domainAnswer = submittedAnswers.find((a: ClarificationAnswerEntry) => a.questionId === "custom-domain")
       expect(domainAnswer.selectedValues).toEqual(["studio.internal"])
     })
   })
