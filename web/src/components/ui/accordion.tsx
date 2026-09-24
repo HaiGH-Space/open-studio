@@ -22,11 +22,7 @@ function Accordion({
         : [defaultValue]
       : undefined
   const normalizedValue =
-    value !== undefined
-      ? Array.isArray(value)
-        ? value
-        : [value]
-      : undefined
+    value !== undefined ? (Array.isArray(value) ? value : [value]) : undefined
 
   return (
     <AccordionPrimitive.Root
@@ -69,8 +65,14 @@ function AccordionTrigger({
         {...props}
       >
         {children}
-        <ChevronDownIcon data-slot="accordion-trigger-icon" className="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" />
-        <ChevronUpIcon data-slot="accordion-trigger-icon" className="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" />
+        <ChevronDownIcon
+          data-slot="accordion-trigger-icon"
+          className="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden"
+        />
+        <ChevronUpIcon
+          data-slot="accordion-trigger-icon"
+          className="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline"
+        />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )

@@ -63,7 +63,9 @@ export function estimateCost(
     return { inputCost: 0 }
   }
 
-  const normalizedKey = (model || DEFAULT_MODEL).trim().toLowerCase() as SupportedModel
+  const normalizedKey = (model || DEFAULT_MODEL)
+    .trim()
+    .toLowerCase() as SupportedModel
   const pricing = MODEL_PRICING[normalizedKey] ?? MODEL_PRICING[DEFAULT_MODEL]
 
   const rawCost = (tokens / 1_000_000) * pricing.inputPerMillion

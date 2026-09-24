@@ -27,10 +27,10 @@ export function DesignSystemCard({
       data-slot="design-system-card"
       data-system-id={system.id}
       className={cn(
-        "group relative flex flex-col justify-between p-3.5 rounded-xl border transition-all duration-150 select-none",
+        "group relative flex flex-col justify-between rounded-xl border p-3.5 transition-all duration-150 select-none",
         isSelected
-          ? "border-primary bg-primary/5 ring-1 ring-primary/40 shadow-xs"
-          : "border-border/70 bg-card/60 hover:bg-card/90 hover:border-border hover:shadow-2xs",
+          ? "border-primary bg-primary/5 shadow-xs ring-1 ring-primary/40"
+          : "border-border/70 bg-card/60 hover:border-border hover:bg-card/90 hover:shadow-2xs",
         className
       )}
     >
@@ -38,19 +38,24 @@ export function DesignSystemCard({
         {/* Header: Name, Category & Swatches */}
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h3 className="font-semibold text-sm text-foreground truncate tracking-tight">
+            <h3 className="truncate text-sm font-semibold tracking-tight text-foreground">
               {name}
             </h3>
-            <span className="text-[11px] text-muted-foreground">{category}</span>
+            <span className="text-[11px] text-muted-foreground">
+              {category}
+            </span>
           </div>
 
-          <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-4 shrink-0 font-medium">
+          <Badge
+            variant="outline"
+            className="h-4 shrink-0 px-1.5 py-0 text-[10px] font-medium"
+          >
             {tokenSummary.totalCssVariables} tokens
           </Badge>
         </div>
 
         {/* Description */}
-        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
           {description}
         </p>
 
@@ -65,13 +70,13 @@ export function DesignSystemCard({
             {tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="text-[10px] px-1.5 py-0.5 rounded bg-muted/60 text-muted-foreground border border-border/40 font-mono"
+                className="rounded border border-border/40 bg-muted/60 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
               >
                 {tag}
               </span>
             ))}
             {tags.length > 3 && (
-              <span className="text-[10px] text-muted-foreground/70 self-center">
+              <span className="self-center text-[10px] text-muted-foreground/70">
                 +{tags.length - 3}
               </span>
             )}
@@ -80,14 +85,14 @@ export function DesignSystemCard({
       </div>
 
       {/* Action Footer */}
-      <div className="flex items-center justify-between gap-2 pt-3 mt-2 border-t border-border/40">
+      <div className="mt-2 flex items-center justify-between gap-2 border-t border-border/40 pt-3">
         <Button
           type="button"
           variant="ghost"
           size="sm"
           data-slot="preview-system-button"
           onClick={() => onPreview?.(system.id)}
-          className="text-xs h-7 px-2.5 gap-1.5 text-muted-foreground hover:text-foreground cursor-pointer"
+          className="h-7 cursor-pointer gap-1.5 px-2.5 text-xs text-muted-foreground hover:text-foreground"
         >
           <EyeIcon className="size-3" />
           <span>Preview</span>
@@ -100,8 +105,9 @@ export function DesignSystemCard({
           data-slot="select-system-button"
           onClick={() => onSelect?.(system.id)}
           className={cn(
-            "text-xs h-7 px-3 gap-1 cursor-pointer font-medium",
-            isSelected && "bg-primary text-primary-foreground hover:bg-primary/90"
+            "h-7 cursor-pointer gap-1 px-3 text-xs font-medium",
+            isSelected &&
+              "bg-primary text-primary-foreground hover:bg-primary/90"
           )}
         >
           {isSelected ? (

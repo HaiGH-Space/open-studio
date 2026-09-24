@@ -4,7 +4,10 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
 import { CatalogProvider } from "../src/context/CatalogContext"
 import { ComposerProvider } from "../src/context/ComposerContext"
 import { ComposerManager } from "../src/components/cockpit/ComposerManager"
-import type { CatalogIndex, ICatalogService } from "../src/lib/catalog/catalog-types"
+import type {
+  CatalogIndex,
+  ICatalogService,
+} from "../src/lib/catalog/catalog-types"
 import type { ComposerConfig } from "../src/lib/composer/composer-types"
 import { createDefaultComposerConfig } from "../src/lib/composer/composer-types"
 
@@ -66,7 +69,8 @@ const mockCatalog: CatalogIndex = {
         tokensCss: "data/design-systems/linear-app/tokens.css",
         tailwindCss: "data/design-systems/linear-app/tailwind-v4.css",
         componentsHtml: "data/design-systems/linear-app/components.html",
-        componentsManifest: "data/design-systems/linear-app/components.manifest.json",
+        componentsManifest:
+          "data/design-systems/linear-app/components.manifest.json",
       },
     },
     {
@@ -107,7 +111,8 @@ const mockCatalog: CatalogIndex = {
         tokensCss: "data/design-systems/stripe-dev/tokens.css",
         tailwindCss: "data/design-systems/stripe-dev/tailwind-v4.css",
         componentsHtml: "data/design-systems/stripe-dev/components.html",
-        componentsManifest: "data/design-systems/stripe-dev/components.manifest.json",
+        componentsManifest:
+          "data/design-systems/stripe-dev/components.manifest.json",
       },
     },
   ],
@@ -116,7 +121,8 @@ const mockCatalog: CatalogIndex = {
       id: "anti-ai-slop",
       name: "Anti-AI-Slop Discipline",
       category: "discipline",
-      description: "Rules against generic AI generated styles and purple gradients",
+      description:
+        "Rules against generic AI generated styles and purple gradients",
       ruleCount: 12,
       isDefaultEnabled: true,
       assetPath: "data/craft/anti-ai-slop.md",
@@ -135,7 +141,9 @@ const mockCatalog: CatalogIndex = {
   templates: [],
 }
 
-function createMockCatalogService(catalogData: CatalogIndex | null = mockCatalog): ICatalogService {
+function createMockCatalogService(
+  catalogData: CatalogIndex | null = mockCatalog
+): ICatalogService {
   return {
     loadCatalog: vi.fn().mockResolvedValue(catalogData),
     getLoadedCatalog: vi.fn().mockReturnValue(catalogData),
@@ -182,7 +190,8 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
     }
   ) {
     const service = options?.catalogService ?? mockService
-    const initialCatalog = options && "catalog" in options ? options.catalog : mockCatalog
+    const initialCatalog =
+      options && "catalog" in options ? options.catalog : mockCatalog
     act(() => {
       root.render(
         <CatalogProvider
@@ -219,7 +228,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       const manager = container.querySelector("[data-slot='composer-manager']")
       expect(manager).toBeTruthy()
 
-      const presetBar = container.querySelector("[data-slot='preset-action-bar']")
+      const presetBar = container.querySelector(
+        "[data-slot='preset-action-bar']"
+      )
       expect(presetBar).toBeTruthy()
       expect(container.textContent).toContain("Presets")
     })
@@ -227,14 +238,20 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
     it("renders all preset buttons (SaaS, Fintech, Dashboard, Reset)", () => {
       renderWithProviders(<ComposerManager />)
       expect(container.querySelector("[data-slot='preset-saas']")).toBeTruthy()
-      expect(container.querySelector("[data-slot='preset-fintech']")).toBeTruthy()
-      expect(container.querySelector("[data-slot='preset-dashboard']")).toBeTruthy()
+      expect(
+        container.querySelector("[data-slot='preset-fintech']")
+      ).toBeTruthy()
+      expect(
+        container.querySelector("[data-slot='preset-dashboard']")
+      ).toBeTruthy()
       expect(container.querySelector("[data-slot='preset-reset']")).toBeTruthy()
     })
 
     it("clicking SaaS Starter preset configures SaaS stack", async () => {
       renderWithProviders(<ComposerManager />)
-      const saasBtn = container.querySelector("[data-slot='preset-saas']") as HTMLButtonElement
+      const saasBtn = container.querySelector(
+        "[data-slot='preset-saas']"
+      ) as HTMLButtonElement
       expect(saasBtn).toBeTruthy()
 
       await act(async () => {
@@ -248,7 +265,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("clicking Fintech Dark preset configures fintech stack", async () => {
       renderWithProviders(<ComposerManager />)
-      const fintechBtn = container.querySelector("[data-slot='preset-fintech']") as HTMLButtonElement
+      const fintechBtn = container.querySelector(
+        "[data-slot='preset-fintech']"
+      ) as HTMLButtonElement
       expect(fintechBtn).toBeTruthy()
 
       await act(async () => {
@@ -262,7 +281,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("clicking Dashboard preset configures dashboard task kind", async () => {
       renderWithProviders(<ComposerManager />)
-      const dashboardBtn = container.querySelector("[data-slot='preset-dashboard']") as HTMLButtonElement
+      const dashboardBtn = container.querySelector(
+        "[data-slot='preset-dashboard']"
+      ) as HTMLButtonElement
       expect(dashboardBtn).toBeTruthy()
 
       await act(async () => {
@@ -277,13 +298,17 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       renderWithProviders(<ComposerManager />)
 
       // First apply fintech preset
-      const fintechBtn = container.querySelector("[data-slot='preset-fintech']") as HTMLButtonElement
+      const fintechBtn = container.querySelector(
+        "[data-slot='preset-fintech']"
+      ) as HTMLButtonElement
       await act(async () => {
         fintechBtn.click()
       })
 
       // Now click reset
-      const resetBtn = container.querySelector("[data-slot='preset-reset']") as HTMLButtonElement
+      const resetBtn = container.querySelector(
+        "[data-slot='preset-reset']"
+      ) as HTMLButtonElement
       await act(async () => {
         resetBtn.click()
       })
@@ -297,7 +322,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
     it("renders accordion items for Layers 1 through 8 with status badges", () => {
       renderWithProviders(<ComposerManager />)
       for (let i = 1; i <= 8; i++) {
-        const item = container.querySelector(`[data-slot='layer-accordion-l${i}']`)
+        const item = container.querySelector(
+          `[data-slot='layer-accordion-l${i}']`
+        )
         expect(item).toBeTruthy()
         const badge = container.querySelector(`[data-slot='layer-badge-l${i}']`)
         expect(badge).toBeTruthy()
@@ -307,14 +334,18 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
     it("renders enable/disable toggle switches for each layer", () => {
       renderWithProviders(<ComposerManager />)
       for (let i = 1; i <= 8; i++) {
-        const toggle = container.querySelector(`[data-slot='layer-toggle-l${i}']`)
+        const toggle = container.querySelector(
+          `[data-slot='layer-toggle-l${i}']`
+        )
         expect(toggle).toBeTruthy()
       }
     })
 
     it("toggling layer toggle updates enabled state in composer", async () => {
       renderWithProviders(<ComposerManager />)
-      const toggleL1 = container.querySelector(`[data-slot='layer-toggle-l1']`) as HTMLElement
+      const toggleL1 = container.querySelector(
+        `[data-slot='layer-toggle-l1']`
+      ) as HTMLElement
       expect(toggleL1).toBeTruthy()
 
       // L1 is initially enabled
@@ -334,7 +365,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
   describe("Layer 1: Security Guardrails", () => {
     it("renders strict mode switch and toggling updates state", async () => {
       renderWithProviders(<ComposerManager />)
-      const strictSwitch = container.querySelector("[data-slot='l1-strict-mode-toggle']") as HTMLElement
+      const strictSwitch = container.querySelector(
+        "[data-slot='l1-strict-mode-toggle']"
+      ) as HTMLElement
       expect(strictSwitch).toBeTruthy()
       expect(strictSwitch.getAttribute("data-checked")).not.toBeNull()
 
@@ -349,8 +382,12 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
   describe("Layer 2: Runtime Inspection Contract", () => {
     it("renders enforceDataOdId and injectQuestionProtocol toggles", async () => {
       renderWithProviders(<ComposerManager />)
-      const odIdToggle = container.querySelector("[data-slot='l2-enforce-data-od-id-toggle']") as HTMLElement
-      const questionToggle = container.querySelector("[data-slot='l2-inject-question-protocol-toggle']") as HTMLElement
+      const odIdToggle = container.querySelector(
+        "[data-slot='l2-enforce-data-od-id-toggle']"
+      ) as HTMLElement
+      const questionToggle = container.querySelector(
+        "[data-slot='l2-inject-question-protocol-toggle']"
+      ) as HTMLElement
 
       expect(odIdToggle).toBeTruthy()
       expect(questionToggle).toBeTruthy()
@@ -370,7 +407,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
   describe("Layer 3: Authoritative Technical Constraints", () => {
     it("renders framework options and allows switching framework", async () => {
       renderWithProviders(<ComposerManager />)
-      const frameworkSelect = container.querySelector("[data-slot='l3-framework-select']") as HTMLSelectElement
+      const frameworkSelect = container.querySelector(
+        "[data-slot='l3-framework-select']"
+      ) as HTMLSelectElement
       expect(frameworkSelect).toBeTruthy()
 
       await act(async () => {
@@ -385,7 +424,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("renders CSS engine options and allows switching css engine", async () => {
       renderWithProviders(<ComposerManager />)
-      const cssEngineSelect = container.querySelector("[data-slot='l3-css-engine-select']") as HTMLSelectElement
+      const cssEngineSelect = container.querySelector(
+        "[data-slot='l3-css-engine-select']"
+      ) as HTMLSelectElement
       expect(cssEngineSelect).toBeTruthy()
 
       await act(async () => {
@@ -398,7 +439,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("renders viewport options and allows switching viewport", async () => {
       renderWithProviders(<ComposerManager />)
-      const viewportSelect = container.querySelector("[data-slot='l3-viewport-select']") as HTMLSelectElement
+      const viewportSelect = container.querySelector(
+        "[data-slot='l3-viewport-select']"
+      ) as HTMLSelectElement
       expect(viewportSelect).toBeTruthy()
 
       await act(async () => {
@@ -411,8 +454,12 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("allows adding and removing strict hard rules", async () => {
       renderWithProviders(<ComposerManager />)
-      const input = container.querySelector("[data-slot='l3-hard-rule-input']") as HTMLInputElement
-      const addBtn = container.querySelector("[data-slot='l3-add-hard-rule-btn']") as HTMLButtonElement
+      const input = container.querySelector(
+        "[data-slot='l3-hard-rule-input']"
+      ) as HTMLInputElement
+      const addBtn = container.querySelector(
+        "[data-slot='l3-add-hard-rule-btn']"
+      ) as HTMLButtonElement
 
       expect(input).toBeTruthy()
       expect(addBtn).toBeTruthy()
@@ -430,7 +477,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       expect(rules[0].textContent).toContain("No external fonts")
 
       // Remove the hard rule
-      const removeBtn = container.querySelector("[data-slot='l3-remove-hard-rule-btn']") as HTMLButtonElement
+      const removeBtn = container.querySelector(
+        "[data-slot='l3-remove-hard-rule-btn']"
+      ) as HTMLButtonElement
       await act(async () => {
         removeBtn.click()
       })
@@ -441,22 +490,32 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("prevents empty or whitespace-only hard rules", async () => {
       renderWithProviders(<ComposerManager />)
-      const input = container.querySelector("[data-slot='l3-hard-rule-input']") as HTMLInputElement
-      const addBtn = container.querySelector("[data-slot='l3-add-hard-rule-btn']") as HTMLButtonElement
+      const input = container.querySelector(
+        "[data-slot='l3-hard-rule-input']"
+      ) as HTMLInputElement
+      const addBtn = container.querySelector(
+        "[data-slot='l3-add-hard-rule-btn']"
+      ) as HTMLButtonElement
 
       await act(async () => {
         setInputValue(input, "   ")
         addBtn.click()
       })
 
-      const rules = container.querySelectorAll("[data-slot='l3-hard-rule-item']")
+      const rules = container.querySelectorAll(
+        "[data-slot='l3-hard-rule-item']"
+      )
       expect(rules.length).toBe(0)
     })
 
     it("prevents duplicate hard rules", async () => {
       renderWithProviders(<ComposerManager />)
-      const input = container.querySelector("[data-slot='l3-hard-rule-input']") as HTMLInputElement
-      const addBtn = container.querySelector("[data-slot='l3-add-hard-rule-btn']") as HTMLButtonElement
+      const input = container.querySelector(
+        "[data-slot='l3-hard-rule-input']"
+      ) as HTMLInputElement
+      const addBtn = container.querySelector(
+        "[data-slot='l3-add-hard-rule-btn']"
+      ) as HTMLButtonElement
 
       await act(async () => {
         setInputValue(input, "Single-page only")
@@ -467,7 +526,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
         addBtn.click()
       })
 
-      const rules = container.querySelectorAll("[data-slot='l3-hard-rule-item']")
+      const rules = container.querySelectorAll(
+        "[data-slot='l3-hard-rule-item']"
+      )
       expect(rules.length).toBe(1)
     })
   })
@@ -475,8 +536,12 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
   describe("Layer 4: Workflow Manifest", () => {
     it("allows changing task kind and phase", async () => {
       renderWithProviders(<ComposerManager />)
-      const taskKindSelect = container.querySelector("[data-slot='l4-task-kind-select']") as HTMLSelectElement
-      const phaseSelect = container.querySelector("[data-slot='l4-phase-select']") as HTMLSelectElement
+      const taskKindSelect = container.querySelector(
+        "[data-slot='l4-task-kind-select']"
+      ) as HTMLSelectElement
+      const phaseSelect = container.querySelector(
+        "[data-slot='l4-phase-select']"
+      ) as HTMLSelectElement
 
       expect(taskKindSelect).toBeTruthy()
       expect(phaseSelect).toBeTruthy()
@@ -498,9 +563,13 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
   describe("Layer 5: Brand Contract (Design System)", () => {
     it("displays active system name when selected or fallback when none selected", () => {
       renderWithProviders(<ComposerManager />)
-      const activeSystem = container.querySelector("[data-slot='l5-active-system']")
+      const activeSystem = container.querySelector(
+        "[data-slot='l5-active-system']"
+      )
       expect(activeSystem).toBeTruthy()
-      expect(activeSystem?.textContent?.toLowerCase()).toMatch(/(none|no system|select a system)/i)
+      expect(activeSystem?.textContent?.toLowerCase()).toMatch(
+        /(none|no system|select a system)/i
+      )
     })
 
     it("displays selected system name when configured", () => {
@@ -513,13 +582,17 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
         },
       }
       renderWithProviders(<ComposerManager />, { config })
-      const activeSystem = container.querySelector("[data-slot='l5-active-system']")
+      const activeSystem = container.querySelector(
+        "[data-slot='l5-active-system']"
+      )
       expect(activeSystem?.textContent).toContain("Linear")
     })
 
     it("toggles token mode between condensed and full", async () => {
       renderWithProviders(<ComposerManager />)
-      const modeSwitch = container.querySelector("[data-slot='l5-token-mode-switch']") as HTMLElement
+      const modeSwitch = container.querySelector(
+        "[data-slot='l5-token-mode-switch']"
+      ) as HTMLElement
       expect(modeSwitch).toBeTruthy()
 
       // Default is condensed
@@ -533,10 +606,18 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("toggles asset inclusion checkboxes (tokens.css, DESIGN.md, USAGE.md, components.html)", async () => {
       renderWithProviders(<ComposerManager />)
-      const tokensCss = container.querySelector("[data-slot='l5-include-tokens-css']") as HTMLElement
-      const designMd = container.querySelector("[data-slot='l5-include-design-md']") as HTMLElement
-      const usage = container.querySelector("[data-slot='l5-include-usage']") as HTMLElement
-      const componentsHtml = container.querySelector("[data-slot='l5-include-components-html']") as HTMLElement
+      const tokensCss = container.querySelector(
+        "[data-slot='l5-include-tokens-css']"
+      ) as HTMLElement
+      const designMd = container.querySelector(
+        "[data-slot='l5-include-design-md']"
+      ) as HTMLElement
+      const usage = container.querySelector(
+        "[data-slot='l5-include-usage']"
+      ) as HTMLElement
+      const componentsHtml = container.querySelector(
+        "[data-slot='l5-include-components-html']"
+      ) as HTMLElement
 
       expect(tokensCss).toBeTruthy()
       expect(designMd).toBeTruthy()
@@ -553,7 +634,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
   describe("Layer 6: Craft Discipline & Rules", () => {
     it("renders recommended rules chip grid and toggling updates selectedRuleIds", async () => {
       renderWithProviders(<ComposerManager />)
-      const chips = container.querySelectorAll("[data-slot='l6-craft-rule-chip']")
+      const chips = container.querySelectorAll(
+        "[data-slot='l6-craft-rule-chip']"
+      )
       expect(chips.length).toBeGreaterThanOrEqual(1)
 
       const firstChip = chips[0] as HTMLElement
@@ -570,8 +653,12 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("allows adding and removing custom craft directives", async () => {
       renderWithProviders(<ComposerManager />)
-      const input = container.querySelector("[data-slot='l6-directive-input']") as HTMLInputElement
-      const addBtn = container.querySelector("[data-slot='l6-add-directive-btn']") as HTMLButtonElement
+      const input = container.querySelector(
+        "[data-slot='l6-directive-input']"
+      ) as HTMLInputElement
+      const addBtn = container.querySelector(
+        "[data-slot='l6-add-directive-btn']"
+      ) as HTMLButtonElement
 
       expect(input).toBeTruthy()
       expect(addBtn).toBeTruthy()
@@ -581,11 +668,17 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
         addBtn.click()
       })
 
-      let directives = container.querySelectorAll("[data-slot='l6-directive-item']")
+      let directives = container.querySelectorAll(
+        "[data-slot='l6-directive-item']"
+      )
       expect(directives.length).toBe(1)
-      expect(directives[0].textContent).toContain("Never use generic stock photos")
+      expect(directives[0].textContent).toContain(
+        "Never use generic stock photos"
+      )
 
-      const removeBtn = container.querySelector("[data-slot='l6-remove-directive-btn']") as HTMLButtonElement
+      const removeBtn = container.querySelector(
+        "[data-slot='l6-remove-directive-btn']"
+      ) as HTMLButtonElement
       await act(async () => {
         removeBtn.click()
       })
@@ -596,14 +689,20 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("handles whitespace and duplicate craft directives safely", async () => {
       renderWithProviders(<ComposerManager />)
-      const input = container.querySelector("[data-slot='l6-directive-input']") as HTMLInputElement
-      const addBtn = container.querySelector("[data-slot='l6-add-directive-btn']") as HTMLButtonElement
+      const input = container.querySelector(
+        "[data-slot='l6-directive-input']"
+      ) as HTMLInputElement
+      const addBtn = container.querySelector(
+        "[data-slot='l6-add-directive-btn']"
+      ) as HTMLButtonElement
 
       await act(async () => {
         setInputValue(input, "   ")
         addBtn.click()
       })
-      expect(container.querySelectorAll("[data-slot='l6-directive-item']").length).toBe(0)
+      expect(
+        container.querySelectorAll("[data-slot='l6-directive-item']").length
+      ).toBe(0)
 
       await act(async () => {
         setInputValue(input, "Consistent 8px grid")
@@ -613,7 +712,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
         setInputValue(input, "Consistent 8px grid")
         addBtn.click()
       })
-      expect(container.querySelectorAll("[data-slot='l6-directive-item']").length).toBe(1)
+      expect(
+        container.querySelectorAll("[data-slot='l6-directive-item']").length
+      ).toBe(1)
     })
   })
 
@@ -628,8 +729,12 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
   describe("Layer 8: User Memory & Persistent Directives", () => {
     it("allows adding and removing persistent directives", async () => {
       renderWithProviders(<ComposerManager />)
-      const input = container.querySelector("[data-slot='l8-directive-input']") as HTMLInputElement
-      const addBtn = container.querySelector("[data-slot='l8-add-directive-btn']") as HTMLButtonElement
+      const input = container.querySelector(
+        "[data-slot='l8-directive-input']"
+      ) as HTMLInputElement
+      const addBtn = container.querySelector(
+        "[data-slot='l8-add-directive-btn']"
+      ) as HTMLButtonElement
 
       expect(input).toBeTruthy()
       expect(addBtn).toBeTruthy()
@@ -643,7 +748,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       expect(items.length).toBe(1)
       expect(items[0].textContent).toContain("Always use Lucide React icons")
 
-      const removeBtn = container.querySelector("[data-slot='l8-remove-directive-btn']") as HTMLButtonElement
+      const removeBtn = container.querySelector(
+        "[data-slot='l8-remove-directive-btn']"
+      ) as HTMLButtonElement
       await act(async () => {
         removeBtn.click()
       })
@@ -654,8 +761,12 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("allows adding and removing negative constraints", async () => {
       renderWithProviders(<ComposerManager />)
-      const input = container.querySelector("[data-slot='l8-negative-input']") as HTMLInputElement
-      const addBtn = container.querySelector("[data-slot='l8-add-negative-btn']") as HTMLButtonElement
+      const input = container.querySelector(
+        "[data-slot='l8-negative-input']"
+      ) as HTMLInputElement
+      const addBtn = container.querySelector(
+        "[data-slot='l8-add-negative-btn']"
+      ) as HTMLButtonElement
 
       expect(input).toBeTruthy()
       expect(addBtn).toBeTruthy()
@@ -669,7 +780,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       expect(items.length).toBe(1)
       expect(items[0].textContent).toContain("No floating modal popups")
 
-      const removeBtn = container.querySelector("[data-slot='l8-remove-negative-btn']") as HTMLButtonElement
+      const removeBtn = container.querySelector(
+        "[data-slot='l8-remove-negative-btn']"
+      ) as HTMLButtonElement
       await act(async () => {
         removeBtn.click()
       })
@@ -680,23 +793,35 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
 
     it("handles whitespace and duplicate user memory entries safely", async () => {
       renderWithProviders(<ComposerManager />)
-      const dirInput = container.querySelector("[data-slot='l8-directive-input']") as HTMLInputElement
-      const dirBtn = container.querySelector("[data-slot='l8-add-directive-btn']") as HTMLButtonElement
+      const dirInput = container.querySelector(
+        "[data-slot='l8-directive-input']"
+      ) as HTMLInputElement
+      const dirBtn = container.querySelector(
+        "[data-slot='l8-add-directive-btn']"
+      ) as HTMLButtonElement
 
       await act(async () => {
         setInputValue(dirInput, "   ")
         dirBtn.click()
       })
-      expect(container.querySelectorAll("[data-slot='l8-directive-item']").length).toBe(0)
+      expect(
+        container.querySelectorAll("[data-slot='l8-directive-item']").length
+      ).toBe(0)
 
-      const negInput = container.querySelector("[data-slot='l8-negative-input']") as HTMLInputElement
-      const negBtn = container.querySelector("[data-slot='l8-add-negative-btn']") as HTMLButtonElement
+      const negInput = container.querySelector(
+        "[data-slot='l8-negative-input']"
+      ) as HTMLInputElement
+      const negBtn = container.querySelector(
+        "[data-slot='l8-add-negative-btn']"
+      ) as HTMLButtonElement
 
       await act(async () => {
         setInputValue(negInput, "   ")
         negBtn.click()
       })
-      expect(container.querySelectorAll("[data-slot='l8-negative-item']").length).toBe(0)
+      expect(
+        container.querySelectorAll("[data-slot='l8-negative-item']").length
+      ).toBe(0)
     })
   })
 })

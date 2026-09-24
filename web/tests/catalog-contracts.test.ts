@@ -14,7 +14,10 @@ import type {
 } from "../src/lib/catalog/catalog-types"
 
 describe("Catalog TypeScript Contracts & Schema", () => {
-  const schemaPath = path.resolve(import.meta.dirname, "../public/schemas/catalog-index.schema.json")
+  const schemaPath = path.resolve(
+    import.meta.dirname,
+    "../public/schemas/catalog-index.schema.json"
+  )
 
   it("should have the catalog-index.schema.json file present and valid JSON", () => {
     expect(fs.existsSync(schemaPath)).toBe(true)
@@ -29,7 +32,9 @@ describe("Catalog TypeScript Contracts & Schema", () => {
     const schema = JSON.parse(rawContent)
 
     expect(schema.$schema).toBe("https://json-schema.org/draft/2020-12/schema")
-    expect(schema.$id).toBe("https://open-studio.dev/schemas/catalog-index.json")
+    expect(schema.$id).toBe(
+      "https://open-studio.dev/schemas/catalog-index.json"
+    )
     expect(schema.title).toBe("OpenStudioCatalogIndex")
     expect(schema.type).toBe("object")
     expect(schema.required).toEqual([
@@ -55,12 +60,18 @@ describe("Catalog TypeScript Contracts & Schema", () => {
       "totalSkills",
       "totalTemplates",
     ])
-    expect(schema.properties.stats.properties.totalDesignSystems.minimum).toBe(0)
+    expect(schema.properties.stats.properties.totalDesignSystems.minimum).toBe(
+      0
+    )
     expect(schema.properties.stats.properties.totalCraftRules.minimum).toBe(0)
     expect(schema.properties.stats.properties.totalSkills.minimum).toBe(0)
     expect(schema.properties.stats.properties.totalTemplates.minimum).toBe(0)
 
-    expect(schema.properties.taxonomies.required).toEqual(["categories", "tags", "surfaces"])
+    expect(schema.properties.taxonomies.required).toEqual([
+      "categories",
+      "tags",
+      "surfaces",
+    ])
   })
 
   it("should enforce complete required fields and property structures for designSystems", () => {
@@ -125,7 +136,14 @@ describe("Catalog TypeScript Contracts & Schema", () => {
     expect(craftItem.properties.ruleCount.minimum).toBe(0)
 
     const skillItem = schema.properties.skills.items
-    expect(skillItem.required).toEqual(["id", "name", "description", "category", "triggers", "assetPath"])
+    expect(skillItem.required).toEqual([
+      "id",
+      "name",
+      "description",
+      "category",
+      "triggers",
+      "assetPath",
+    ])
 
     const templateItem = schema.properties.templates.items
     expect(templateItem.required).toEqual([
@@ -136,7 +154,10 @@ describe("Catalog TypeScript Contracts & Schema", () => {
       "surface",
       "assetPath",
     ])
-    expect(templateItem.properties.category.enum).toEqual(["design-template", "prompt-template"])
+    expect(templateItem.properties.category.enum).toEqual([
+      "design-template",
+      "prompt-template",
+    ])
     expect(templateItem.properties.surface.enum).toEqual([
       "landing",
       "dashboard",
@@ -170,7 +191,8 @@ describe("Catalog TypeScript Contracts & Schema", () => {
       id: "linear-app",
       name: "Linear",
       category: "Productivity & SaaS",
-      description: "High-contrast dark mode with sleek borders and purple accents",
+      description:
+        "High-contrast dark mode with sleek borders and purple accents",
       tags: ["dark-mode", "minimal", "saas", "bento"],
       swatches: sampleSwatches,
       tokenSummary: sampleTokenSummary,
@@ -200,7 +222,8 @@ describe("Catalog TypeScript Contracts & Schema", () => {
       id: "anti-ai-slop",
       name: "Anti-AI-Slop Discipline",
       category: "discipline",
-      description: "Eliminates generic gradient backgrounds, centered card syndrome, and purple hero titles",
+      description:
+        "Eliminates generic gradient backgrounds, centered card syndrome, and purple hero titles",
       ruleCount: 12,
       isDefaultEnabled: true,
       assetPath: "data/craft/anti-ai-slop.md",
@@ -279,7 +302,9 @@ describe("Catalog TypeScript Contracts & Schema", () => {
         generatedAt: "2026-09-22T00:00:00.000Z",
       }
 
-      const missing = requiredFields.filter((field) => !(field in incompletePayload))
+      const missing = requiredFields.filter(
+        (field) => !(field in incompletePayload)
+      )
       expect(missing).toContain("stats")
       expect(missing).toContain("taxonomies")
       expect(missing).toContain("designSystems")
@@ -314,9 +339,15 @@ describe("Catalog TypeScript Contracts & Schema", () => {
     it("should reject craftRules with categories outside the allowed enum", () => {
       const rawContent = fs.readFileSync(schemaPath, "utf-8")
       const schema = JSON.parse(rawContent)
-      const allowedCategories: string[] = schema.properties.craftRules.items.properties.category.enum
+      const allowedCategories: string[] =
+        schema.properties.craftRules.items.properties.category.enum
 
-      const invalidCategories = ["random", "backend", "performance-invalid", "unknown"]
+      const invalidCategories = [
+        "random",
+        "backend",
+        "performance-invalid",
+        "unknown",
+      ]
       invalidCategories.forEach((cat) => {
         expect(allowedCategories.includes(cat)).toBe(false)
       })
@@ -325,7 +356,8 @@ describe("Catalog TypeScript Contracts & Schema", () => {
     it("should reject templates with surfaces outside the allowed enum", () => {
       const rawContent = fs.readFileSync(schemaPath, "utf-8")
       const schema = JSON.parse(rawContent)
-      const allowedSurfaces: string[] = schema.properties.templates.items.properties.surface.enum
+      const allowedSurfaces: string[] =
+        schema.properties.templates.items.properties.surface.enum
 
       const invalidSurfaces = ["vr", "cli", "email", "smartwatch"]
       invalidSurfaces.forEach((surf) => {

@@ -8,10 +8,16 @@ import { QuestionFormModal } from "../src/components/clarification/QuestionFormM
 import { ClarificationZone } from "../src/components/clarification/ClarificationZone"
 import { Layer9BriefClarification } from "../src/components/layers/Layer9BriefClarification"
 import { ComposerManager } from "../src/components/cockpit/ComposerManager"
-import type { QuestionNode, ClarificationAnswerEntry } from "../src/lib/clarification/question-form-types"
+import type {
+  QuestionNode,
+  ClarificationAnswerEntry,
+} from "../src/lib/clarification/question-form-types"
 import type { ComposerConfig } from "../src/lib/composer/composer-types"
 import { createDefaultComposerConfig } from "../src/lib/composer/composer-types"
-import type { ICatalogService, CatalogIndex } from "../src/lib/catalog/catalog-types"
+import type {
+  ICatalogService,
+  CatalogIndex,
+} from "../src/lib/catalog/catalog-types"
 
 declare global {
   var IS_REACT_ACT_ENVIRONMENT: boolean
@@ -66,7 +72,12 @@ const sampleXml = `
 const emptyCatalog: CatalogIndex = {
   schemaVersion: "open-studio-catalog/v1",
   generatedAt: "2026-09-22T00:00:00.000Z",
-  stats: { totalDesignSystems: 0, totalCraftRules: 0, totalSkills: 0, totalTemplates: 0 },
+  stats: {
+    totalDesignSystems: 0,
+    totalCraftRules: 0,
+    totalSkills: 0,
+    totalTemplates: 0,
+  },
   taxonomies: { categories: [], tags: [], surfaces: [] },
   designSystems: [],
   craftRules: [],
@@ -79,7 +90,9 @@ function createMockCatalogService(): ICatalogService {
     loadCatalog: vi.fn().mockResolvedValue(emptyCatalog),
     getLoadedCatalog: vi.fn().mockReturnValue(emptyCatalog),
     fetchDesignTokens: vi.fn().mockResolvedValue(""),
-    fetchDesignSystemBundle: vi.fn().mockResolvedValue({ id: "mock", name: "Mock" }),
+    fetchDesignSystemBundle: vi
+      .fn()
+      .mockResolvedValue({ id: "mock", name: "Mock" }),
     fetchAssetContent: vi.fn().mockResolvedValue(""),
     clearCache: vi.fn(),
     hasAssetCached: vi.fn().mockReturnValue(true),
@@ -235,7 +248,9 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
         )
       })
 
-      const input = container.querySelector('input[type="text"]') as HTMLInputElement
+      const input = container.querySelector(
+        'input[type="text"]'
+      ) as HTMLInputElement
       expect(input).not.toBeNull()
       expect(input.value).toBe("My App")
       expect(input.placeholder).toBe("e.g. Open Studio")
@@ -266,7 +281,9 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
         )
       })
 
-      const textarea = container.querySelector("textarea") as HTMLTextAreaElement
+      const textarea = container.querySelector(
+        "textarea"
+      ) as HTMLTextAreaElement
       expect(textarea).not.toBeNull()
       expect(textarea.value).toBe("Initial details")
 
@@ -284,10 +301,16 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
         <QuestionFormModal open={true} initialRawText={sampleXml} />
       )
 
-      expect(document.body.textContent).toContain("Onboarding Flow Clarification")
-      expect(document.body.textContent).toContain("Please resolve design ambiguities")
+      expect(document.body.textContent).toContain(
+        "Onboarding Flow Clarification"
+      )
+      expect(document.body.textContent).toContain(
+        "Please resolve design ambiguities"
+      )
       expect(document.body.textContent).toContain("Preferred color theme?")
-      expect(document.body.textContent).toContain("Authentication methods supported?")
+      expect(document.body.textContent).toContain(
+        "Authentication methods supported?"
+      )
 
       // Check pre-selected options
       const darkRadio = document.body.querySelector(
@@ -303,10 +326,15 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
 
     it("shows error warning when pasted text has no <question-form> XML", () => {
       renderWithProviders(
-        <QuestionFormModal open={true} initialRawText="Here is some text without XML." />
+        <QuestionFormModal
+          open={true}
+          initialRawText="Here is some text without XML."
+        />
       )
 
-      expect(document.body.textContent).toContain("No valid <question-form> XML detected")
+      expect(document.body.textContent).toContain(
+        "No valid <question-form> XML detected"
+      )
       const submitBtn = document.body.querySelector(
         'button[data-slot="submit-answers-btn"]'
       ) as HTMLButtonElement
@@ -348,10 +376,14 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
       const submittedAnswers = onSubmitted.mock.calls[0][0]
       expect(submittedAnswers.length).toBeGreaterThanOrEqual(3)
 
-      const themeAnswer = submittedAnswers.find((a: ClarificationAnswerEntry) => a.questionId === "theme")
+      const themeAnswer = submittedAnswers.find(
+        (a: ClarificationAnswerEntry) => a.questionId === "theme"
+      )
       expect(themeAnswer.selectedValues).toEqual(["dark"])
 
-      const domainAnswer = submittedAnswers.find((a: ClarificationAnswerEntry) => a.questionId === "custom-domain")
+      const domainAnswer = submittedAnswers.find(
+        (a: ClarificationAnswerEntry) => a.questionId === "custom-domain"
+      )
       expect(domainAnswer.selectedValues).toEqual(["studio.internal"])
     })
   })
@@ -470,7 +502,9 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
         pasteBtn.click()
       })
 
-      expect(document.body.querySelector('[data-slot="question-form-modal"]')).not.toBeNull()
+      expect(
+        document.body.querySelector('[data-slot="question-form-modal"]')
+      ).not.toBeNull()
     })
   })
 
@@ -520,9 +554,13 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
       })
 
       // Must display disobedience warning banner with two escape hatches
-      const banner = container.querySelector('[data-slot="ai-disobedience-banner"]')
+      const banner = container.querySelector(
+        '[data-slot="ai-disobedience-banner"]'
+      )
       expect(banner).not.toBeNull()
-      expect(banner?.textContent).toContain("No structured question form detected")
+      expect(banner?.textContent).toContain(
+        "No structured question form detected"
+      )
 
       const manualBtn = container.querySelector(
         'button[data-slot="manual-clarifications-btn"]'
@@ -551,7 +589,10 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
       const textarea = container.querySelector(
         'textarea[data-slot="ai-response-paste-textarea"]'
       ) as HTMLTextAreaElement
-      setNativeTextareaValue(textarea, "1. What is your audience? 2. Slide count?")
+      setNativeTextareaValue(
+        textarea,
+        "1. What is your audience? 2. Slide count?"
+      )
 
       const parseBtn = container.querySelector(
         'button[data-slot="parse-questions-btn"]'
@@ -585,7 +626,9 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
       })
 
       // Advances to STEP_2_PROMPT_READY
-      expect(container.textContent).toContain("Turn 2 Execution Prompt Compiled")
+      expect(container.textContent).toContain(
+        "Turn 2 Execution Prompt Compiled"
+      )
     })
 
     it("Fallback Path 2: Use Skill Defaults & Proceed synthesizes answers and advances immediately", () => {
@@ -622,7 +665,9 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
       })
 
       // Advances immediately to STEP_2_PROMPT_READY
-      expect(container.textContent).toContain("Turn 2 Execution Prompt Compiled")
+      expect(container.textContent).toContain(
+        "Turn 2 Execution Prompt Compiled"
+      )
     })
 
     it("parses pre-sanitized micro-schema with pipe options and ampersands into interactive questions", () => {
@@ -669,7 +714,9 @@ describe("Interactive Clarification Loop & Layer 9 (Task 14)", () => {
       })
 
       // Transitions to STEP_2_PROMPT_READY
-      expect(container.textContent).toContain("Turn 2 Execution Prompt Compiled")
+      expect(container.textContent).toContain(
+        "Turn 2 Execution Prompt Compiled"
+      )
     })
   })
 })

@@ -6,13 +6,23 @@
  * Claude 3.7 Sonnet's extended reasoning mode, plus downloadable CLAUDE.md and prompt.xml.
  */
 
-import type { CompiledPromptResult, ComposerConfig } from "../composer/composer-types"
-import type { AgentExportPackage, DownloadableFile, IAgentExporter } from "./export-types"
+import type {
+  CompiledPromptResult,
+  ComposerConfig,
+} from "../composer/composer-types"
+import type {
+  AgentExportPackage,
+  DownloadableFile,
+  IAgentExporter,
+} from "./export-types"
 
 export class ClaudeCodeExporter implements IAgentExporter {
   readonly agentName = "claude-code" as const
 
-  formatExport(result: CompiledPromptResult, config: ComposerConfig): AgentExportPackage {
+  formatExport(
+    result: CompiledPromptResult,
+    config: ComposerConfig
+  ): AgentExportPackage {
     const primaryClipboardText = this.buildClaudeCodePrompt(result)
     const claudeMdContent = this.buildClaudeMd(result, config)
 
@@ -50,34 +60,40 @@ export class ClaudeCodeExporter implements IAgentExporter {
     ].join("\n")
   }
 
-  private buildClaudeMd(result: CompiledPromptResult, config: ComposerConfig): string {
+  private buildClaudeMd(
+    result: CompiledPromptResult,
+    config: ComposerConfig
+  ): string {
     const l3 = config.layer3AuthoritativeConstraints
     const l5 = config.layer5BrandContract
     const l8 = config.layer8UserMemory
 
-    const hardRules = l3.enabled && l3.strictHardRules.length > 0
-      ? [
-          "",
-          "### Strict Hard Rules",
-          ...l3.strictHardRules.map((rule) => `- ${rule}`),
-        ].join("\n")
-      : ""
+    const hardRules =
+      l3.enabled && l3.strictHardRules.length > 0
+        ? [
+            "",
+            "### Strict Hard Rules",
+            ...l3.strictHardRules.map((rule) => `- ${rule}`),
+          ].join("\n")
+        : ""
 
-    const persistentDirectives = l8.enabled && l8.persistentDirectives.length > 0
-      ? [
-          "",
-          "### Persistent Directives",
-          ...l8.persistentDirectives.map((d) => `- ${d}`),
-        ].join("\n")
-      : ""
+    const persistentDirectives =
+      l8.enabled && l8.persistentDirectives.length > 0
+        ? [
+            "",
+            "### Persistent Directives",
+            ...l8.persistentDirectives.map((d) => `- ${d}`),
+          ].join("\n")
+        : ""
 
-    const negativeConstraints = l8.enabled && l8.negativeConstraints.length > 0
-      ? [
-          "",
-          "### Negative Constraints (Never Do)",
-          ...l8.negativeConstraints.map((c) => `- ${c}`),
-        ].join("\n")
-      : ""
+    const negativeConstraints =
+      l8.enabled && l8.negativeConstraints.length > 0
+        ? [
+            "",
+            "### Negative Constraints (Never Do)",
+            ...l8.negativeConstraints.map((c) => `- ${c}`),
+          ].join("\n")
+        : ""
 
     return [
       "# Project Guidelines & Design System Directives",

@@ -78,13 +78,13 @@ export function Layer8UserRules() {
                 handleAddDirective()
               }
             }}
-            className="flex-1 h-8 px-3 rounded-lg border border-border/70 bg-input/20 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="h-8 flex-1 rounded-lg border border-border/70 bg-input/20 px-3 text-xs text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-primary focus:outline-none"
           />
           <button
             type="button"
             data-slot="l8-add-directive-btn"
             onClick={handleAddDirective}
-            className="inline-flex items-center gap-1 px-3 h-8 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer"
+            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             <Plus className="size-3.5" />
             <span>Add</span>
@@ -97,14 +97,14 @@ export function Layer8UserRules() {
               <span
                 key={`${dir}-${idx}`}
                 data-slot="l8-directive-item"
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-border/80 bg-muted/40 text-xs text-foreground"
+                className="inline-flex items-center gap-1 rounded-md border border-border/80 bg-muted/40 px-2.5 py-1 text-xs text-foreground"
               >
                 <span>{dir}</span>
                 <button
                   type="button"
                   data-slot="l8-remove-directive-btn"
                   onClick={() => handleRemoveDirective(idx)}
-                  className="text-muted-foreground hover:text-destructive cursor-pointer transition-colors p-0.5 rounded"
+                  className="cursor-pointer rounded p-0.5 text-muted-foreground transition-colors hover:text-destructive"
                   aria-label={`Remove directive: ${dir}`}
                 >
                   <X className="size-3" />
@@ -116,7 +116,7 @@ export function Layer8UserRules() {
       </div>
 
       {/* Negative Constraints (Never Do) */}
-      <div className="space-y-2 pt-2 border-t border-border/50">
+      <div className="space-y-2 border-t border-border/50 pt-2">
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1.5 text-xs font-medium text-foreground">
             <ShieldAlert className="size-3.5 text-destructive" />
@@ -140,13 +140,13 @@ export function Layer8UserRules() {
                 handleAddNegative()
               }
             }}
-            className="flex-1 h-8 px-3 rounded-lg border border-border/70 bg-input/20 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="h-8 flex-1 rounded-lg border border-border/70 bg-input/20 px-3 text-xs text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-primary focus:outline-none"
           />
           <button
             type="button"
             data-slot="l8-add-negative-btn"
             onClick={handleAddNegative}
-            className="inline-flex items-center gap-1 px-3 h-8 rounded-lg bg-destructive/15 text-destructive border border-destructive/30 hover:bg-destructive/25 text-xs font-medium transition-colors cursor-pointer"
+            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-destructive/30 bg-destructive/15 px-3 text-xs font-medium text-destructive transition-colors hover:bg-destructive/25"
           >
             <Plus className="size-3.5" />
             <span>Add</span>
@@ -159,14 +159,14 @@ export function Layer8UserRules() {
               <span
                 key={`${neg}-${idx}`}
                 data-slot="l8-negative-item"
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-destructive/20 bg-destructive/5 text-xs text-destructive dark:text-destructive-foreground"
+                className="dark:text-destructive-foreground inline-flex items-center gap-1 rounded-md border border-destructive/20 bg-destructive/5 px-2.5 py-1 text-xs text-destructive"
               >
                 <span>{neg}</span>
                 <button
                   type="button"
                   data-slot="l8-remove-negative-btn"
                   onClick={() => handleRemoveNegative(idx)}
-                  className="text-muted-foreground hover:text-destructive cursor-pointer transition-colors p-0.5 rounded"
+                  className="cursor-pointer rounded p-0.5 text-muted-foreground transition-colors hover:text-destructive"
                   aria-label={`Remove negative constraint: ${neg}`}
                 >
                   <X className="size-3" />

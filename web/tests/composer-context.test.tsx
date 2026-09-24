@@ -6,7 +6,11 @@ import { useCatalog } from "../src/hooks/useCatalog"
 import { ComposerProvider } from "../src/context/ComposerContext"
 import { useComposer } from "../src/hooks/useComposer"
 import { useTokenCount } from "../src/hooks/useTokenCount"
-import type { CatalogIndex, ICatalogService, DesignSystemBundle } from "../src/lib/catalog/catalog-types"
+import type {
+  CatalogIndex,
+  ICatalogService,
+  DesignSystemBundle,
+} from "../src/lib/catalog/catalog-types"
 import { STORAGE_KEYS } from "../src/lib/storage/persistence"
 
 // Configure React act environment support in test environment
@@ -30,7 +34,9 @@ function renderHook<T>(
     return null
   }
 
-  const Wrapper = options?.wrapper ?? (({ children }: { children: React.ReactNode }) => <>{children}</>)
+  const Wrapper =
+    options?.wrapper ??
+    (({ children }: { children: React.ReactNode }) => <>{children}</>)
 
   act(() => {
     root.render(
@@ -114,7 +120,8 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
           tokensCss: "data/design-systems/linear-app/tokens.css",
           tailwindCss: "data/design-systems/linear-app/tailwind-v4.css",
           componentsHtml: "data/design-systems/linear-app/components.html",
-          componentsManifest: "data/design-systems/linear-app/components.manifest.json",
+          componentsManifest:
+            "data/design-systems/linear-app/components.manifest.json",
         },
       },
       {
@@ -155,7 +162,8 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
           tokensCss: "data/design-systems/stripe-dev/tokens.css",
           tailwindCss: "data/design-systems/stripe-dev/tailwind-v4.css",
           componentsHtml: "data/design-systems/stripe-dev/components.html",
-          componentsManifest: "data/design-systems/stripe-dev/components.manifest.json",
+          componentsManifest:
+            "data/design-systems/stripe-dev/components.manifest.json",
         },
       },
     ],
@@ -164,7 +172,8 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
         id: "anti-ai-slop",
         name: "Anti-AI-Slop Discipline",
         category: "discipline",
-        description: "Rules against generic AI generated styles and purple gradients",
+        description:
+          "Rules against generic AI generated styles and purple gradients",
         ruleCount: 12,
         isDefaultEnabled: true,
         assetPath: "data/craft/anti-ai-slop.md",
@@ -213,15 +222,19 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       fetchAssetContent: vi.fn().mockImplementation((path: string) => {
         return Promise.resolve(`Mock content for ${path}`)
       }),
-      fetchDesignTokens: vi.fn().mockResolvedValue(":root { --primary: #5e6ad2; }"),
-      fetchDesignSystemBundle: vi.fn().mockImplementation((systemId: string): Promise<DesignSystemBundle> => {
-        return Promise.resolve({
-          usage: `# ${systemId} Usage Guidelines`,
-          designMd: `# ${systemId} Design Principles`,
-          tokensCss: `:root { --system: "${systemId}"; }`,
-          componentsHtml: `<div class="${systemId}-root">Component</div>`,
-        })
-      }),
+      fetchDesignTokens: vi
+        .fn()
+        .mockResolvedValue(":root { --primary: #5e6ad2; }"),
+      fetchDesignSystemBundle: vi
+        .fn()
+        .mockImplementation((systemId: string): Promise<DesignSystemBundle> => {
+          return Promise.resolve({
+            usage: `# ${systemId} Usage Guidelines`,
+            designMd: `# ${systemId} Design Principles`,
+            tokensCss: `:root { --system: "${systemId}"; }`,
+            componentsHtml: `<div class="${systemId}-root">Component</div>`,
+          })
+        }),
       clearCache: vi.fn(),
       hasAssetCached: vi.fn().mockReturnValue(false),
       getLoadedCatalog: vi.fn().mockReturnValue(mockCatalogData),
@@ -237,7 +250,9 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
   describe("CatalogContext & useCatalog", () => {
     it("throws an informative error when used outside CatalogProvider", () => {
       // Suppress console.error for expected React uncaught error
-      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {})
+      const consoleError = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {})
       expect(() => {
         renderHook(() => useCatalog())
       }).toThrow(/useCatalog must be used within a CatalogProvider/)
@@ -270,7 +285,10 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
     it("filters design systems and craft rules by search query in real time", async () => {
       const wrapper = ({ children }: { children: React.ReactNode }) => (
-        <CatalogProvider catalogService={mockCatalogService} initialCatalog={mockCatalogData}>
+        <CatalogProvider
+          catalogService={mockCatalogService}
+          initialCatalog={mockCatalogData}
+        >
           {children}
         </CatalogProvider>
       )
@@ -312,7 +330,10 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
     it("filters design systems by selected category", async () => {
       const wrapper = ({ children }: { children: React.ReactNode }) => (
-        <CatalogProvider catalogService={mockCatalogService} initialCatalog={mockCatalogData}>
+        <CatalogProvider
+          catalogService={mockCatalogService}
+          initialCatalog={mockCatalogData}
+        >
           {children}
         </CatalogProvider>
       )
@@ -335,7 +356,10 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
     it("handles preview system selection cleanly", async () => {
       const wrapper = ({ children }: { children: React.ReactNode }) => (
-        <CatalogProvider catalogService={mockCatalogService} initialCatalog={mockCatalogData}>
+        <CatalogProvider
+          catalogService={mockCatalogService}
+          initialCatalog={mockCatalogData}
+        >
           {children}
         </CatalogProvider>
       )
@@ -385,7 +409,9 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
   describe("ComposerContext & useComposer", () => {
     it("throws an informative error when used outside ComposerProvider", () => {
-      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {})
+      const consoleError = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {})
       expect(() => {
         renderHook(() => useComposer())
       }).toThrow(/useComposer must be used within a ComposerProvider/)
@@ -402,9 +428,13 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       const { result } = renderHook(() => useComposer(), { wrapper })
 
       expect(result.current.config.layer1Security.enabled).toBe(true)
-      expect(result.current.config.layer3AuthoritativeConstraints.targetFramework).toBe("react")
+      expect(
+        result.current.config.layer3AuthoritativeConstraints.targetFramework
+      ).toBe("react")
       expect(result.current.compiledPrompt).toBeDefined()
-      expect(result.current.compiledPrompt.fullPrompt).toContain("<open-studio-directive")
+      expect(result.current.compiledPrompt.fullPrompt).toContain(
+        "<open-studio-directive"
+      )
       expect(result.current.compiledPrompt.totalTokens).toBeGreaterThan(0)
     })
 
@@ -420,7 +450,9 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
       // Update objective in Layer 9
       act(() => {
-        result.current.setUserObjective("Create an AI analytics dashboard with real-time graphs")
+        result.current.setUserObjective(
+          "Create an AI analytics dashboard with real-time graphs"
+        )
       })
 
       // Immediately after update, the compiled prompt has NOT yet updated due to 100ms debounce
@@ -439,7 +471,9 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       })
 
       expect(result.current.isDebouncing).toBe(false)
-      expect(result.current.compiledPrompt.fullPrompt).toContain("Create an AI analytics dashboard")
+      expect(result.current.compiledPrompt.fullPrompt).toContain(
+        "Create an AI analytics dashboard"
+      )
     })
 
     it("coalesces rapid consecutive updates into a single compilation after 100ms", async () => {
@@ -472,14 +506,18 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       act(() => {
         vi.advanceTimersByTime(40)
       })
-      expect(result.current.compiledPrompt.fullPrompt).not.toContain("Final Update 3")
+      expect(result.current.compiledPrompt.fullPrompt).not.toContain(
+        "Final Update 3"
+      )
 
       // Advance remaining 70ms to clear debounce
       act(() => {
         vi.advanceTimersByTime(70)
       })
 
-      expect(result.current.compiledPrompt.fullPrompt).toContain("Final Update 3")
+      expect(result.current.compiledPrompt.fullPrompt).toContain(
+        "Final Update 3"
+      )
       expect(result.current.compiledPrompt.fullPrompt).not.toContain("Update 1")
     })
 
@@ -497,7 +535,9 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
         result.current.compileNow()
       })
 
-      expect(result.current.compiledPrompt.fullPrompt).toContain("Immediate compilation required")
+      expect(result.current.compiledPrompt.fullPrompt).toContain(
+        "Immediate compilation required"
+      )
       expect(result.current.isDebouncing).toBe(false)
     })
 
@@ -514,9 +554,13 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
         await result.current.selectDesignSystem("linear-app")
       })
 
-      expect(result.current.config.layer5BrandContract.selectedSystemId).toBe("linear-app")
+      expect(result.current.config.layer5BrandContract.selectedSystemId).toBe(
+        "linear-app"
+      )
       expect(result.current.config.layer5BrandContract.enabled).toBe(true)
-      expect(mockCatalogService.fetchDesignSystemBundle).toHaveBeenCalledWith("linear-app")
+      expect(mockCatalogService.fetchDesignSystemBundle).toHaveBeenCalledWith(
+        "linear-app"
+      )
       expect(result.current.assets.designSystem?.usage).toContain("linear-app")
 
       // Advance timer for debounced recompilation
@@ -539,18 +583,25 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       await act(async () => {
         await result.current.selectDesignSystem("linear-app")
       })
-      expect(result.current.config.layer5BrandContract.selectedSystemId).toBe("linear-app")
+      expect(result.current.config.layer5BrandContract.selectedSystemId).toBe(
+        "linear-app"
+      )
 
       await act(async () => {
         await result.current.selectDesignSystem(undefined)
       })
-      expect(result.current.config.layer5BrandContract.selectedSystemId).toBeUndefined()
+      expect(
+        result.current.config.layer5BrandContract.selectedSystemId
+      ).toBeUndefined()
       expect(result.current.assets.designSystem).toBeUndefined()
     })
 
     it("toggles craft rules and loads their markdown content on demand", async () => {
       const wrapper = ({ children }: { children: React.ReactNode }) => (
-        <CatalogProvider catalogService={mockCatalogService} initialCatalog={mockCatalogData}>
+        <CatalogProvider
+          catalogService={mockCatalogService}
+          initialCatalog={mockCatalogData}
+        >
           <ComposerProvider catalogService={mockCatalogService}>
             {children}
           </ComposerProvider>
@@ -560,20 +611,28 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       const { result } = renderHook(() => useComposer(), { wrapper })
 
       // Initially "anti-ai-slop" is selected by default
-      expect(result.current.config.layer6CraftRules.selectedRuleIds).toContain("anti-ai-slop")
+      expect(result.current.config.layer6CraftRules.selectedRuleIds).toContain(
+        "anti-ai-slop"
+      )
 
       // Toggle off anti-ai-slop
       await act(async () => {
         await result.current.toggleCraftRule("anti-ai-slop")
       })
-      expect(result.current.config.layer6CraftRules.selectedRuleIds).not.toContain("anti-ai-slop")
+      expect(
+        result.current.config.layer6CraftRules.selectedRuleIds
+      ).not.toContain("anti-ai-slop")
 
       // Toggle on accessibility-contrast
       await act(async () => {
         await result.current.toggleCraftRule("accessibility-contrast")
       })
-      expect(result.current.config.layer6CraftRules.selectedRuleIds).toContain("accessibility-contrast")
-      expect(mockCatalogService.fetchAssetContent).toHaveBeenCalledWith("data/craft/accessibility-contrast.md")
+      expect(result.current.config.layer6CraftRules.selectedRuleIds).toContain(
+        "accessibility-contrast"
+      )
+      expect(mockCatalogService.fetchAssetContent).toHaveBeenCalledWith(
+        "data/craft/accessibility-contrast.md"
+      )
     })
 
     it("manages clarification answers and interactive loops", () => {
@@ -593,8 +652,13 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
         })
       })
 
-      expect(result.current.config.layer9BriefAndClarification.clarificationAnswers).toHaveLength(1)
-      expect(result.current.config.layer9BriefAndClarification.clarificationAnswers[0].questionId).toBe("auth-type")
+      expect(
+        result.current.config.layer9BriefAndClarification.clarificationAnswers
+      ).toHaveLength(1)
+      expect(
+        result.current.config.layer9BriefAndClarification
+          .clarificationAnswers[0].questionId
+      ).toBe("auth-type")
 
       // Adding answer for existing questionId replaces it
       act(() => {
@@ -604,14 +668,21 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
           selectedValues: ["passkeys"],
         })
       })
-      expect(result.current.config.layer9BriefAndClarification.clarificationAnswers).toHaveLength(1)
-      expect(result.current.config.layer9BriefAndClarification.clarificationAnswers[0].selectedValues).toEqual(["passkeys"])
+      expect(
+        result.current.config.layer9BriefAndClarification.clarificationAnswers
+      ).toHaveLength(1)
+      expect(
+        result.current.config.layer9BriefAndClarification
+          .clarificationAnswers[0].selectedValues
+      ).toEqual(["passkeys"])
 
       // Clear answers
       act(() => {
         result.current.clearClarificationAnswers()
       })
-      expect(result.current.config.layer9BriefAndClarification.clarificationAnswers).toHaveLength(0)
+      expect(
+        result.current.config.layer9BriefAndClarification.clarificationAnswers
+      ).toHaveLength(0)
     })
 
     it("manages active agent export target and produces formatted export", () => {
@@ -639,7 +710,10 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
     it("auto-saves Layer 9 draft brief to localStorage", () => {
       const wrapper = ({ children }: { children: React.ReactNode }) => (
-        <ComposerProvider catalogService={mockCatalogService} autoPersist={true}>
+        <ComposerProvider
+          catalogService={mockCatalogService}
+          autoPersist={true}
+        >
           {children}
         </ComposerProvider>
       )
@@ -662,22 +736,28 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
         persistentDirectives: ["Always adhere to WCAG AAA"],
         negativeConstraints: ["Never use inline styles"],
       }
-      localStorage.setItem(STORAGE_KEYS.USER_MEMORY, JSON.stringify(savedMemory))
+      localStorage.setItem(
+        STORAGE_KEYS.USER_MEMORY,
+        JSON.stringify(savedMemory)
+      )
 
       const wrapper = ({ children }: { children: React.ReactNode }) => (
-        <ComposerProvider catalogService={mockCatalogService} autoPersist={true}>
+        <ComposerProvider
+          catalogService={mockCatalogService}
+          autoPersist={true}
+        >
           {children}
         </ComposerProvider>
       )
 
       const { result } = renderHook(() => useComposer(), { wrapper })
 
-      expect(result.current.config.layer8UserMemory.persistentDirectives).toEqual([
-        "Always adhere to WCAG AAA",
-      ])
-      expect(result.current.config.layer8UserMemory.negativeConstraints).toEqual([
-        "Never use inline styles",
-      ])
+      expect(
+        result.current.config.layer8UserMemory.persistentDirectives
+      ).toEqual(["Always adhere to WCAG AAA"])
+      expect(
+        result.current.config.layer8UserMemory.negativeConstraints
+      ).toEqual(["Never use inline styles"])
     })
 
     it("supports resetConfig to restore defaults", () => {
@@ -694,12 +774,16 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
           targetFramework: "svelte",
         })
       })
-      expect(result.current.config.layer3AuthoritativeConstraints.targetFramework).toBe("svelte")
+      expect(
+        result.current.config.layer3AuthoritativeConstraints.targetFramework
+      ).toBe("svelte")
 
       act(() => {
         result.current.resetConfig()
       })
-      expect(result.current.config.layer3AuthoritativeConstraints.targetFramework).toBe("react")
+      expect(
+        result.current.config.layer3AuthoritativeConstraints.targetFramework
+      ).toBe("react")
     })
   })
 
@@ -712,7 +796,11 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       )
 
       const { result } = renderHook(
-        () => useTokenCount({ targetModel: "claude-3-5-sonnet", budgetLimit: 5000 }),
+        () =>
+          useTokenCount({
+            targetModel: "claude-3-5-sonnet",
+            budgetLimit: 5000,
+          }),
         { wrapper }
       )
 
@@ -733,7 +821,8 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
       // Set tiny budget limit of 10 tokens
       const { result } = renderHook(
-        () => useTokenCount({ targetModel: "claude-3-5-sonnet", budgetLimit: 10 }),
+        () =>
+          useTokenCount({ targetModel: "claude-3-5-sonnet", budgetLimit: 10 }),
         { wrapper }
       )
 
@@ -744,7 +833,11 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
     it("supports calculating tokens for custom arbitrary text", () => {
       const sampleText = "The quick brown fox jumps over the lazy dog."
       const { result } = renderHook(() =>
-        useTokenCount({ customText: sampleText, targetModel: "gpt-4o", budgetLimit: 100 })
+        useTokenCount({
+          customText: sampleText,
+          targetModel: "gpt-4o",
+          budgetLimit: 100,
+        })
       )
 
       expect(result.current.totalTokens).toBe(11) // 44 chars / 4 = 11 tokens
@@ -831,7 +924,10 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
       expect(result.current.roundtripStep).toBe("STEP_2_PROMPT_READY")
       expect(result.current.activeTurn).toBe("turn2_execution")
-      expect(result.current.config.layer9BriefAndClarification.clarificationAnswers.length).toBeGreaterThan(0)
+      expect(
+        result.current.config.layer9BriefAndClarification.clarificationAnswers
+          .length
+      ).toBeGreaterThan(0)
       expect(result.current.compiledPrompt.turnMode).toBe("turn2_execution")
     })
 
@@ -856,7 +952,9 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
       expect(result.current.roundtripStep).toBe("STEP_2_PROMPT_READY")
       expect(result.current.activeTurn).toBe("turn2_execution")
-      expect(result.current.config.layer9BriefAndClarification.clarificationAnswers).toEqual([
+      expect(
+        result.current.config.layer9BriefAndClarification.clarificationAnswers
+      ).toEqual([
         {
           questionId: "custom-auth",
           questionLabel: "Auth method",
@@ -866,4 +964,3 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
     })
   })
 })
-

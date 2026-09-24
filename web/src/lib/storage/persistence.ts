@@ -138,7 +138,9 @@ export class SafeStorage implements StorageAdapter {
   }
 }
 
-export function createSafeStorage(adapter?: StorageAdapter | null): SafeStorage {
+export function createSafeStorage(
+  adapter?: StorageAdapter | null
+): SafeStorage {
   return new SafeStorage(adapter)
 }
 
@@ -160,7 +162,9 @@ export interface PersistenceService {
   clearDraftBrief(): boolean
 }
 
-export function createPersistence(storage?: StorageAdapter | null): PersistenceService {
+export function createPersistence(
+  storage?: StorageAdapter | null
+): PersistenceService {
   const safeStorage =
     storage instanceof SafeStorage ? storage : new SafeStorage(storage)
 
@@ -223,9 +227,13 @@ export function createPersistence(storage?: StorageAdapter | null): PersistenceS
         "enabled" in data &&
         typeof (data as { enabled: unknown }).enabled === "boolean" &&
         "persistentDirectives" in data &&
-        Array.isArray((data as { persistentDirectives: unknown }).persistentDirectives) &&
+        Array.isArray(
+          (data as { persistentDirectives: unknown }).persistentDirectives
+        ) &&
         "negativeConstraints" in data &&
-        Array.isArray((data as { negativeConstraints: unknown }).negativeConstraints)
+        Array.isArray(
+          (data as { negativeConstraints: unknown }).negativeConstraints
+        )
       ) {
         return data as Layer8UserMemoryConfig
       }
@@ -345,14 +353,24 @@ export const getTheme = defaultPersistence.getTheme.bind(defaultPersistence)
 export const setTheme = defaultPersistence.setTheme.bind(defaultPersistence)
 export const clearTheme = defaultPersistence.clearTheme.bind(defaultPersistence)
 
-export const getUserMemory = defaultPersistence.getUserMemory.bind(defaultPersistence)
-export const setUserMemory = defaultPersistence.setUserMemory.bind(defaultPersistence)
-export const getUserDirectives = defaultPersistence.getUserDirectives.bind(defaultPersistence)
-export const setUserDirectives = defaultPersistence.setUserDirectives.bind(defaultPersistence)
-export const getNegativeConstraints = defaultPersistence.getNegativeConstraints.bind(defaultPersistence)
-export const setNegativeConstraints = defaultPersistence.setNegativeConstraints.bind(defaultPersistence)
-export const clearUserMemory = defaultPersistence.clearUserMemory.bind(defaultPersistence)
+export const getUserMemory =
+  defaultPersistence.getUserMemory.bind(defaultPersistence)
+export const setUserMemory =
+  defaultPersistence.setUserMemory.bind(defaultPersistence)
+export const getUserDirectives =
+  defaultPersistence.getUserDirectives.bind(defaultPersistence)
+export const setUserDirectives =
+  defaultPersistence.setUserDirectives.bind(defaultPersistence)
+export const getNegativeConstraints =
+  defaultPersistence.getNegativeConstraints.bind(defaultPersistence)
+export const setNegativeConstraints =
+  defaultPersistence.setNegativeConstraints.bind(defaultPersistence)
+export const clearUserMemory =
+  defaultPersistence.clearUserMemory.bind(defaultPersistence)
 
-export const getDraftBrief = defaultPersistence.getDraftBrief.bind(defaultPersistence)
-export const setDraftBrief = defaultPersistence.setDraftBrief.bind(defaultPersistence)
-export const clearDraftBrief = defaultPersistence.clearDraftBrief.bind(defaultPersistence)
+export const getDraftBrief =
+  defaultPersistence.getDraftBrief.bind(defaultPersistence)
+export const setDraftBrief =
+  defaultPersistence.setDraftBrief.bind(defaultPersistence)
+export const clearDraftBrief =
+  defaultPersistence.clearDraftBrief.bind(defaultPersistence)

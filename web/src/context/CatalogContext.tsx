@@ -10,10 +10,7 @@ import {
   type ICatalogService,
 } from "../lib/catalog/catalog-service"
 import type { CatalogIndex } from "../lib/catalog/catalog-types"
-import {
-  CatalogContext,
-  type CatalogContextValue,
-} from "./catalog-context-def"
+import { CatalogContext, type CatalogContextValue } from "./catalog-context-def"
 
 export interface CatalogProviderProps {
   readonly children: ReactNode
@@ -29,7 +26,9 @@ export function CatalogProvider({
   autoLoad = true,
 }: CatalogProviderProps) {
   const [catalog, setCatalog] = useState<CatalogIndex | null>(initialCatalog)
-  const [isLoading, setIsLoading] = useState<boolean>(!initialCatalog && autoLoad)
+  const [isLoading, setIsLoading] = useState<boolean>(
+    !initialCatalog && autoLoad
+  )
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
@@ -150,9 +149,7 @@ export function CatalogProvider({
 
   const previewSystem = useMemo(() => {
     if (!catalog || !previewSystemId) return null
-    return (
-      catalog.designSystems.find((ds) => ds.id === previewSystemId) ?? null
-    )
+    return catalog.designSystems.find((ds) => ds.id === previewSystemId) ?? null
   }, [catalog, previewSystemId])
 
   const value: CatalogContextValue = useMemo(

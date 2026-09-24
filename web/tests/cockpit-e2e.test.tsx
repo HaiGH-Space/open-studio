@@ -5,7 +5,10 @@ import { App } from "../src/App"
 import { StudioCockpit } from "../src/components/cockpit/StudioCockpit"
 import { CatalogProvider } from "../src/context/CatalogContext"
 import { ComposerProvider } from "../src/context/ComposerContext"
-import type { CatalogIndex, ICatalogService } from "../src/lib/catalog/catalog-types"
+import type {
+  CatalogIndex,
+  ICatalogService,
+} from "../src/lib/catalog/catalog-types"
 
 declare global {
   var IS_REACT_ACT_ENVIRONMENT: boolean
@@ -102,7 +105,8 @@ const mockCatalog: CatalogIndex = {
         tokensCss: "data/design-systems/linear-app/tokens.css",
         tailwindCss: "data/design-systems/linear-app/tailwind-v4.css",
         componentsHtml: "data/design-systems/linear-app/components.html",
-        componentsManifest: "data/design-systems/linear-app/components.manifest.json",
+        componentsManifest:
+          "data/design-systems/linear-app/components.manifest.json",
       },
     },
     {
@@ -143,7 +147,8 @@ const mockCatalog: CatalogIndex = {
         tokensCss: "data/design-systems/stripe-dev/tokens.css",
         tailwindCss: "data/design-systems/stripe-dev/tailwind-v4.css",
         componentsHtml: "data/design-systems/stripe-dev/components.html",
-        componentsManifest: "data/design-systems/stripe-dev/components.manifest.json",
+        componentsManifest:
+          "data/design-systems/stripe-dev/components.manifest.json",
       },
     },
   ],
@@ -152,7 +157,8 @@ const mockCatalog: CatalogIndex = {
       id: "anti-ai-slop",
       name: "Anti-AI-Slop Discipline",
       category: "discipline",
-      description: "Rules against generic AI generated styles and purple gradients",
+      description:
+        "Rules against generic AI generated styles and purple gradients",
       ruleCount: 12,
       isDefaultEnabled: true,
       assetPath: "data/craft/anti-ai-slop.md",
@@ -171,18 +177,26 @@ const mockCatalog: CatalogIndex = {
   templates: [],
 }
 
-function createMockCatalogService(catalogData: CatalogIndex | null = mockCatalog): ICatalogService {
+function createMockCatalogService(
+  catalogData: CatalogIndex | null = mockCatalog
+): ICatalogService {
   return {
     loadCatalog: vi.fn().mockResolvedValue(catalogData),
     getLoadedCatalog: vi.fn().mockReturnValue(catalogData),
-    fetchDesignTokens: vi.fn().mockResolvedValue(":root { --primary: #5e6ad2; }"),
+    fetchDesignTokens: vi
+      .fn()
+      .mockResolvedValue(":root { --primary: #5e6ad2; }"),
     fetchDesignSystemBundle: vi.fn().mockResolvedValue({
       id: "linear-app",
       name: "Linear",
       tokensCss: ":root { --primary: #5e6ad2; --bg: #08090a; }",
       componentsHtml: "<div>Linear components</div>",
     }),
-    fetchAssetContent: vi.fn().mockResolvedValue("# Anti-AI-Slop Rules\n- Avoid purple glowing cards\n- Use deliberate shadows"),
+    fetchAssetContent: vi
+      .fn()
+      .mockResolvedValue(
+        "# Anti-AI-Slop Rules\n- Avoid purple glowing cards\n- Use deliberate shadows"
+      ),
     clearCache: vi.fn(),
     hasAssetCached: vi.fn().mockReturnValue(true),
   }
@@ -237,8 +251,16 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
     it("coordinates Left (Resource Navigator), Center (Composer Manager), and Right (Prompt Inspector) panes", async () => {
       await act(async () => {
         root.render(
-          <CatalogProvider catalogService={mockService} initialCatalog={mockCatalog} autoLoad={false}>
-            <ComposerProvider catalogService={mockService} autoPersist={false} debounceMs={0}>
+          <CatalogProvider
+            catalogService={mockService}
+            initialCatalog={mockCatalog}
+            autoLoad={false}
+          >
+            <ComposerProvider
+              catalogService={mockService}
+              autoPersist={false}
+              debounceMs={0}
+            >
               <StudioCockpit />
             </ComposerProvider>
           </CatalogProvider>
@@ -249,23 +271,37 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       expect(cockpit).not.toBeNull()
 
       // Left Column
-      const leftPane = container.querySelector('[data-slot="resource-navigator"]')
+      const leftPane = container.querySelector(
+        '[data-slot="resource-navigator"]'
+      )
       expect(leftPane).not.toBeNull()
 
       // Center Column
-      const centerPane = container.querySelector('[data-slot="composer-manager"]')
+      const centerPane = container.querySelector(
+        '[data-slot="composer-manager"]'
+      )
       expect(centerPane).not.toBeNull()
 
       // Right Column
-      const rightPane = container.querySelector('[data-slot="prompt-inspector"]')
+      const rightPane = container.querySelector(
+        '[data-slot="prompt-inspector"]'
+      )
       expect(rightPane).not.toBeNull()
     })
 
     it("accepts and applies custom className to the cockpit container", async () => {
       await act(async () => {
         root.render(
-          <CatalogProvider catalogService={mockService} initialCatalog={mockCatalog} autoLoad={false}>
-            <ComposerProvider catalogService={mockService} autoPersist={false} debounceMs={0}>
+          <CatalogProvider
+            catalogService={mockService}
+            initialCatalog={mockCatalog}
+            autoLoad={false}
+          >
+            <ComposerProvider
+              catalogService={mockService}
+              autoPersist={false}
+              debounceMs={0}
+            >
               <StudioCockpit className="custom-cockpit-test" />
             </ComposerProvider>
           </CatalogProvider>
@@ -292,9 +328,15 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       expect(cockpit).not.toBeNull()
 
       // 3 columns rendered inside
-      expect(container.querySelector('[data-slot="resource-navigator"]')).not.toBeNull()
-      expect(container.querySelector('[data-slot="composer-manager"]')).not.toBeNull()
-      expect(container.querySelector('[data-slot="prompt-inspector"]')).not.toBeNull()
+      expect(
+        container.querySelector('[data-slot="resource-navigator"]')
+      ).not.toBeNull()
+      expect(
+        container.querySelector('[data-slot="composer-manager"]')
+      ).not.toBeNull()
+      expect(
+        container.querySelector('[data-slot="prompt-inspector"]')
+      ).not.toBeNull()
     })
   })
 
@@ -305,7 +347,9 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       })
 
       // Step 1: Catalog Loaded and Systems Visible
-      const linearCard = container.querySelector('[data-slot="design-system-card"]')
+      const linearCard = container.querySelector(
+        '[data-slot="design-system-card"]'
+      )
       expect(linearCard).not.toBeNull()
       expect(container.textContent).toContain("Linear")
 
@@ -335,7 +379,9 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
 
       expect(container.textContent).toContain("Anti-AI-Slop Discipline")
 
-      const switches = container.querySelectorAll('[data-slot="craft-rule-switch"]')
+      const switches = container.querySelectorAll(
+        '[data-slot="craft-rule-switch"]'
+      )
       expect(switches.length).toBeGreaterThan(0)
       const antiAiSlopSwitch = switches[0] as HTMLElement
 
@@ -351,7 +397,10 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       expect(objectiveInput).not.toBeNull()
 
       await act(async () => {
-        setNativeTextareaValue(objectiveInput, "Build high-converting pricing page with tiered plans")
+        setNativeTextareaValue(
+          objectiveInput,
+          "Build high-converting pricing page with tiered plans"
+        )
       })
 
       // Add feature requirement
@@ -385,7 +434,9 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       })
 
       // Modal should now be open in document.body
-      const modal = document.body.querySelector('[data-slot="question-form-modal"]')
+      const modal = document.body.querySelector(
+        '[data-slot="question-form-modal"]'
+      )
       expect(modal).not.toBeNull()
 
       // Switch to Raw tab to paste XML
@@ -417,7 +468,9 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
         formTabBtn.click()
       })
 
-      expect(document.body.textContent).toContain("Billing Module Clarifications")
+      expect(document.body.textContent).toContain(
+        "Billing Module Clarifications"
+      )
       expect(document.body.textContent).toContain("Pricing model?")
 
       // Step 6: Submit answers to Layer 9
@@ -435,7 +488,9 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       expect(container.textContent).toContain("Pricing model?")
 
       // Step 7: Verify Prompt Output & Copy to Clipboard
-      const promptViewer = container.querySelector('[data-slot="prompt-output-viewer"]')
+      const promptViewer = container.querySelector(
+        '[data-slot="prompt-output-viewer"]'
+      )
       expect(promptViewer).not.toBeNull()
 
       // Ensure compiled prompt contains our user objective
@@ -469,8 +524,12 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       })
 
       // Default target: generic-llm
-      let promptViewer = container.querySelector('[data-slot="prompt-output-viewer"]')
-      expect(promptViewer?.textContent).toContain("# Open Studio Design Directive")
+      let promptViewer = container.querySelector(
+        '[data-slot="prompt-output-viewer"]'
+      )
+      expect(promptViewer?.textContent).toContain(
+        "# Open Studio Design Directive"
+      )
 
       // Switch to Claude Code
       const claudeTab = container.querySelector(
@@ -482,7 +541,9 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
         claudeTab.click()
       })
 
-      promptViewer = container.querySelector('[data-slot="prompt-output-viewer"]')
+      promptViewer = container.querySelector(
+        '[data-slot="prompt-output-viewer"]'
+      )
       expect(promptViewer?.textContent).toContain("claude-code-directive")
 
       // Switch to Cursor
@@ -495,7 +556,9 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
         cursorTab.click()
       })
 
-      promptViewer = container.querySelector('[data-slot="prompt-output-viewer"]')
+      promptViewer = container.querySelector(
+        '[data-slot="prompt-output-viewer"]'
+      )
       expect(promptViewer?.textContent).toContain("security-guardrails")
 
       // Switch to Prompt XML
@@ -508,12 +571,16 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
         xmlTab.click()
       })
 
-      promptViewer = container.querySelector('[data-slot="prompt-output-viewer"]')
+      promptViewer = container.querySelector(
+        '[data-slot="prompt-output-viewer"]'
+      )
       expect(promptViewer?.textContent).toContain("<open-studio-directive")
     })
 
     it("handles clipboard failure gracefully in export without crash", async () => {
-      writeTextMock.mockRejectedValueOnce(new Error("Clipboard permission denied"))
+      writeTextMock.mockRejectedValueOnce(
+        new Error("Clipboard permission denied")
+      )
 
       await act(async () => {
         root.render(<App catalogService={mockService} />)
@@ -559,7 +626,9 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       })
 
       // System should remain intact and prompt output still renders
-      const promptViewer = container.querySelector('[data-slot="prompt-output-viewer"]')
+      const promptViewer = container.querySelector(
+        '[data-slot="prompt-output-viewer"]'
+      )
       expect(promptViewer).not.toBeNull()
     })
 
@@ -619,7 +688,8 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       })
 
       expect(writeTextMock).toHaveBeenCalled()
-      const lastCallText = writeTextMock.mock.calls[writeTextMock.mock.calls.length - 1][0]
+      const lastCallText =
+        writeTextMock.mock.calls[writeTextMock.mock.calls.length - 1][0]
       expect(lastCallText).toContain("billing settings card")
     })
 
@@ -627,7 +697,12 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       const emptyCatalog: CatalogIndex = {
         schemaVersion: "open-studio-catalog/v1",
         generatedAt: "2026-09-22T00:00:00.000Z",
-        stats: { totalDesignSystems: 0, totalCraftRules: 0, totalSkills: 0, totalTemplates: 0 },
+        stats: {
+          totalDesignSystems: 0,
+          totalCraftRules: 0,
+          totalSkills: 0,
+          totalTemplates: 0,
+        },
         taxonomies: { categories: [], tags: [], surfaces: [] },
         designSystems: [],
         craftRules: [],
@@ -643,11 +718,15 @@ describe("Cockpit Integration & End-to-End User Journey (Task 16)", () => {
       const cockpit = container.querySelector('[data-slot="studio-cockpit"]')
       expect(cockpit).not.toBeNull()
 
-      const emptySystems = container.querySelector('[data-slot="empty-systems"]')
+      const emptySystems = container.querySelector(
+        '[data-slot="empty-systems"]'
+      )
       expect(emptySystems).not.toBeNull()
 
       // Prompt inspector still renders clean prompt
-      const promptViewer = container.querySelector('[data-slot="prompt-output-viewer"]')
+      const promptViewer = container.querySelector(
+        '[data-slot="prompt-output-viewer"]'
+      )
       expect(promptViewer).not.toBeNull()
     })
   })

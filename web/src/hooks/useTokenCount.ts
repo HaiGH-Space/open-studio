@@ -52,7 +52,9 @@ export function useTokenCount(
     } else if (composer) {
       totalTokens = composer.compiledPrompt.totalTokens
       layerBreakdown = composer.compiledPrompt.layerBreakdown
-      systemPromptTokens = countTokens(composer.compiledPrompt.systemPromptBlock)
+      systemPromptTokens = countTokens(
+        composer.compiledPrompt.systemPromptBlock
+      )
       userPromptTokens = countTokens(composer.compiledPrompt.userPromptBlock)
     } else {
       totalTokens = 0

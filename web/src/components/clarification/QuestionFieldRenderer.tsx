@@ -1,7 +1,10 @@
 import React from "react"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
-import type { QuestionNode, QuestionOption } from "../../lib/clarification/question-form-types"
+import type {
+  QuestionNode,
+  QuestionOption,
+} from "../../lib/clarification/question-form-types"
 import { cn } from "cn"
 
 export interface QuestionFieldRendererProps {
@@ -35,7 +38,9 @@ export function QuestionFieldRenderer({
     }
   }
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleTextChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     if (disabled) return
     onChange([e.target.value])
   }
@@ -49,16 +54,19 @@ export function QuestionFieldRenderer({
       <div className="flex items-center justify-between gap-2">
         <label
           htmlFor={`q-${id}`}
-          className="text-xs font-semibold text-foreground leading-snug flex items-center gap-1.5"
+          className="flex items-center gap-1.5 text-xs leading-snug font-semibold text-foreground"
         >
           <span>{label}</span>
           {required && (
-            <span className="text-destructive font-mono text-xs" title="Required field">
+            <span
+              className="font-mono text-xs text-destructive"
+              title="Required field"
+            >
               *
             </span>
           )}
         </label>
-        <span className="text-[10px] uppercase font-mono tracking-wider text-muted-foreground/80 px-1.5 py-0.5 rounded bg-muted/40">
+        <span className="rounded bg-muted/40 px-1.5 py-0.5 font-mono text-[10px] tracking-wider text-muted-foreground/80 uppercase">
           {type}
         </span>
       </div>
@@ -74,11 +82,11 @@ export function QuestionFieldRenderer({
                 key={opt.value}
                 htmlFor={optionId}
                 className={cn(
-                  "flex items-center gap-2.5 p-2 rounded-lg border text-xs cursor-pointer transition-all",
+                  "flex cursor-pointer items-center gap-2.5 rounded-lg border p-2 text-xs transition-all",
                   isChecked
-                    ? "border-primary/60 bg-primary/10 text-foreground font-medium"
-                    : "border-border/50 bg-background/40 hover:bg-muted/30 text-muted-foreground hover:text-foreground",
-                  disabled && "opacity-50 cursor-not-allowed"
+                    ? "border-primary/60 bg-primary/10 font-medium text-foreground"
+                    : "border-border/50 bg-background/40 text-muted-foreground hover:bg-muted/30 hover:text-foreground",
+                  disabled && "cursor-not-allowed opacity-50"
                 )}
               >
                 <input
@@ -89,7 +97,7 @@ export function QuestionFieldRenderer({
                   checked={isChecked}
                   disabled={disabled}
                   onChange={() => handleRadioChange(opt.value)}
-                  className="size-3.5 text-primary accent-primary cursor-pointer disabled:cursor-not-allowed"
+                  className="size-3.5 cursor-pointer text-primary accent-primary disabled:cursor-not-allowed"
                 />
                 <span className="flex-1">{opt.label}</span>
               </label>
@@ -105,7 +113,7 @@ export function QuestionFieldRenderer({
             value={value[0] ?? ""}
             disabled={disabled}
             onChange={(e) => handleRadioChange(e.target.value)}
-            className="w-full text-xs h-8 px-2.5 rounded-lg border border-border/60 bg-background/80 text-foreground cursor-pointer focus:outline-hidden focus:ring-1 focus:ring-primary"
+            className="h-8 w-full cursor-pointer rounded-lg border border-border/60 bg-background/80 px-2.5 text-xs text-foreground focus:ring-1 focus:ring-primary focus:outline-hidden"
           >
             <option value="" disabled>
               Select an option...
@@ -129,11 +137,11 @@ export function QuestionFieldRenderer({
                 key={opt.value}
                 htmlFor={optionId}
                 className={cn(
-                  "flex items-center gap-2.5 p-2 rounded-lg border text-xs cursor-pointer transition-all",
+                  "flex cursor-pointer items-center gap-2.5 rounded-lg border p-2 text-xs transition-all",
                   isChecked
-                    ? "border-primary/60 bg-primary/10 text-foreground font-medium"
-                    : "border-border/50 bg-background/40 hover:bg-muted/30 text-muted-foreground hover:text-foreground",
-                  disabled && "opacity-50 cursor-not-allowed"
+                    ? "border-primary/60 bg-primary/10 font-medium text-foreground"
+                    : "border-border/50 bg-background/40 text-muted-foreground hover:bg-muted/30 hover:text-foreground",
+                  disabled && "cursor-not-allowed opacity-50"
                 )}
               >
                 <input
@@ -143,8 +151,10 @@ export function QuestionFieldRenderer({
                   value={opt.value}
                   checked={isChecked}
                   disabled={disabled}
-                  onChange={(e) => handleCheckboxChange(opt.value, e.target.checked)}
-                  className="size-3.5 text-primary rounded accent-primary cursor-pointer disabled:cursor-not-allowed"
+                  onChange={(e) =>
+                    handleCheckboxChange(opt.value, e.target.checked)
+                  }
+                  className="size-3.5 cursor-pointer rounded text-primary accent-primary disabled:cursor-not-allowed"
                 />
                 <span className="flex-1">{opt.label}</span>
               </label>
@@ -162,7 +172,7 @@ export function QuestionFieldRenderer({
             placeholder={placeholder ?? "Enter answer..."}
             disabled={disabled}
             onChange={handleTextChange}
-            className="text-xs h-8"
+            className="h-8 text-xs"
           />
         </div>
       )}
@@ -176,7 +186,7 @@ export function QuestionFieldRenderer({
             disabled={disabled}
             onChange={handleTextChange}
             rows={3}
-            className="text-xs min-h-[4.5rem]"
+            className="min-h-[4.5rem] text-xs"
           />
         </div>
       )}

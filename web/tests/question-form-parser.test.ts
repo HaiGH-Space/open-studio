@@ -16,7 +16,8 @@ describe("Question Form AST Parser & Answer Serializer", () => {
     })
 
     it("returns null when text does not contain <question-form> tag", () => {
-      const plainText = "Here is the plan for your application. No questions needed."
+      const plainText =
+        "Here is the plan for your application. No questions needed."
       expect(parseQuestionForm(plainText)).toBeNull()
     })
 
@@ -54,7 +55,9 @@ describe("Question Form AST Parser & Answer Serializer", () => {
       expect(q1?.id).toBe("q1")
       expect(q1?.type).toBe("select")
       expect(q1?.required).toBe(true)
-      expect(q1?.label).toBe("What visual theme should the analytics dashboard prioritize?")
+      expect(q1?.label).toBe(
+        "What visual theme should the analytics dashboard prioritize?"
+      )
       expect(q1?.options).toEqual([
         { value: "dark-slate", label: "Dark Slate (Default Linear style)" },
         { value: "high-contrast-light", label: "High Contrast Light" },
@@ -65,9 +68,15 @@ describe("Question Form AST Parser & Answer Serializer", () => {
       expect(q2?.id).toBe("q2")
       expect(q2?.type).toBe("checkbox")
       expect(q2?.required).toBe(false)
-      expect(q2?.label).toBe("Which chart modules should be displayed on first paint?")
+      expect(q2?.label).toBe(
+        "Which chart modules should be displayed on first paint?"
+      )
       expect(q2?.options).toEqual([
-        { value: "revenue-velocity", label: "Revenue Velocity Area Chart", defaultChecked: true },
+        {
+          value: "revenue-velocity",
+          label: "Revenue Velocity Area Chart",
+          defaultChecked: true,
+        },
         { value: "latency-p99", label: "P99 Latency Bar Chart" },
         { value: "live-activity-stream", label: "Live Activity Stream" },
       ])
@@ -76,7 +85,9 @@ describe("Question Form AST Parser & Answer Serializer", () => {
       const q3 = ast?.questions[2]
       expect(q3?.id).toBe("q3")
       expect(q3?.type).toBe("text")
-      expect(q3?.label).toBe("What is the brand title or workspace display name?")
+      expect(q3?.label).toBe(
+        "What is the brand title or workspace display name?"
+      )
       expect(q3?.placeholder).toBe("e.g. Acme Corp internal analytics")
       expect(q3?.options).toBeUndefined()
 
@@ -139,7 +150,7 @@ Let me know once you submit!
       const ast = parseQuestionForm(xml)
       expect(ast?.title).toBe("Q & A Form")
       expect(ast?.questions[0].label).toBe("Pick A < B & C > D")
-      expect(ast?.questions[0].placeholder).toBe('"quotes" & \'apostrophes\'')
+      expect(ast?.questions[0].placeholder).toBe("\"quotes\" & 'apostrophes'")
       expect(ast?.questions[0].options?.[0].label).toBe("Rock & Roll")
       expect(ast?.questions[0].options?.[1].label).toBe("Price < $50")
     })
@@ -325,18 +336,19 @@ Let me know once you submit!
       const answers: ClarificationAnswerEntry[] = [
         {
           questionId: "q1",
-          questionLabel: "What visual theme should the analytics dashboard prioritize?",
+          questionLabel:
+            "What visual theme should the analytics dashboard prioritize?",
           selectedValues: ["dark-slate"],
         },
       ]
 
       const serialized = serializeAnswers(answers)
-      expect(serialized).toContain('<clarification-answers>')
-      expect(serialized).toContain('</clarification-answers>')
+      expect(serialized).toContain("<clarification-answers>")
+      expect(serialized).toContain("</clarification-answers>")
       expect(serialized).toContain(
         '<answer id="q1" question="What visual theme should the analytics dashboard prioritize?">'
       )
-      expect(serialized).toContain('<value>dark-slate</value>')
+      expect(serialized).toContain("<value>dark-slate</value>")
     })
 
     it("serializes multi-value checkbox answers", () => {
@@ -349,8 +361,8 @@ Let me know once you submit!
       ]
 
       const serialized = serializeAnswers(answers)
-      expect(serialized).toContain('<value>revenue-velocity</value>')
-      expect(serialized).toContain('<value>live-activity-stream</value>')
+      expect(serialized).toContain("<value>revenue-velocity</value>")
+      expect(serialized).toContain("<value>live-activity-stream</value>")
     })
 
     it("escapes special XML characters in answers and question labels", () => {
@@ -363,8 +375,12 @@ Let me know once you submit!
       ]
 
       const serialized = serializeAnswers(answers)
-      expect(serialized).toContain('question="Brand &amp; Company &lt;Name&gt;"')
-      expect(serialized).toContain('<value>Acme &quot;Pro&quot; &amp; &lt;Lite&gt;</value>')
+      expect(serialized).toContain(
+        'question="Brand &amp; Company &lt;Name&gt;"'
+      )
+      expect(serialized).toContain(
+        "<value>Acme &quot;Pro&quot; &amp; &lt;Lite&gt;</value>"
+      )
       expect(serialized).not.toContain('<value>Acme "Pro"')
     })
 
@@ -392,7 +408,9 @@ Let me know once you submit!
       expect(serialized.endsWith("</clarification-answers>")).toBe(true)
       expect(serialized).toContain('<answer id="q1" question="Theme">')
       expect(serialized).toContain('<answer id="q2" question="Features">')
-      expect(serialized).toContain('<answer id="q3" question="Optional Notes" />')
+      expect(serialized).toContain(
+        '<answer id="q3" question="Optional Notes" />'
+      )
     })
   })
 

@@ -12,7 +12,7 @@ export function StudioCockpit({ className }: StudioCockpitProps = {}) {
     <main
       data-slot="studio-cockpit"
       className={cn(
-        "flex-1 flex overflow-hidden w-full h-full min-h-0",
+        "flex h-full min-h-0 w-full flex-1 overflow-hidden",
         className
       )}
     >
@@ -20,7 +20,7 @@ export function StudioCockpit({ className }: StudioCockpitProps = {}) {
       <ResourceNavigator />
 
       {/* Center Column: 9-Layer Composer Manager (Tasks 13 & 14) */}
-      <ComposerManager className="flex-1 border-r border-border/70 min-w-0" />
+      <ComposerManager className="min-w-0 flex-1 border-r border-border/70" />
 
       {/* Right Column: Prompt Inspector & Exporters (Task 15) */}
       <PromptInspector />

@@ -81,7 +81,7 @@ export function preSanitizeXml(rawXml: string): string {
   // 3. Handle self-closing tag discrepancies for <field ...> tags
   sanitized = sanitized.replace(
     /<field\b([^>/]*?)(?<!\/)>(?!\s*<\/field>)(?=\s*(?:<field\b|<\/question-form>|$))/gi,
-    '<field$1 />'
+    "<field$1 />"
   )
 
   return sanitized
@@ -144,7 +144,8 @@ export function parseDelimitedOptions(
     value: tok,
     label: tok,
     ...(trimmedDefault &&
-    (trimmedDefault === tok || trimmedDefault.toLowerCase() === tok.toLowerCase())
+    (trimmedDefault === tok ||
+      trimmedDefault.toLowerCase() === tok.toLowerCase())
       ? { defaultChecked: true }
       : {}),
   }))
@@ -160,14 +161,19 @@ export function parseDelimitedOptions(
 export function parseQuestionForm(
   rawAiResponse: string | null | undefined
 ): QuestionFormAST | null {
-  if (!rawAiResponse || typeof rawAiResponse !== "string" || !rawAiResponse.trim()) {
+  if (
+    !rawAiResponse ||
+    typeof rawAiResponse !== "string" ||
+    !rawAiResponse.trim()
+  ) {
     return null
   }
 
   const sanitized = preSanitizeXml(rawAiResponse)
 
   // Find <question-form> opening tag and content
-  const rootTagRegex = /<question-form\b([^>]*)>([\s\S]*?)(?:<\/question-form>|$)/i
+  const rootTagRegex =
+    /<question-form\b([^>]*)>([\s\S]*?)(?:<\/question-form>|$)/i
   const rootMatch = rootTagRegex.exec(sanitized)
   if (!rootMatch) {
     return null
@@ -181,7 +187,9 @@ export function parseQuestionForm(
 
   // If title was not an attribute, check for a child <title> tag
   if (!title) {
-    const titleTagMatch = /<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(rootInnerXml)
+    const titleTagMatch = /<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(
+      rootInnerXml
+    )
     if (titleTagMatch) {
       title = decodeXmlEntities(titleTagMatch[1]).trim()
     }
@@ -222,9 +230,8 @@ export function parseQuestionForm(
 
     let placeholder = tagAttrs.placeholder?.trim()
     if (!placeholder && innerContent) {
-      const placeholderTagMatch = /<placeholder\b[^>]*>([\s\S]*?)<\/placeholder>/i.exec(
-        innerContent
-      )
+      const placeholderTagMatch =
+        /<placeholder\b[^>]*>([\s\S]*?)<\/placeholder>/i.exec(innerContent)
       if (placeholderTagMatch) {
         placeholder = decodeXmlEntities(placeholderTagMatch[1]).trim()
       }
@@ -233,9 +240,10 @@ export function parseQuestionForm(
     // Extract label
     let label = tagAttrs.label?.trim()
     if (!label && innerContent) {
-      const labelMatch = /<label\b[^>]*>([\s\S]*?)(?:<\/label>|(?=<option|<placeholder|$))/i.exec(
-        innerContent
-      )
+      const labelMatch =
+        /<label\b[^>]*>([\s\S]*?)(?:<\/label>|(?=<option|<placeholder|$))/i.exec(
+          innerContent
+        )
       if (labelMatch) {
         label = decodeXmlEntities(labelMatch[1]).trim()
       }
@@ -259,7 +267,8 @@ export function parseQuestionForm(
       while ((optMatch = optionRegex.exec(innerContent)) !== null) {
         const optAttrs = parseAttributes(optMatch[1])
         const optLabel = decodeXmlEntities(optMatch[2]).trim()
-        const optValue = optAttrs.value !== undefined ? optAttrs.value : optLabel
+        const optValue =
+          optAttrs.value !== undefined ? optAttrs.value : optLabel
 
         const isChecked =
           optAttrs.checked === "true" ||

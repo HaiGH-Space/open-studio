@@ -1,35 +1,70 @@
 import { useState } from "react"
 import { useComposer } from "../../hooks/useComposer"
-import type { TargetFramework, CssEngine } from "../../lib/composer/composer-types"
+import type {
+  TargetFramework,
+  CssEngine,
+} from "../../lib/composer/composer-types"
 import { Layers, Monitor, Paintbrush, Plus, X } from "lucide-react"
+import { Label } from "../ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
+
+const FRAMEWORK_ITEMS = [
+  { value: "react", label: "React 19" },
+  { value: "nextjs", label: "Next.js (App Router)" },
+  { value: "vite", label: "Vite + React" },
+  { value: "html-vanilla", label: "HTML Vanilla" },
+  { value: "vue", label: "Vue 3" },
+  { value: "svelte", label: "Svelte 5" },
+]
+
+const CSS_ENGINE_ITEMS = [
+  { value: "tailwind-v4", label: "Tailwind CSS v4" },
+  { value: "tailwind-v3", label: "Tailwind CSS v3" },
+  { value: "css-modules", label: "CSS Modules" },
+  { value: "vanilla-css", label: "Vanilla CSS" },
+]
+
+const VIEWPORT_ITEMS = [
+  { value: "responsive", label: "Responsive (Mobile + Desktop)" },
+  { value: "desktop-only", label: "Desktop Only (1280px+)" },
+  { value: "mobile-only", label: "Mobile Only (390px)" },
+]
 
 export function Layer3Constraints() {
   const { config, updateLayer } = useComposer()
-  const {
-    targetFramework,
-    cssEngine,
-    viewport,
-    strictHardRules,
-  } = config.layer3AuthoritativeConstraints
+  const { targetFramework, cssEngine, viewport, strictHardRules } =
+    config.layer3AuthoritativeConstraints
 
   const [newRule, setNewRule] = useState("")
 
-  const handleFrameworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateLayer("layer3AuthoritativeConstraints", {
-      targetFramework: e.target.value as TargetFramework,
-    })
+  const handleFrameworkChange = (val: string | null) => {
+    if (val) {
+      updateLayer("layer3AuthoritativeConstraints", {
+        targetFramework: val as TargetFramework,
+      })
+    }
   }
 
-  const handleCssEngineChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateLayer("layer3AuthoritativeConstraints", {
-      cssEngine: e.target.value as CssEngine,
-    })
+  const handleCssEngineChange = (val: string | null) => {
+    if (val) {
+      updateLayer("layer3AuthoritativeConstraints", {
+        cssEngine: val as CssEngine,
+      })
+    }
   }
 
-  const handleViewportChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateLayer("layer3AuthoritativeConstraints", {
-      viewport: e.target.value as "responsive" | "desktop-only" | "mobile-only",
-    })
+  const handleViewportChange = (val: string | null) => {
+    if (val) {
+      updateLayer("layer3AuthoritativeConstraints", {
+        viewport: val as "responsive" | "desktop-only" | "mobile-only",
+      })
+    }
   }
 
   const handleAddRule = () => {
@@ -47,7 +82,9 @@ export function Layer3Constraints() {
 
   const handleRemoveRule = (indexToRemove: number) => {
     updateLayer("layer3AuthoritativeConstraints", {
-      strictHardRules: strictHardRules.filter((_, idx) => idx !== indexToRemove),
+      strictHardRules: strictHardRules.filter(
+        (_, idx) => idx !== indexToRemove
+      ),
     })
   }
 
@@ -61,80 +98,163 @@ export function Layer3Constraints() {
   return (
     <div data-slot="layer3-constraints-panel" className="space-y-4 py-2">
       {/* Framework & CSS Selectors Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {/* Framework Selection */}
-        <div className="space-y-1.5">
-          <label
+        <div className="relative space-y-1.5">
+          <Label
             htmlFor="framework-select"
-            className="flex items-center gap-1.5 text-xs font-medium text-foreground"
+            className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-foreground"
           >
             <Layers className="size-3.5 text-primary" />
             <span>Framework</span>
-          </label>
+          </Label>
           <select
-            id="framework-select"
+            id="framework-select-native"
             data-slot="l3-framework-select"
+            tabIndex={-1}
+            aria-hidden="true"
             value={targetFramework}
-            onChange={handleFrameworkChange}
-            className="w-full h-8 px-2.5 rounded-lg border border-border/70 bg-input/20 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+            onChange={(e) => handleFrameworkChange(e.target.value)}
+            className="sr-only"
           >
-            <option value="react">React 19</option>
-            <option value="nextjs">Next.js (App Router)</option>
-            <option value="vite">Vite + React</option>
-            <option value="html-vanilla">HTML Vanilla</option>
-            <option value="vue">Vue 3</option>
-            <option value="svelte">Svelte 5</option>
+            {FRAMEWORK_ITEMS.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))}
           </select>
+          <Select
+            items={FRAMEWORK_ITEMS}
+            value={targetFramework}
+            onValueChange={handleFrameworkChange}
+          >
+            <SelectTrigger
+              id="framework-select"
+              data-slot="l3-framework-trigger"
+              size="sm"
+              className="w-full cursor-pointer rounded-lg border-border/70 bg-input/20 text-xs"
+            >
+              <SelectValue placeholder="Select framework" />
+            </SelectTrigger>
+            <SelectContent>
+              {FRAMEWORK_ITEMS.map((item) => (
+                <SelectItem
+                  key={item.value}
+                  value={item.value}
+                  className="py-1.5 text-xs"
+                >
+                  {item.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* CSS Engine Selection */}
-        <div className="space-y-1.5">
-          <label
+        <div className="relative space-y-1.5">
+          <Label
             htmlFor="css-engine-select"
-            className="flex items-center gap-1.5 text-xs font-medium text-foreground"
+            className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-foreground"
           >
             <Paintbrush className="size-3.5 text-primary" />
             <span>CSS Engine</span>
-          </label>
+          </Label>
           <select
-            id="css-engine-select"
+            id="css-engine-select-native"
             data-slot="l3-css-engine-select"
+            tabIndex={-1}
+            aria-hidden="true"
             value={cssEngine}
-            onChange={handleCssEngineChange}
-            className="w-full h-8 px-2.5 rounded-lg border border-border/70 bg-input/20 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+            onChange={(e) => handleCssEngineChange(e.target.value)}
+            className="sr-only"
           >
-            <option value="tailwind-v4">Tailwind CSS v4</option>
-            <option value="tailwind-v3">Tailwind CSS v3</option>
-            <option value="css-modules">CSS Modules</option>
-            <option value="vanilla-css">Vanilla CSS</option>
+            {CSS_ENGINE_ITEMS.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))}
           </select>
+          <Select
+            items={CSS_ENGINE_ITEMS}
+            value={cssEngine}
+            onValueChange={handleCssEngineChange}
+          >
+            <SelectTrigger
+              id="css-engine-select"
+              data-slot="l3-css-engine-trigger"
+              size="sm"
+              className="w-full cursor-pointer rounded-lg border-border/70 bg-input/20 text-xs"
+            >
+              <SelectValue placeholder="Select CSS engine" />
+            </SelectTrigger>
+            <SelectContent>
+              {CSS_ENGINE_ITEMS.map((item) => (
+                <SelectItem
+                  key={item.value}
+                  value={item.value}
+                  className="py-1.5 text-xs"
+                >
+                  {item.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Viewport Selection */}
-        <div className="space-y-1.5">
-          <label
+        <div className="relative space-y-1.5">
+          <Label
             htmlFor="viewport-select"
-            className="flex items-center gap-1.5 text-xs font-medium text-foreground"
+            className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-foreground"
           >
             <Monitor className="size-3.5 text-primary" />
             <span>Viewport</span>
-          </label>
+          </Label>
           <select
-            id="viewport-select"
+            id="viewport-select-native"
             data-slot="l3-viewport-select"
+            tabIndex={-1}
+            aria-hidden="true"
             value={viewport}
-            onChange={handleViewportChange}
-            className="w-full h-8 px-2.5 rounded-lg border border-border/70 bg-input/20 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+            onChange={(e) => handleViewportChange(e.target.value)}
+            className="sr-only"
           >
-            <option value="responsive">Responsive (Mobile + Desktop)</option>
-            <option value="desktop-only">Desktop Only (1280px+)</option>
-            <option value="mobile-only">Mobile Only (390px)</option>
+            {VIEWPORT_ITEMS.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))}
           </select>
+          <Select
+            items={VIEWPORT_ITEMS}
+            value={viewport}
+            onValueChange={handleViewportChange}
+          >
+            <SelectTrigger
+              id="viewport-select"
+              data-slot="l3-viewport-trigger"
+              size="sm"
+              className="w-full cursor-pointer rounded-lg border-border/70 bg-input/20 text-xs"
+            >
+              <SelectValue placeholder="Select viewport" />
+            </SelectTrigger>
+            <SelectContent>
+              {VIEWPORT_ITEMS.map((item) => (
+                <SelectItem
+                  key={item.value}
+                  value={item.value}
+                  className="py-1.5 text-xs"
+                >
+                  {item.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       {/* Strict Hard Rules Section */}
-      <div className="space-y-2 pt-1 border-t border-border/50">
+      <div className="space-y-2 border-t border-border/50 pt-1">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-foreground">
             Strict Overriding Hard Rules
@@ -153,13 +273,13 @@ export function Layer3Constraints() {
             value={newRule}
             onChange={(e) => setNewRule(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="flex-1 h-8 px-3 rounded-lg border border-border/70 bg-input/20 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="h-8 flex-1 rounded-lg border border-border/70 bg-input/20 px-3 text-xs text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-primary focus:outline-none"
           />
           <button
             type="button"
             data-slot="l3-add-hard-rule-btn"
             onClick={handleAddRule}
-            className="inline-flex items-center gap-1 px-3 h-8 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer"
+            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             <Plus className="size-3.5" />
             <span>Add</span>
@@ -173,14 +293,14 @@ export function Layer3Constraints() {
               <span
                 key={`${rule}-${idx}`}
                 data-slot="l3-hard-rule-item"
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-border/80 bg-muted/40 text-xs text-foreground"
+                className="inline-flex items-center gap-1 rounded-md border border-border/80 bg-muted/40 px-2.5 py-1 text-xs text-foreground"
               >
                 <span>{rule}</span>
                 <button
                   type="button"
                   data-slot="l3-remove-hard-rule-btn"
                   onClick={() => handleRemoveRule(idx)}
-                  className="text-muted-foreground hover:text-destructive cursor-pointer transition-colors p-0.5 rounded"
+                  className="cursor-pointer rounded p-0.5 text-muted-foreground transition-colors hover:text-destructive"
                   aria-label={`Remove rule: ${rule}`}
                 >
                   <X className="size-3" />

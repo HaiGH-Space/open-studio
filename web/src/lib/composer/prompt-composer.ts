@@ -42,10 +42,19 @@ export function compilePrompt(
   // Compile individual layers
   const l1 = compileLayer1Security(config.layer1Security)
   const l2 = compileLayer2RuntimeContract(config.layer2RuntimeContract)
-  const l3 = compileLayer3AuthoritativeConstraints(config.layer3AuthoritativeConstraints)
+  const l3 = compileLayer3AuthoritativeConstraints(
+    config.layer3AuthoritativeConstraints
+  )
   const l4 = compileLayer4WorkflowManifest(config.layer4WorkflowManifest)
-  const l5 = compileLayer5BrandContract(config.layer5BrandContract, assets?.designSystem, turn)
-  const l6 = compileLayer6CraftRules(config.layer6CraftRules, assets?.craftRules)
+  const l5 = compileLayer5BrandContract(
+    config.layer5BrandContract,
+    assets?.designSystem,
+    turn
+  )
+  const l6 = compileLayer6CraftRules(
+    config.layer6CraftRules,
+    assets?.craftRules
+  )
   const l7 = compileLayer7SkillTemplate(
     config.layer7SkillTemplate,
     assets?.skillContent,
@@ -55,7 +64,10 @@ export function compilePrompt(
     userObjective: config.layer9BriefAndClarification.userObjective,
     featureRequirements: config.layer9BriefAndClarification.featureRequirements,
   })
-  const l9 = compileLayer9BriefAndClarification(config.layer9BriefAndClarification, turn)
+  const l9 = compileLayer9BriefAndClarification(
+    config.layer9BriefAndClarification,
+    turn
+  )
 
   const layerBreakdown: readonly LayerCompilationResult[] = [
     l1,

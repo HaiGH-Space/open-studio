@@ -21,7 +21,9 @@ export interface Layer9BriefClarificationProps {
   readonly className?: string
 }
 
-export function Layer9BriefClarification({ className }: Layer9BriefClarificationProps) {
+export function Layer9BriefClarification({
+  className,
+}: Layer9BriefClarificationProps) {
   const {
     config,
     setUserObjective,
@@ -56,18 +58,21 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
   }
 
   return (
-    <div data-slot="layer-9-brief-clarification" className={`space-y-5 ${className ?? ""}`}>
+    <div
+      data-slot="layer-9-brief-clarification"
+      className={`space-y-5 ${className ?? ""}`}
+    >
       {/* Section 1: User Objective */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label
             htmlFor="layer9-objective"
-            className="text-xs font-semibold text-foreground flex items-center gap-1.5"
+            className="flex items-center gap-1.5 text-xs font-semibold text-foreground"
           >
             <FileText className="size-3.5 text-primary" />
             <span>User Objective &amp; Goal</span>
           </label>
-          <span className="text-[11px] text-muted-foreground font-mono">
+          <span className="font-mono text-[11px] text-muted-foreground">
             {objective.length} chars
           </span>
         </div>
@@ -78,7 +83,7 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
           onChange={(e) => setUserObjective(e.target.value)}
           placeholder="Describe your user goal, the primary problem being solved, key user persona, and required visual tone..."
           rows={3}
-          className="text-xs min-h-[5rem] bg-card/40 border-border/70 placeholder:text-muted-foreground/60 leading-relaxed"
+          className="min-h-[5rem] border-border/70 bg-card/40 text-xs leading-relaxed placeholder:text-muted-foreground/60"
         />
       </div>
 
@@ -87,7 +92,7 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
         <div className="flex items-center justify-between">
           <label
             htmlFor="layer9-new-feature"
-            className="text-xs font-semibold text-foreground flex items-center gap-1.5"
+            className="flex items-center gap-1.5 text-xs font-semibold text-foreground"
           >
             <ListChecks className="size-3.5 text-primary" />
             <span>Feature Checklist ({features.length})</span>
@@ -106,7 +111,7 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
             onChange={(e) => setNewFeatureText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Add specific feature requirement..."
-            className="text-xs h-8 bg-card/40 border-border/70"
+            className="h-8 border-border/70 bg-card/40 text-xs"
           />
           <Button
             type="button"
@@ -114,7 +119,7 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
             size="sm"
             onClick={handleAddFeature}
             disabled={!newFeatureText.trim()}
-            className="h-8 px-2.5 text-xs gap-1 cursor-pointer bg-primary/20 text-primary hover:bg-primary/30 border border-primary/40 shrink-0"
+            className="h-8 shrink-0 cursor-pointer gap-1 border border-primary/40 bg-primary/20 px-2.5 text-xs text-primary hover:bg-primary/30"
           >
             <Plus className="size-3.5" />
             <span>Add</span>
@@ -127,17 +132,17 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
             {features.map((feature, idx) => (
               <div
                 key={`${idx}-${feature}`}
-                className="flex items-center justify-between gap-2 p-2 rounded-lg bg-card/50 border border-border/50 text-xs text-foreground group transition-colors"
+                className="group flex items-center justify-between gap-2 rounded-lg border border-border/50 bg-card/50 p-2 text-xs text-foreground transition-colors"
               >
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <span className="size-1.5 rounded-full bg-primary/80 shrink-0" />
+                <div className="flex min-w-0 flex-1 items-center gap-2">
+                  <span className="size-1.5 shrink-0 rounded-full bg-primary/80" />
                   <span className="truncate">{feature}</span>
                 </div>
                 <button
                   type="button"
                   data-slot={`layer9-remove-feature-${idx}`}
                   onClick={() => handleRemoveFeature(idx)}
-                  className="text-muted-foreground hover:text-destructive opacity-70 group-hover:opacity-100 transition-opacity p-1 cursor-pointer"
+                  className="cursor-pointer p-1 text-muted-foreground opacity-70 transition-opacity group-hover:opacity-100 hover:text-destructive"
                   title="Remove feature"
                 >
                   <Trash2 className="size-3.5" />
@@ -151,11 +156,11 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
       {/* Section 3: Interactive Clarification Loop */}
       <div
         data-slot="layer9-clarification-section"
-        className="rounded-xl border border-border/70 bg-card/30 p-3.5 space-y-3"
+        className="space-y-3 rounded-xl border border-border/70 bg-card/30 p-3.5"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-md bg-primary/10 text-primary">
+            <div className="rounded-md bg-primary/10 p-1.5 text-primary">
               <HelpCircle className="size-4" />
             </div>
             <div>
@@ -163,7 +168,8 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
                 Clarification Loop
               </h4>
               <p className="text-[11px] text-muted-foreground">
-                Answer AI-generated &lt;question-form&gt; XML blocks to resolve UI ambiguities
+                Answer AI-generated &lt;question-form&gt; XML blocks to resolve
+                UI ambiguities
               </p>
             </div>
           </div>
@@ -173,7 +179,7 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
             data-slot="paste-ai-response-btn"
             size="sm"
             onClick={() => setIsModalOpen(true)}
-            className="text-xs h-7 px-2.5 gap-1.5 cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90"
+            className="h-7 cursor-pointer gap-1.5 bg-primary px-2.5 text-xs text-primary-foreground hover:bg-primary/90"
           >
             <Sparkles className="size-3" />
             <span>Paste AI Response</span>
@@ -184,10 +190,10 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
         {answers.length > 0 ? (
           <div
             data-slot="clarification-answers-summary"
-            className="space-y-2 pt-2 border-t border-border/50"
+            className="space-y-2 border-t border-border/50 pt-2"
           >
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-foreground flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 font-semibold text-foreground">
                 <CheckCircle2 className="size-3.5 text-emerald-400" />
                 <span>Answered Questions ({answers.length})</span>
               </span>
@@ -197,9 +203,9 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsModalOpen(true)}
-                  className="h-6 px-2 text-[11px] text-muted-foreground hover:text-foreground cursor-pointer"
+                  className="h-6 cursor-pointer px-2 text-[11px] text-muted-foreground hover:text-foreground"
                 >
-                  <ExternalLink className="size-3 mr-1" />
+                  <ExternalLink className="mr-1 size-3" />
                   Edit Form
                 </Button>
                 <Button
@@ -208,9 +214,9 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
                   variant="ghost"
                   size="sm"
                   onClick={clearClarificationAnswers}
-                  className="h-6 px-2 text-[11px] text-destructive hover:bg-destructive/15 cursor-pointer"
+                  className="h-6 cursor-pointer px-2 text-[11px] text-destructive hover:bg-destructive/15"
                 >
-                  <RotateCcw className="size-3 mr-1" />
+                  <RotateCcw className="mr-1 size-3" />
                   Clear
                 </Button>
               </div>
@@ -220,9 +226,9 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
               {answers.map((ans) => (
                 <div
                   key={ans.questionId}
-                  className="p-2 rounded-lg bg-background/50 border border-border/50 text-xs space-y-1"
+                  className="space-y-1 rounded-lg border border-border/50 bg-background/50 p-2 text-xs"
                 >
-                  <div className="font-medium text-foreground text-[11px]">
+                  <div className="text-[11px] font-medium text-foreground">
                     {ans.questionLabel}
                   </div>
                   <div className="flex flex-wrap gap-1">
@@ -231,7 +237,7 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
                         <Badge
                           key={v}
                           variant="secondary"
-                          className="text-[10px] py-0 px-1.5 font-normal bg-primary/10 text-primary border-primary/20"
+                          className="border-primary/20 bg-primary/10 px-1.5 py-0 text-[10px] font-normal text-primary"
                         >
                           {v}
                         </Badge>
@@ -247,8 +253,9 @@ export function Layer9BriefClarification({ className }: Layer9BriefClarification
             </div>
           </div>
         ) : (
-          <div className="p-3 rounded-lg border border-dashed border-border/60 bg-background/20 text-center text-[11px] text-muted-foreground">
-            No clarification answers yet. When an AI agent returns a &lt;question-form&gt; block, paste it here to answer interactively.
+          <div className="rounded-lg border border-dashed border-border/60 bg-background/20 p-3 text-center text-[11px] text-muted-foreground">
+            No clarification answers yet. When an AI agent returns a
+            &lt;question-form&gt; block, paste it here to answer interactively.
           </div>
         )}
       </div>

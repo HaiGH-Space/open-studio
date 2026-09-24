@@ -6,13 +6,23 @@
  * downloadable .cursorrules, .cursor/rules/open-studio.mdc, and prompt.xml.
  */
 
-import type { CompiledPromptResult, ComposerConfig } from "../composer/composer-types"
-import type { AgentExportPackage, DownloadableFile, IAgentExporter } from "./export-types"
+import type {
+  CompiledPromptResult,
+  ComposerConfig,
+} from "../composer/composer-types"
+import type {
+  AgentExportPackage,
+  DownloadableFile,
+  IAgentExporter,
+} from "./export-types"
 
 export class CursorExporter implements IAgentExporter {
   readonly agentName = "cursor" as const
 
-  formatExport(result: CompiledPromptResult, config: ComposerConfig): AgentExportPackage {
+  formatExport(
+    result: CompiledPromptResult,
+    config: ComposerConfig
+  ): AgentExportPackage {
     const primaryClipboardText = this.buildSystemRules(result)
     const secondaryClipboardText = this.buildUserTask(result, config)
 
@@ -48,7 +58,10 @@ export class CursorExporter implements IAgentExporter {
     return result.systemPromptBlock
   }
 
-  private buildUserTask(result: CompiledPromptResult, config: ComposerConfig): string {
+  private buildUserTask(
+    result: CompiledPromptResult,
+    config: ComposerConfig
+  ): string {
     const l9 = config.layer9BriefAndClarification
     if (
       !l9.userObjective.trim() &&
@@ -65,39 +78,48 @@ export class CursorExporter implements IAgentExporter {
       parts.push(l9.userObjective.trim())
     }
     if (l9.featureRequirements.length > 0) {
-      parts.push("\nRequirements:\n" + l9.featureRequirements.map((r) => `- ${r}`).join("\n"))
+      parts.push(
+        "\nRequirements:\n" +
+          l9.featureRequirements.map((r) => `- ${r}`).join("\n")
+      )
     }
     return parts.join("\n")
   }
 
-  private buildCursorrules(result: CompiledPromptResult, config: ComposerConfig): string {
+  private buildCursorrules(
+    result: CompiledPromptResult,
+    config: ComposerConfig
+  ): string {
     const l3 = config.layer3AuthoritativeConstraints
     const l5 = config.layer5BrandContract
     const l8 = config.layer8UserMemory
 
-    const hardRules = l3.enabled && l3.strictHardRules.length > 0
-      ? [
-          "",
-          "## Hard Constraints",
-          ...l3.strictHardRules.map((r) => `- ${r}`),
-        ].join("\n")
-      : ""
+    const hardRules =
+      l3.enabled && l3.strictHardRules.length > 0
+        ? [
+            "",
+            "## Hard Constraints",
+            ...l3.strictHardRules.map((r) => `- ${r}`),
+          ].join("\n")
+        : ""
 
-    const persistentDirectives = l8.enabled && l8.persistentDirectives.length > 0
-      ? [
-          "",
-          "## Persistent Directives",
-          ...l8.persistentDirectives.map((d) => `- ${d}`),
-        ].join("\n")
-      : ""
+    const persistentDirectives =
+      l8.enabled && l8.persistentDirectives.length > 0
+        ? [
+            "",
+            "## Persistent Directives",
+            ...l8.persistentDirectives.map((d) => `- ${d}`),
+          ].join("\n")
+        : ""
 
-    const negativeConstraints = l8.enabled && l8.negativeConstraints.length > 0
-      ? [
-          "",
-          "## Negative Constraints",
-          ...l8.negativeConstraints.map((c) => `- ${c}`),
-        ].join("\n")
-      : ""
+    const negativeConstraints =
+      l8.enabled && l8.negativeConstraints.length > 0
+        ? [
+            "",
+            "## Negative Constraints",
+            ...l8.negativeConstraints.map((c) => `- ${c}`),
+          ].join("\n")
+        : ""
 
     return [
       "# Open Studio Cursor Rules",
@@ -121,26 +143,31 @@ export class CursorExporter implements IAgentExporter {
       .join("\n")
   }
 
-  private buildMdcRule(result: CompiledPromptResult, config: ComposerConfig): string {
+  private buildMdcRule(
+    result: CompiledPromptResult,
+    config: ComposerConfig
+  ): string {
     const l3 = config.layer3AuthoritativeConstraints
     const l5 = config.layer5BrandContract
     const l8 = config.layer8UserMemory
 
-    const hardRules = l3.enabled && l3.strictHardRules.length > 0
-      ? [
-          "",
-          "### Hard Constraints",
-          ...l3.strictHardRules.map((r) => `- ${r}`),
-        ].join("\n")
-      : ""
+    const hardRules =
+      l3.enabled && l3.strictHardRules.length > 0
+        ? [
+            "",
+            "### Hard Constraints",
+            ...l3.strictHardRules.map((r) => `- ${r}`),
+          ].join("\n")
+        : ""
 
-    const persistentDirectives = l8.enabled && l8.persistentDirectives.length > 0
-      ? [
-          "",
-          "### Persistent Directives",
-          ...l8.persistentDirectives.map((d) => `- ${d}`),
-        ].join("\n")
-      : ""
+    const persistentDirectives =
+      l8.enabled && l8.persistentDirectives.length > 0
+        ? [
+            "",
+            "### Persistent Directives",
+            ...l8.persistentDirectives.map((d) => `- ${d}`),
+          ].join("\n")
+        : ""
 
     return [
       "---",

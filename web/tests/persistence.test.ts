@@ -54,7 +54,10 @@ describe("Storage Persistence", () => {
 
       const saved = persistence.setTheme("dark")
       expect(saved).toBe(true)
-      expect(mockStorage.setItem).toHaveBeenCalledWith(STORAGE_KEYS.THEME, "dark")
+      expect(mockStorage.setItem).toHaveBeenCalledWith(
+        STORAGE_KEYS.THEME,
+        "dark"
+      )
       expect(persistence.getTheme()).toBe("dark")
 
       persistence.setTheme("light")
@@ -110,7 +113,10 @@ describe("Storage Persistence", () => {
       expect(persistence.getUserDirectives()).toEqual(["Rule 1", "Rule 2"])
 
       persistence.setNegativeConstraints(["No red", "No comic sans"])
-      expect(persistence.getNegativeConstraints()).toEqual(["No red", "No comic sans"])
+      expect(persistence.getNegativeConstraints()).toEqual([
+        "No red",
+        "No comic sans",
+      ])
 
       // When retrieving full memory, both are preserved
       const memory = persistence.getUserMemory()
@@ -146,7 +152,8 @@ describe("Storage Persistence", () => {
 
   describe("Draft Brief (Layer 9) Auto-Save", () => {
     const sampleBrief: Layer9BriefAndClarificationConfig = {
-      userObjective: "Build a high-converting pricing page for an AI developer tool",
+      userObjective:
+        "Build a high-converting pricing page for an AI developer tool",
       featureRequirements: [
         "Interactive monthly/annual billing toggle",
         "Feature comparison table",
@@ -183,8 +190,12 @@ describe("Storage Persistence", () => {
 
       const retrieved = persistence.getDraftBrief()
       expect(retrieved?.userObjective).toBe("Updated objective")
-      expect(retrieved?.featureRequirements).toEqual(sampleBrief.featureRequirements)
-      expect(retrieved?.clarificationAnswers).toEqual(sampleBrief.clarificationAnswers)
+      expect(retrieved?.featureRequirements).toEqual(
+        sampleBrief.featureRequirements
+      )
+      expect(retrieved?.clarificationAnswers).toEqual(
+        sampleBrief.clarificationAnswers
+      )
     })
 
     it("handles corrupted draft brief JSON gracefully", () => {
@@ -277,7 +288,9 @@ describe("Storage Persistence", () => {
         persistentDirectives: ["Global directive"],
         negativeConstraints: ["Global constraint"],
       })
-      expect(getUserMemory()?.persistentDirectives).toEqual(["Global directive"])
+      expect(getUserMemory()?.persistentDirectives).toEqual([
+        "Global directive",
+      ])
 
       setUserDirectives(["Test directive"])
       expect(getUserDirectives()).toEqual(["Test directive"])

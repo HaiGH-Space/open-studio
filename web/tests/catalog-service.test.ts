@@ -56,7 +56,8 @@ describe("CatalogService", () => {
           tokensCss: "data/design-systems/linear-app/tokens.css",
           tailwindCss: "data/design-systems/linear-app/tailwind-v4.css",
           componentsHtml: "data/design-systems/linear-app/components.html",
-          componentsManifest: "data/design-systems/linear-app/components.manifest.json",
+          componentsManifest:
+            "data/design-systems/linear-app/components.manifest.json",
         },
       },
       {
@@ -122,7 +123,10 @@ describe("CatalogService", () => {
     mockFetch = vi.fn(async (url: string | URL | Request) => {
       const urlStr = url.toString()
 
-      if (urlStr.endsWith("/catalog-index.json") || urlStr === "/catalog-index.json") {
+      if (
+        urlStr.endsWith("/catalog-index.json") ||
+        urlStr === "/catalog-index.json"
+      ) {
         return {
           ok: true,
           status: 200,
@@ -188,7 +192,9 @@ describe("CatalogService", () => {
 
   describe("loadCatalog", () => {
     it("fetches catalog index and parses it", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       const catalog = await service.loadCatalog()
 
@@ -198,7 +204,9 @@ describe("CatalogService", () => {
     })
 
     it("caches catalog index across multiple calls", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       const catalog1 = await service.loadCatalog()
       const catalog2 = await service.loadCatalog()
@@ -208,7 +216,9 @@ describe("CatalogService", () => {
     })
 
     it("deduplicates concurrent in-flight loadCatalog requests", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       const [c1, c2, c3] = await Promise.all([
         service.loadCatalog(),
@@ -223,7 +233,9 @@ describe("CatalogService", () => {
 
     it("throws a descriptive error when network fails", async () => {
       mockFetch = vi.fn().mockRejectedValue(new Error("Network Error"))
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       await expect(service.loadCatalog()).rejects.toThrow("Network Error")
     })
@@ -234,9 +246,13 @@ describe("CatalogService", () => {
         status: 500,
         statusText: "Internal Server Error",
       } as Response)
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
-      await expect(service.loadCatalog()).rejects.toThrow("500 Internal Server Error")
+      await expect(service.loadCatalog()).rejects.toThrow(
+        "500 Internal Server Error"
+      )
     })
 
     it("throws when catalog index schemaVersion is invalid", async () => {
@@ -245,17 +261,25 @@ describe("CatalogService", () => {
         status: 200,
         json: async () => ({ schemaVersion: "invalid-version" }),
       } as Response)
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
-      await expect(service.loadCatalog()).rejects.toThrow("Invalid catalog schema version")
+      await expect(service.loadCatalog()).rejects.toThrow(
+        "Invalid catalog schema version"
+      )
     })
   })
 
   describe("fetchAssetContent", () => {
     it("fetches asset content by relative path", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
-      const content = await service.fetchAssetContent("data/craft/anti-ai-slop.md")
+      const content = await service.fetchAssetContent(
+        "data/craft/anti-ai-slop.md"
+      )
 
       expect(content).toBe("# Anti-AI-Slop Rules")
       expect(mockFetch).toHaveBeenCalledWith(
@@ -264,10 +288,16 @@ describe("CatalogService", () => {
     })
 
     it("normalizes leading slashes in asset path", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
-      const content1 = await service.fetchAssetContent("/data/craft/anti-ai-slop.md")
-      const content2 = await service.fetchAssetContent("data/craft/anti-ai-slop.md")
+      const content1 = await service.fetchAssetContent(
+        "/data/craft/anti-ai-slop.md"
+      )
+      const content2 = await service.fetchAssetContent(
+        "data/craft/anti-ai-slop.md"
+      )
 
       expect(content1).toBe("# Anti-AI-Slop Rules")
       expect(content2).toBe("# Anti-AI-Slop Rules")
@@ -276,7 +306,9 @@ describe("CatalogService", () => {
     })
 
     it("caches asset content so repeated calls do not re-fetch", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       await service.fetchAssetContent("data/craft/anti-ai-slop.md")
       await service.fetchAssetContent("data/craft/anti-ai-slop.md")
@@ -285,7 +317,9 @@ describe("CatalogService", () => {
     })
 
     it("deduplicates concurrent fetches for the same asset", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       const [res1, res2] = await Promise.all([
         service.fetchAssetContent("data/craft/anti-ai-slop.md"),
@@ -297,9 +331,13 @@ describe("CatalogService", () => {
     })
 
     it("throws descriptive error on 404", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
-      await expect(service.fetchAssetContent("data/nonexistent.md")).rejects.toThrow(
+      await expect(
+        service.fetchAssetContent("data/nonexistent.md")
+      ).rejects.toThrow(
         "Failed to fetch asset 'data/nonexistent.md': 404 Not Found"
       )
     })
@@ -307,7 +345,9 @@ describe("CatalogService", () => {
 
   describe("fetchDesignTokens", () => {
     it("fetches full CSS tokens for a design system", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       const tokens = await service.fetchDesignTokens("linear-app", "full")
 
@@ -315,9 +355,14 @@ describe("CatalogService", () => {
     })
 
     it("fetches condensed CSS tokens, removing internal vars and comments", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
-      const condensed = await service.fetchDesignTokens("linear-app", "condensed")
+      const condensed = await service.fetchDesignTokens(
+        "linear-app",
+        "condensed"
+      )
 
       expect(condensed).toContain("--bg: #08090a;")
       expect(condensed).toContain("--fg: #f7f8f8;")
@@ -330,15 +375,19 @@ describe("CatalogService", () => {
     })
 
     it("throws error for unknown design system id", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
-      await expect(service.fetchDesignTokens("non-existent-system", "full")).rejects.toThrow(
-        "Design system not found: 'non-existent-system'"
-      )
+      await expect(
+        service.fetchDesignTokens("non-existent-system", "full")
+      ).rejects.toThrow("Design system not found: 'non-existent-system'")
     })
 
     it("returns empty string if system has no tokens.css", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       const tokens = await service.fetchDesignTokens("minimal-system", "full")
       expect(tokens).toBe("")
@@ -347,7 +396,9 @@ describe("CatalogService", () => {
 
   describe("fetchDesignSystemBundle", () => {
     it("fetches all available design system assets in parallel", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       const bundle = await service.fetchDesignSystemBundle("linear-app")
 
@@ -358,7 +409,9 @@ describe("CatalogService", () => {
     })
 
     it("handles design systems with partial or missing files gracefully", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       const bundle = await service.fetchDesignSystemBundle("minimal-system")
 
@@ -369,17 +422,21 @@ describe("CatalogService", () => {
     })
 
     it("throws error when design system id does not exist", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
-      await expect(service.fetchDesignSystemBundle("unknown-system")).rejects.toThrow(
-        "Design system not found: 'unknown-system'"
-      )
+      await expect(
+        service.fetchDesignSystemBundle("unknown-system")
+      ).rejects.toThrow("Design system not found: 'unknown-system'")
     })
   })
 
   describe("Cache Invalidation", () => {
     it("clears cached index and assets when clearCache() is called", async () => {
-      const service = new CatalogService({ fetch: mockFetch as unknown as typeof fetch })
+      const service = new CatalogService({
+        fetch: mockFetch as unknown as typeof fetch,
+      })
 
       await service.loadCatalog()
       await service.fetchAssetContent("data/craft/anti-ai-slop.md")

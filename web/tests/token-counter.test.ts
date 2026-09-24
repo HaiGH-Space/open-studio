@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest"
-import { countTokens, estimateCost, MODEL_PRICING } from "../src/lib/tokenizer/token-counter"
+import {
+  countTokens,
+  estimateCost,
+  MODEL_PRICING,
+} from "../src/lib/tokenizer/token-counter"
 
 describe("Token Counter Service", () => {
   describe("countTokens", () => {
@@ -62,24 +66,38 @@ describe("Token Counter Service", () => {
 
     it("calculates accurate cost for claude-3-5-sonnet ($3.00 / 1M tokens)", () => {
       // 1,000,000 tokens -> $3.00
-      expect(estimateCost(1_000_000, "claude-3-5-sonnet")).toEqual({ inputCost: 3.0 })
+      expect(estimateCost(1_000_000, "claude-3-5-sonnet")).toEqual({
+        inputCost: 3.0,
+      })
       // 10,000 tokens -> $0.03
-      expect(estimateCost(10_000, "claude-3-5-sonnet")).toEqual({ inputCost: 0.03 })
+      expect(estimateCost(10_000, "claude-3-5-sonnet")).toEqual({
+        inputCost: 0.03,
+      })
       // 1,000 tokens -> $0.003
-      expect(estimateCost(1_000, "claude-3-5-sonnet")).toEqual({ inputCost: 0.003 })
+      expect(estimateCost(1_000, "claude-3-5-sonnet")).toEqual({
+        inputCost: 0.003,
+      })
     })
 
     it("calculates accurate cost for claude-3-7-sonnet ($3.00 / 1M tokens)", () => {
-      expect(estimateCost(100_000, "claude-3-7-sonnet")).toEqual({ inputCost: 0.3 })
+      expect(estimateCost(100_000, "claude-3-7-sonnet")).toEqual({
+        inputCost: 0.3,
+      })
     })
 
     it("calculates accurate cost for claude-3-5-haiku ($0.80 / 1M tokens)", () => {
-      expect(estimateCost(1_000_000, "claude-3-5-haiku")).toEqual({ inputCost: 0.8 })
-      expect(estimateCost(10_000, "claude-3-5-haiku")).toEqual({ inputCost: 0.008 })
+      expect(estimateCost(1_000_000, "claude-3-5-haiku")).toEqual({
+        inputCost: 0.8,
+      })
+      expect(estimateCost(10_000, "claude-3-5-haiku")).toEqual({
+        inputCost: 0.008,
+      })
     })
 
     it("calculates accurate cost for claude-3-opus ($15.00 / 1M tokens)", () => {
-      expect(estimateCost(1_000_000, "claude-3-opus")).toEqual({ inputCost: 15.0 })
+      expect(estimateCost(1_000_000, "claude-3-opus")).toEqual({
+        inputCost: 15.0,
+      })
       expect(estimateCost(10_000, "claude-3-opus")).toEqual({ inputCost: 0.15 })
     })
 
@@ -89,12 +107,16 @@ describe("Token Counter Service", () => {
     })
 
     it("calculates accurate cost for gpt-4o-mini ($0.15 / 1M tokens)", () => {
-      expect(estimateCost(1_000_000, "gpt-4o-mini")).toEqual({ inputCost: 0.15 })
+      expect(estimateCost(1_000_000, "gpt-4o-mini")).toEqual({
+        inputCost: 0.15,
+      })
       expect(estimateCost(10_000, "gpt-4o-mini")).toEqual({ inputCost: 0.0015 })
     })
 
     it("handles model name case-insensitively and trims whitespace", () => {
-      expect(estimateCost(10_000, "  CLAUDE-3-5-SONNET  ")).toEqual({ inputCost: 0.03 })
+      expect(estimateCost(10_000, "  CLAUDE-3-5-SONNET  ")).toEqual({
+        inputCost: 0.03,
+      })
       expect(estimateCost(10_000, "GPT-4O")).toEqual({ inputCost: 0.025 })
     })
 

@@ -67,7 +67,9 @@ export function AppHeader({
 
   const isMac =
     typeof navigator !== "undefined" &&
-    /(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent || navigator.platform || "")
+    /(Mac|iPhone|iPod|iPad)/i.test(
+      navigator.userAgent || navigator.platform || ""
+    )
   const shortcutHint = isMac ? "⌘K" : "Ctrl+K"
 
   return (
@@ -75,46 +77,58 @@ export function AppHeader({
       <header
         data-slot="app-header"
         className={cn(
-          "sticky top-0 z-40 w-full border-b border-border/70 bg-background/80 backdrop-blur-md px-4 py-2.5 flex items-center justify-between gap-4 select-none",
+          "sticky top-0 z-40 flex w-full items-center justify-between gap-4 border-b border-border/70 bg-background/80 px-4 py-2.5 backdrop-blur-md select-none",
           className
         )}
       >
         {/* Left: Brand Identity & Active System Pill */}
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex min-w-0 items-center gap-3">
           <div
             data-slot="app-brand-logo"
-            className="flex items-center gap-2 font-semibold tracking-tight text-foreground text-sm shrink-0"
+            className="flex shrink-0 items-center gap-2 text-sm font-semibold tracking-tight text-foreground"
           >
-            <div className="size-7 rounded-lg bg-primary/15 border border-primary/30 flex items-center justify-center text-primary shadow-xs">
+            <div className="flex size-7 items-center justify-center rounded-lg border border-primary/30 bg-primary/15 text-primary shadow-xs">
               <SparklesIcon className="size-4 text-primary" />
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-sm tracking-tight">Open Studio</span>
-              <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 uppercase font-mono tracking-wider text-muted-foreground">
+              <span className="text-sm font-bold tracking-tight">
+                Open Studio
+              </span>
+              <Badge
+                variant="outline"
+                className="h-4 px-1 py-0 font-mono text-[10px] tracking-wider text-muted-foreground uppercase"
+              >
                 Cockpit
               </Badge>
             </div>
           </div>
 
-          <div className="h-4 w-px bg-border/60 shrink-0" />
+          <div className="h-4 w-px shrink-0 bg-border/60" />
 
           {/* Active Brand Badge */}
           <button
             type="button"
             data-slot="active-brand-badge"
             onClick={handleOpenCommandMenu}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border border-border/70 bg-input/20 hover:bg-muted transition-colors cursor-pointer text-muted-foreground hover:text-foreground truncate max-w-44"
-            title={activeSystem ? `Active System: ${activeSystem.name}` : "Click to select a design system"}
+            className="inline-flex max-w-44 cursor-pointer items-center gap-1.5 truncate rounded-full border border-border/70 bg-input/20 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            title={
+              activeSystem
+                ? `Active System: ${activeSystem.name}`
+                : "Click to select a design system"
+            }
           >
             {activeSystem ? (
               <>
                 <div
-                  className="size-2.5 rounded-full shrink-0 border border-black/20"
+                  className="size-2.5 shrink-0 rounded-full border border-black/20"
                   style={{
-                    backgroundColor: activeSystem.swatches?.primary ?? "var(--primary)",
+                    backgroundColor:
+                      activeSystem.swatches?.primary ?? "var(--primary)",
                   }}
                 />
-                <span className="truncate text-foreground font-medium">{activeSystem.name}</span>
+                <span className="truncate font-medium text-foreground">
+                  {activeSystem.name}
+                </span>
               </>
             ) : (
               <>
@@ -126,37 +140,37 @@ export function AppHeader({
         </div>
 
         {/* Center: Command Palette Trigger */}
-        <div className="flex-1 max-w-sm hidden md:flex items-center">
+        <div className="hidden max-w-sm flex-1 items-center md:flex">
           <button
             type="button"
             data-slot="command-menu-trigger"
             onClick={handleOpenCommandMenu}
-            className="w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-full border border-border/60 bg-input/15 text-xs text-muted-foreground hover:text-foreground hover:border-border transition-all cursor-pointer shadow-2xs"
+            className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-full border border-border/60 bg-input/15 px-3 py-1.5 text-xs text-muted-foreground shadow-2xs transition-all hover:border-border hover:text-foreground"
           >
             <div className="flex items-center gap-2">
               <SearchIcon className="size-3.5 text-muted-foreground" />
               <span>Search systems &amp; craft rules...</span>
             </div>
-            <kbd className="px-1.5 py-0.5 rounded bg-muted/60 border border-border/60 text-[10px] font-mono tracking-tight text-foreground/80">
+            <kbd className="rounded border border-border/60 bg-muted/60 px-1.5 py-0.5 font-mono text-[10px] tracking-tight text-foreground/80">
               {shortcutHint}
             </kbd>
           </button>
         </div>
 
         {/* Right: Token Gauge & Quick Export Action */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex shrink-0 items-center gap-3">
           {/* Token Gauge Summary */}
           <div
             data-slot="token-gauge"
             className={cn(
-              "flex items-center gap-2 px-2.5 py-1 rounded-full border text-xs transition-colors",
+              "flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs transition-colors",
               tokenStats.isOverBudget
                 ? "border-destructive/50 bg-destructive/10 text-destructive"
                 : "border-border/60 bg-input/15 text-muted-foreground"
             )}
           >
             <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-foreground font-mono">
+              <span className="font-mono font-semibold text-foreground">
                 {tokenStats.totalTokens.toLocaleString()}
               </span>
               <span className="text-[11px] text-muted-foreground">tokens</span>
@@ -164,7 +178,7 @@ export function AppHeader({
 
             <div className="h-3 w-px bg-border/60" />
 
-            <span className="text-[11px] font-mono">
+            <span className="font-mono text-[11px]">
               {tokenStats.budgetUsagePercent}%
             </span>
 
@@ -172,7 +186,7 @@ export function AppHeader({
               <Badge
                 variant="destructive"
                 data-slot="token-overbudget"
-                className="text-[10px] py-0 px-1.5 h-4 gap-0.5"
+                className="h-4 gap-0.5 px-1.5 py-0 text-[10px]"
               >
                 <AlertTriangleIcon className="size-2.5" />
                 Over Budget
@@ -187,8 +201,8 @@ export function AppHeader({
             data-slot="quick-export-button"
             onClick={handleQuickExport}
             className={cn(
-              "gap-1.5 font-medium transition-all text-xs h-8 px-3 rounded-full cursor-pointer",
-              isCopied && "bg-emerald-600 hover:bg-emerald-600 text-white"
+              "h-8 cursor-pointer gap-1.5 rounded-full px-3 text-xs font-medium transition-all",
+              isCopied && "bg-emerald-600 text-white hover:bg-emerald-600"
             )}
           >
             {isCopied ? (

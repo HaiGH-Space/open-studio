@@ -14,7 +14,10 @@ import {
 } from "../../scripts/generate-catalog.ts"
 
 describe("Catalog Indexer & Token Utilities", () => {
-  const fixturePath = path.resolve(import.meta.dirname, "./fixtures/sample-tokens.css")
+  const fixturePath = path.resolve(
+    import.meta.dirname,
+    "./fixtures/sample-tokens.css"
+  )
   const sampleCss = fs.readFileSync(fixturePath, "utf-8")
 
   describe("parseCssVariables", () => {
@@ -86,7 +89,9 @@ describe("Catalog Indexer & Token Utilities", () => {
       expect(summary.hasColorRamps).toBe(true)
       expect(summary.hasRadiusTokens).toBe(true)
       expect(summary.hasTypographyTokens).toBe(true)
-      expect(summary.condensedCssVariablesCount).toBeLessThan(summary.totalCssVariables)
+      expect(summary.condensedCssVariablesCount).toBeLessThan(
+        summary.totalCssVariables
+      )
       expect(summary.previewDeclarations.length).toBeLessThanOrEqual(8)
       expect(summary.previewDeclarations.length).toBeGreaterThan(0)
     })
@@ -147,8 +152,12 @@ describe("Catalog Indexer & Token Utilities", () => {
       expect(entry.availableFiles.hasTokensCss).toBe(true)
       expect(entry.availableFiles.hasComponentsHtml).toBe(true)
       expect(entry.availableFiles.hasUsage).toBe(false)
-      expect(entry.assetPaths.basePath).toBe("data/design-systems/sample-system")
-      expect(entry.assetPaths.tokensCss).toBe("data/design-systems/sample-system/tokens.css")
+      expect(entry.assetPaths.basePath).toBe(
+        "data/design-systems/sample-system"
+      )
+      expect(entry.assetPaths.tokensCss).toBe(
+        "data/design-systems/sample-system/tokens.css"
+      )
       expect(entry.swatches.primary).toBe("#6366f1")
     })
 
@@ -251,7 +260,8 @@ od:
         templates: [
           buildTemplateEntry({
             id: "landing",
-            markdown: "---\nname: landing\ndescription: Landing\nod:\n  surface: landing\n---",
+            markdown:
+              "---\nname: landing\ndescription: Landing\nod:\n  surface: landing\n---",
             assetPath: "data/design-templates/landing/SKILL.md",
           }),
         ],
@@ -269,8 +279,14 @@ od:
   })
 
   describe("Generated catalog-index.json Validation", () => {
-    const catalogPath = path.resolve(import.meta.dirname, "../public/catalog-index.json")
-    const schemaPath = path.resolve(import.meta.dirname, "../public/schemas/catalog-index.schema.json")
+    const catalogPath = path.resolve(
+      import.meta.dirname,
+      "../public/catalog-index.json"
+    )
+    const schemaPath = path.resolve(
+      import.meta.dirname,
+      "../public/schemas/catalog-index.schema.json"
+    )
 
     it("verifies the generated catalog-index.json exists and is valid JSON", () => {
       expect(fs.existsSync(catalogPath)).toBe(true)
@@ -289,12 +305,16 @@ od:
 
     it("verifies known brand swatches match their CSS tokens", () => {
       const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf-8"))
-      const linear = catalog.designSystems.find((ds: { id: string }) => ds.id === "linear-app")
+      const linear = catalog.designSystems.find(
+        (ds: { id: string }) => ds.id === "linear-app"
+      )
       expect(linear).toBeDefined()
       expect(linear.swatches.primary).toBe("#5e6ad2")
       expect(linear.swatches.background).toBe("#08090a")
 
-      const stripe = catalog.designSystems.find((ds: { id: string }) => ds.id === "stripe")
+      const stripe = catalog.designSystems.find(
+        (ds: { id: string }) => ds.id === "stripe"
+      )
       expect(stripe).toBeDefined()
       expect(stripe.swatches.primary).toBe("#533afd")
       expect(stripe.swatches.background).toBe("#ffffff")
@@ -308,14 +328,18 @@ od:
       const dsRequired = schema.properties.designSystems.items.required
       for (const ds of catalog.designSystems) {
         for (const req of dsRequired) {
-          expect(ds[req], `Missing required field ${req} on design system ${ds.id}`).toBeDefined()
+          expect(
+            ds[req],
+            `Missing required field ${req} on design system ${ds.id}`
+          ).toBeDefined()
         }
         expect(ds.assetPaths.basePath).toBeDefined()
         expect(ds.tokenSummary.totalCssVariables).toBeGreaterThanOrEqual(0)
       }
 
       // Check craft rules enum constraints
-      const allowedCategories = schema.properties.craftRules.items.properties.category.enum
+      const allowedCategories =
+        schema.properties.craftRules.items.properties.category.enum
       for (const rule of catalog.craftRules) {
         expect(allowedCategories).toContain(rule.category)
         expect(rule.ruleCount).toBeGreaterThan(0)
@@ -323,7 +347,8 @@ od:
       }
 
       // Check templates surface enum constraints
-      const allowedSurfaces = schema.properties.templates.items.properties.surface.enum
+      const allowedSurfaces =
+        schema.properties.templates.items.properties.surface.enum
       for (const tpl of catalog.templates) {
         expect(allowedSurfaces).toContain(tpl.surface)
         expect(tpl.category).toBe("design-template")

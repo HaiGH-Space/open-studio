@@ -1,4 +1,10 @@
-import { useState, useEffect, useCallback, useMemo, type ReactNode } from "react"
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  type ReactNode,
+} from "react"
 import { cn } from "cn"
 import { ScrollArea } from "../ui/scroll-area"
 import {
@@ -40,15 +46,24 @@ export function PromptOutputViewer({
   const copyToClipboard = useCallback(
     async (text: string, label = "Prompt") => {
       try {
-        if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        if (
+          typeof navigator !== "undefined" &&
+          navigator.clipboard?.writeText
+        ) {
           await navigator.clipboard.writeText(text)
-          setToast({ type: "success", message: `Copied ${label} to clipboard!` })
+          setToast({
+            type: "success",
+            message: `Copied ${label} to clipboard!`,
+          })
           onCopy?.(text)
         } else {
           throw new Error("Clipboard API unavailable")
         }
       } catch {
-        setToast({ type: "error", message: `Failed to copy ${label} to clipboard` })
+        setToast({
+          type: "error",
+          message: `Failed to copy ${label} to clipboard`,
+        })
       }
     },
     [onCopy]
@@ -67,47 +82,60 @@ export function PromptOutputViewer({
       let styledContent: ReactNode = line
 
       if (trimmed.startsWith("<!--") && trimmed.endsWith("-->")) {
-        styledContent = <span className="text-muted-foreground/60 italic">{line}</span>
-      } else if (trimmed.startsWith("<") && (trimmed.endsWith(">") || trimmed.includes(">"))) {
+        styledContent = (
+          <span className="text-muted-foreground/60 italic">{line}</span>
+        )
+      } else if (
+        trimmed.startsWith("<") &&
+        (trimmed.endsWith(">") || trimmed.includes(">"))
+      ) {
         // XML opening / closing / directives
         styledContent = (
           <span>
-            {line.split(/(<\/?[a-zA-Z0-9_\-:]+(?:\s+[^>]+)?>)/g).map((part, pIdx) => {
-              if (part.startsWith("<") && part.endsWith(">")) {
-                const isClosing = part.startsWith("</")
-                return (
-                  <span
-                    key={pIdx}
-                    className={cn(
-                      "font-semibold",
-                      isClosing ? "text-indigo-400/80" : "text-primary"
-                    )}
-                  >
-                    {part}
-                  </span>
-                )
-              }
-              return <span key={pIdx}>{part}</span>
-            })}
+            {line
+              .split(/(<\/?[a-zA-Z0-9_\-:]+(?:\s+[^>]+)?>)/g)
+              .map((part, pIdx) => {
+                if (part.startsWith("<") && part.endsWith(">")) {
+                  const isClosing = part.startsWith("</")
+                  return (
+                    <span
+                      key={pIdx}
+                      className={cn(
+                        "font-semibold",
+                        isClosing ? "text-indigo-400/80" : "text-primary"
+                      )}
+                    >
+                      {part}
+                    </span>
+                  )
+                }
+                return <span key={pIdx}>{part}</span>
+              })}
           </span>
         )
       } else if (trimmed.startsWith("#")) {
-        styledContent = <span className="text-sky-400 font-semibold">{line}</span>
+        styledContent = (
+          <span className="font-semibold text-sky-400">{line}</span>
+        )
       } else if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
         styledContent = (
           <span>
-            <span className="text-amber-400 font-bold">{line.slice(0, line.indexOf("-") + 1 || line.indexOf("*") + 1)}</span>
-            {line.slice((line.indexOf("-") + 1 || line.indexOf("*") + 1))}
+            <span className="font-bold text-amber-400">
+              {line.slice(0, line.indexOf("-") + 1 || line.indexOf("*") + 1)}
+            </span>
+            {line.slice(line.indexOf("-") + 1 || line.indexOf("*") + 1)}
           </span>
         )
       }
 
       return (
         <div key={idx} className="table-row leading-relaxed hover:bg-muted/10">
-          <span className="table-cell pr-3 select-none text-right font-mono text-[10px] text-muted-foreground/40 w-8">
+          <span className="table-cell w-8 pr-3 text-right font-mono text-[10px] text-muted-foreground/40 select-none">
             {idx + 1}
           </span>
-          <span className="table-cell select-text break-all">{styledContent}</span>
+          <span className="table-cell break-all select-text">
+            {styledContent}
+          </span>
         </div>
       )
     })
@@ -117,35 +145,35 @@ export function PromptOutputViewer({
     <div
       data-slot="prompt-output-viewer"
       className={cn(
-        "relative flex flex-col flex-1 min-h-0 bg-card/40 border border-border/60 rounded-xl overflow-hidden shadow-xs",
+        "relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border/60 bg-card/40 shadow-xs",
         className
       )}
     >
       {/* Header Bar */}
-      <div className="flex items-center justify-between px-3 py-2 border-b border-border/50 bg-background/50 backdrop-blur-xs select-none shrink-0 gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <FileCodeIcon className="size-3.5 text-primary shrink-0" />
-          <span className="font-semibold text-xs text-foreground truncate">
+      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border/50 bg-background/50 px-3 py-2 backdrop-blur-xs select-none">
+        <div className="flex min-w-0 items-center gap-2">
+          <FileCodeIcon className="size-3.5 shrink-0 text-primary" />
+          <span className="truncate text-xs font-semibold text-foreground">
             Compiled Prompt
           </span>
           <span
             data-slot="prompt-metrics"
-            className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-muted/60 text-muted-foreground shrink-0"
+            className="shrink-0 rounded bg-muted/60 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
           >
             {lineCount} lines · {content.length.toLocaleString()} chars
           </span>
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex shrink-0 items-center gap-1.5">
           {/* Wrap Toggle */}
           <button
             type="button"
             onClick={() => setWrapLines((prev) => !prev)}
             className={cn(
-              "p-1 rounded-md text-xs border border-border/40 transition-colors cursor-pointer",
+              "cursor-pointer rounded-md border border-border/40 p-1 text-xs transition-colors",
               wrapLines
-                ? "bg-primary/10 text-primary border-primary/30"
+                ? "border-primary/30 bg-primary/10 text-primary"
                 : "text-muted-foreground hover:bg-muted/40"
             )}
             title={wrapLines ? "Disable word wrap" : "Enable word wrap"}
@@ -159,7 +187,7 @@ export function PromptOutputViewer({
               type="button"
               data-slot="copy-secondary-btn"
               onClick={() => copyToClipboard(secondaryContent, "User Task")}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded-lg border border-border/70 bg-input/20 hover:bg-input/40 text-xs font-medium text-foreground transition-all cursor-pointer"
+              className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-border/70 bg-input/20 px-2 py-1 text-xs font-medium text-foreground transition-all hover:bg-input/40"
               title="Copy User Task for dual clipboard"
             >
               <CopyIcon className="size-3 text-muted-foreground" />
@@ -171,8 +199,13 @@ export function PromptOutputViewer({
           <button
             type="button"
             data-slot="copy-prompt-btn"
-            onClick={() => copyToClipboard(content, format === "cursor" ? "System Rules" : "Prompt")}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-primary/40 bg-primary/15 hover:bg-primary/25 text-xs font-semibold text-primary transition-all cursor-pointer shadow-xs"
+            onClick={() =>
+              copyToClipboard(
+                content,
+                format === "cursor" ? "System Rules" : "Prompt"
+              )
+            }
+            className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-primary/40 bg-primary/15 px-2.5 py-1 text-xs font-semibold text-primary shadow-xs transition-all hover:bg-primary/25"
           >
             {toast?.type === "success" ? (
               <>
@@ -182,7 +215,9 @@ export function PromptOutputViewer({
             ) : (
               <>
                 <CopyIcon className="size-3" />
-                <span>{format === "cursor" ? "Copy Rules" : "Copy Prompt"}</span>
+                <span>
+                  {format === "cursor" ? "Copy Rules" : "Copy Prompt"}
+                </span>
               </>
             )}
           </button>
@@ -191,11 +226,11 @@ export function PromptOutputViewer({
 
       {/* Code Viewer Body */}
       <ScrollArea
-        className="flex-1 min-h-0 bg-muted/5"
+        className="min-h-0 flex-1 bg-muted/5"
         orientation={wrapLines ? "vertical" : "both"}
         viewportClassName={cn(
           "p-3 font-mono text-[11px] text-foreground/90 select-text",
-          wrapLines ? "whitespace-pre-wrap break-words" : "whitespace-pre"
+          wrapLines ? "break-words whitespace-pre-wrap" : "whitespace-pre"
         )}
       >
         <div className="table w-full font-mono">{renderedLines}</div>
@@ -208,16 +243,16 @@ export function PromptOutputViewer({
           role="status"
           aria-live="polite"
           className={cn(
-            "absolute bottom-3 right-3 z-30 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border shadow-lg text-xs font-medium backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-200",
+            "absolute right-3 bottom-3 z-30 inline-flex animate-in items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur-md duration-200 fade-in slide-in-from-bottom-2",
             toast.type === "success"
-              ? "bg-emerald-950/90 text-emerald-200 border-emerald-500/40"
-              : "bg-destructive/90 text-destructive-foreground border-destructive/40"
+              ? "border-emerald-500/40 bg-emerald-950/90 text-emerald-200"
+              : "text-destructive-foreground border-destructive/40 bg-destructive/90"
           )}
         >
           {toast.type === "success" ? (
-            <CheckIcon className="size-3.5 text-emerald-400 shrink-0" />
+            <CheckIcon className="size-3.5 shrink-0 text-emerald-400" />
           ) : (
-            <AlertCircleIcon className="size-3.5 text-destructive-foreground shrink-0" />
+            <AlertCircleIcon className="text-destructive-foreground size-3.5 shrink-0" />
           )}
           <span>{toast.message}</span>
         </div>

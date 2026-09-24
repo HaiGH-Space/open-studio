@@ -26,10 +26,7 @@ import {
   getDraftBrief,
   setDraftBrief,
 } from "../lib/storage/persistence"
-import {
-  exportPrompt,
-  type AgentExportPackage,
-} from "../lib/export"
+import { exportPrompt, type AgentExportPackage } from "../lib/export"
 import type {
   ClarificationAnswerEntry,
   QuestionFormAST,
@@ -83,12 +80,16 @@ export function ComposerProvider({
 
   const [config, setConfigState] = useState<ComposerConfig>(getInitialConfig)
   const [assets, setAssetsState] = useState<ComposerAssets>(initialAssets ?? {})
-  const [agentTarget, setAgentTarget] = useState<ActiveAgentTarget>("generic-llm")
+  const [agentTarget, setAgentTarget] =
+    useState<ActiveAgentTarget>("generic-llm")
   const [rawAiResponse, setRawAiResponse] = useState<string>("")
   const [clarificationHistory] = useState<readonly string[]>([])
-  const [roundtripStep, setRoundtripStepState] = useState<RoundtripStep>("STEP_1_CONFIGURING")
+  const [roundtripStep, setRoundtripStepState] =
+    useState<RoundtripStep>("STEP_1_CONFIGURING")
   const [activeTurn, setActiveTurnState] = useState<TurnMode>("turn1_discovery")
-  const [parsedFormAst, setParsedFormAst] = useState<QuestionFormAST | null>(null)
+  const [parsedFormAst, setParsedFormAst] = useState<QuestionFormAST | null>(
+    null
+  )
   const [isDisobedientAi, setIsDisobedientAi] = useState<boolean>(false)
   const [parseError, setParseError] = useState<string | null>(null)
 
@@ -126,26 +127,33 @@ export function ComposerProvider({
   )
 
   // Immediately compile initial state using initial values
-  const [compiledPrompt, setCompiledPrompt] = useState<CompiledPromptResult>(() =>
-    promptComposer.compile(config, assets, "turn1_discovery")
+  const [compiledPrompt, setCompiledPrompt] = useState<CompiledPromptResult>(
+    () => promptComposer.compile(config, assets, "turn1_discovery")
   )
   const [isDebouncing, setIsDebouncing] = useState<boolean>(false)
 
   // Synchronous compilation helper
-  const compileNow = useCallback((overrideConfig?: ComposerConfig, overrideTurn?: TurnMode) => {
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current)
-      debounceTimerRef.current = null
-    }
-    const configToCompile = overrideConfig ?? currentConfigRef.current
-    const assetsToCompile = currentAssetsRef.current
-    const turnToCompile = overrideTurn ?? activeTurnRef.current
-    const result = promptComposer.compile(configToCompile, assetsToCompile, turnToCompile)
-    lastCompiledConfigRef.current = configToCompile
-    lastCompiledAssetsRef.current = assetsToCompile
-    setCompiledPrompt(result)
-    setIsDebouncing(false)
-  }, [])
+  const compileNow = useCallback(
+    (overrideConfig?: ComposerConfig, overrideTurn?: TurnMode) => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+        debounceTimerRef.current = null
+      }
+      const configToCompile = overrideConfig ?? currentConfigRef.current
+      const assetsToCompile = currentAssetsRef.current
+      const turnToCompile = overrideTurn ?? activeTurnRef.current
+      const result = promptComposer.compile(
+        configToCompile,
+        assetsToCompile,
+        turnToCompile
+      )
+      lastCompiledConfigRef.current = configToCompile
+      lastCompiledAssetsRef.current = assetsToCompile
+      setCompiledPrompt(result)
+      setIsDebouncing(false)
+    },
+    []
+  )
 
   // Schedule debounced recompilation on config or assets changes
   useEffect(() => {
@@ -249,7 +257,10 @@ export function ComposerProvider({
         currentAssetsRef.current = nextAssets
         setAssetsState(nextAssets)
       } catch (err) {
-        console.warn(`Failed to fetch design system bundle for '${systemId}':`, err)
+        console.warn(
+          `Failed to fetch design system bundle for '${systemId}':`,
+          err
+        )
       }
     },
     [catalogService, updateLayer]
@@ -258,7 +269,8 @@ export function ComposerProvider({
   // Craft rule toggle & asset retrieval
   const toggleCraftRule = useCallback(
     async (ruleId: string) => {
-      const currentRules = currentConfigRef.current.layer6CraftRules.selectedRuleIds
+      const currentRules =
+        currentConfigRef.current.layer6CraftRules.selectedRuleIds
       const isSelected = currentRules.includes(ruleId)
 
       if (isSelected) {
@@ -287,7 +299,10 @@ export function ComposerProvider({
           currentAssetsRef.current = nextAssets
           setAssetsState(nextAssets)
         } catch (err) {
-          console.warn(`Failed to fetch craft rule content for '${ruleId}':`, err)
+          console.warn(
+            `Failed to fetch craft rule content for '${ruleId}':`,
+            err
+          )
         }
       }
     },
@@ -312,7 +327,8 @@ export function ComposerProvider({
   const addClarificationAnswer = useCallback(
     (answer: ClarificationAnswerEntry) => {
       const currentAnswers =
-        currentConfigRef.current.layer9BriefAndClarification.clarificationAnswers
+        currentConfigRef.current.layer9BriefAndClarification
+          .clarificationAnswers
       const existingIdx = currentAnswers.findIndex(
         (a) => a.questionId === answer.questionId
       )
@@ -357,7 +373,10 @@ export function ComposerProvider({
         activeTurnRef.current = "turn2_execution"
         setActiveTurnState("turn2_execution")
         compileNow(undefined, "turn2_execution")
-      } else if (step === "STEP_1_CONFIGURING" || step === "STEP_1_PROMPT_READY") {
+      } else if (
+        step === "STEP_1_CONFIGURING" ||
+        step === "STEP_1_PROMPT_READY"
+      ) {
         activeTurnRef.current = "turn1_discovery"
         setActiveTurnState("turn1_discovery")
         compileNow(undefined, "turn1_discovery")
@@ -420,7 +439,8 @@ export function ComposerProvider({
   // Fallback 2: Synthesize defaults from active skill and proceed
   const useSkillDefaultsAndProceed = useCallback(() => {
     const skillId =
-      currentConfigRef.current.layer7SkillTemplate.selectedSkillId ?? "general-ui"
+      currentConfigRef.current.layer7SkillTemplate.selectedSkillId ??
+      "general-ui"
     const taskKind = currentConfigRef.current.layer4WorkflowManifest.taskKind
     const defaultAnswers: ClarificationAnswerEntry[] = [
       {

@@ -7,7 +7,10 @@ import { ColorSwatchBar } from "../src/components/cockpit/ColorSwatchBar"
 import { DesignSystemCard } from "../src/components/cockpit/DesignSystemCard"
 import { DesignSystemPreviewModal } from "../src/components/preview/DesignSystemPreviewModal"
 import { ResourceNavigator } from "../src/components/cockpit/ResourceNavigator"
-import type { CatalogIndex, ICatalogService } from "../src/lib/catalog/catalog-types"
+import type {
+  CatalogIndex,
+  ICatalogService,
+} from "../src/lib/catalog/catalog-types"
 import type { ComposerConfig } from "../src/lib/composer/composer-types"
 
 declare global {
@@ -70,7 +73,8 @@ const mockCatalog: CatalogIndex = {
         tokensCss: "data/design-systems/linear-app/tokens.css",
         tailwindCss: "data/design-systems/linear-app/tailwind-v4.css",
         componentsHtml: "data/design-systems/linear-app/components.html",
-        componentsManifest: "data/design-systems/linear-app/components.manifest.json",
+        componentsManifest:
+          "data/design-systems/linear-app/components.manifest.json",
       },
     },
     {
@@ -112,7 +116,8 @@ const mockCatalog: CatalogIndex = {
         tokensCss: "data/design-systems/stripe-dev/tokens.css",
         tailwindCss: "data/design-systems/stripe-dev/tailwind-v4.css",
         componentsHtml: "data/design-systems/stripe-dev/components.html",
-        componentsManifest: "data/design-systems/stripe-dev/components.manifest.json",
+        componentsManifest:
+          "data/design-systems/stripe-dev/components.manifest.json",
       },
     },
     {
@@ -158,7 +163,8 @@ const mockCatalog: CatalogIndex = {
       id: "anti-ai-slop",
       name: "Anti-AI-Slop Discipline",
       category: "discipline",
-      description: "Rules against generic AI generated styles and purple gradients",
+      description:
+        "Rules against generic AI generated styles and purple gradients",
       ruleCount: 12,
       isDefaultEnabled: true,
       assetPath: "data/craft/anti-ai-slop.md",
@@ -194,11 +200,15 @@ const mockCatalog: CatalogIndex = {
   templates: [],
 }
 
-function createMockCatalogService(catalogData: CatalogIndex | null = mockCatalog): ICatalogService {
+function createMockCatalogService(
+  catalogData: CatalogIndex | null = mockCatalog
+): ICatalogService {
   return {
     loadCatalog: vi.fn().mockResolvedValue(catalogData),
     getLoadedCatalog: vi.fn().mockReturnValue(catalogData),
-    fetchDesignTokens: vi.fn().mockResolvedValue(":root { --primary: #5e6ad2; --bg: #08090a; }"),
+    fetchDesignTokens: vi
+      .fn()
+      .mockResolvedValue(":root { --primary: #5e6ad2; --bg: #08090a; }"),
     fetchDesignSystemBundle: vi.fn().mockImplementation((systemId: string) => {
       return Promise.resolve({
         id: systemId,
@@ -246,7 +256,8 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     }
   ) {
     const service = options?.catalogService ?? mockService
-    const initialCatalog = options && "catalog" in options ? options.catalog : mockCatalog
+    const initialCatalog =
+      options && "catalog" in options ? options.catalog : mockCatalog
     act(() => {
       root.render(
         <CatalogProvider
@@ -304,9 +315,7 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     const sampleSystem = mockCatalog.designSystems[0]
 
     it("displays brand name, category badge, description, and token metrics", () => {
-      renderWithProviders(
-        <DesignSystemCard system={sampleSystem} />
-      )
+      renderWithProviders(<DesignSystemCard system={sampleSystem} />)
 
       const card = container.querySelector("[data-slot='design-system-card']")
       expect(card).toBeTruthy()
@@ -317,9 +326,7 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     })
 
     it("displays tag chips", () => {
-      renderWithProviders(
-        <DesignSystemCard system={sampleSystem} />
-      )
+      renderWithProviders(<DesignSystemCard system={sampleSystem} />)
       expect(container.textContent).toContain("dark-mode")
       expect(container.textContent).toContain("minimal")
     })
@@ -330,7 +337,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
         <DesignSystemCard system={sampleSystem} onSelect={handleSelect} />
       )
 
-      const selectBtn = container.querySelector("[data-slot='select-system-button']") as HTMLButtonElement
+      const selectBtn = container.querySelector(
+        "[data-slot='select-system-button']"
+      ) as HTMLButtonElement
       expect(selectBtn).toBeTruthy()
       act(() => {
         selectBtn.click()
@@ -344,7 +353,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
         <DesignSystemCard system={sampleSystem} onPreview={handlePreview} />
       )
 
-      const previewBtn = container.querySelector("[data-slot='preview-system-button']") as HTMLButtonElement
+      const previewBtn = container.querySelector(
+        "[data-slot='preview-system-button']"
+      ) as HTMLButtonElement
       expect(previewBtn).toBeTruthy()
       act(() => {
         previewBtn.click()
@@ -357,7 +368,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
         <DesignSystemCard system={sampleSystem} isSelected={true} />
       )
 
-      const selectBtn = container.querySelector("[data-slot='select-system-button']")
+      const selectBtn = container.querySelector(
+        "[data-slot='select-system-button']"
+      )
       expect(selectBtn?.textContent).toMatch(/(active|selected)/i)
     })
   })
@@ -366,10 +379,7 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("renders modal dialog with system title, category, and tabs", async () => {
       await act(async () => {
         renderWithProviders(
-          <DesignSystemPreviewModal
-            systemId="linear-app"
-            open={true}
-          />
+          <DesignSystemPreviewModal systemId="linear-app" open={true} />
         )
       })
 
@@ -383,57 +393,60 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("fetches bundle assets and displays tokens CSS content", async () => {
       await act(async () => {
         renderWithProviders(
-          <DesignSystemPreviewModal
-            systemId="linear-app"
-            open={true}
-          />
+          <DesignSystemPreviewModal systemId="linear-app" open={true} />
         )
       })
 
-      expect(mockService.fetchDesignSystemBundle).toHaveBeenCalledWith("linear-app")
-      const tokensPreview = document.querySelector("[data-slot='tokens-css-preview']")
+      expect(mockService.fetchDesignSystemBundle).toHaveBeenCalledWith(
+        "linear-app"
+      )
+      const tokensPreview = document.querySelector(
+        "[data-slot='tokens-css-preview']"
+      )
       expect(tokensPreview?.textContent).toContain("--primary: #5e6ad2")
     })
 
     it("switches to Typography tab when clicked", async () => {
       await act(async () => {
         renderWithProviders(
-          <DesignSystemPreviewModal
-            systemId="linear-app"
-            open={true}
-          />
+          <DesignSystemPreviewModal systemId="linear-app" open={true} />
         )
       })
 
-      const typographyTabTrigger = document.querySelector("[data-slot='tab-trigger-typography']") as HTMLElement
+      const typographyTabTrigger = document.querySelector(
+        "[data-slot='tab-trigger-typography']"
+      ) as HTMLElement
       expect(typographyTabTrigger).toBeTruthy()
 
       act(() => {
         typographyTabTrigger.click()
       })
 
-      const typographyContent = document.querySelector("[data-slot='tab-content-typography']")
+      const typographyContent = document.querySelector(
+        "[data-slot='tab-content-typography']"
+      )
       expect(typographyContent).toBeTruthy()
     })
 
     it("switches to Components HTML tab and displays markup preview", async () => {
       await act(async () => {
         renderWithProviders(
-          <DesignSystemPreviewModal
-            systemId="linear-app"
-            open={true}
-          />
+          <DesignSystemPreviewModal systemId="linear-app" open={true} />
         )
       })
 
-      const componentsTabTrigger = document.querySelector("[data-slot='tab-trigger-components']") as HTMLElement
+      const componentsTabTrigger = document.querySelector(
+        "[data-slot='tab-trigger-components']"
+      ) as HTMLElement
       expect(componentsTabTrigger).toBeTruthy()
 
       act(() => {
         componentsTabTrigger.click()
       })
 
-      const componentsContent = document.querySelector("[data-slot='tab-content-components']")
+      const componentsContent = document.querySelector(
+        "[data-slot='tab-content-components']"
+      )
       expect(componentsContent).toBeTruthy()
       expect(componentsContent?.textContent).toContain("btn-primary")
     })
@@ -450,7 +463,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
         )
       })
 
-      const useSystemBtn = document.querySelector("[data-slot='modal-select-system-button']") as HTMLButtonElement
+      const useSystemBtn = document.querySelector(
+        "[data-slot='modal-select-system-button']"
+      ) as HTMLButtonElement
       expect(useSystemBtn).toBeTruthy()
 
       await act(async () => {
@@ -465,18 +480,32 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("renders search input, category dropdown, tag chips, and resource tabs", () => {
       renderWithProviders(<ResourceNavigator />)
 
-      expect(container.querySelector("[data-slot='catalog-search-input']")).toBeTruthy()
-      expect(container.querySelector("[data-slot='category-filter-select']")).toBeTruthy()
-      expect(container.querySelector("[data-slot='tag-filter-chips']")).toBeTruthy()
-      expect(container.querySelector("[data-slot='resource-tabs']")).toBeTruthy()
+      expect(
+        container.querySelector("[data-slot='catalog-search-input']")
+      ).toBeTruthy()
+      expect(
+        container.querySelector("[data-slot='category-filter-select']")
+      ).toBeTruthy()
+      expect(
+        container.querySelector("[data-slot='tag-filter-chips']")
+      ).toBeTruthy()
+      expect(
+        container.querySelector("[data-slot='resource-tabs']")
+      ).toBeTruthy()
     })
 
     it("displays tab counts for Design Systems, Craft Rules, and Skills", () => {
       renderWithProviders(<ResourceNavigator />)
 
-      const systemsTab = container.querySelector("[data-slot='tab-trigger-systems']")
-      const rulesTab = container.querySelector("[data-slot='tab-trigger-rules']")
-      const skillsTab = container.querySelector("[data-slot='tab-trigger-skills']")
+      const systemsTab = container.querySelector(
+        "[data-slot='tab-trigger-systems']"
+      )
+      const rulesTab = container.querySelector(
+        "[data-slot='tab-trigger-rules']"
+      )
+      const skillsTab = container.querySelector(
+        "[data-slot='tab-trigger-skills']"
+      )
 
       expect(systemsTab?.textContent).toContain("3")
       expect(rulesTab?.textContent).toContain("2")
@@ -486,7 +515,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("filters design systems by search query in real time", () => {
       renderWithProviders(<ResourceNavigator />)
 
-      const searchInput = container.querySelector("[data-slot='catalog-search-input']") as HTMLInputElement
+      const searchInput = container.querySelector(
+        "[data-slot='catalog-search-input']"
+      ) as HTMLInputElement
       expect(searchInput).toBeTruthy()
 
       act(() => {
@@ -498,7 +529,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
         searchInput.dispatchEvent(new Event("input", { bubbles: true }))
       })
 
-      const cards = container.querySelectorAll("[data-slot='design-system-card']")
+      const cards = container.querySelectorAll(
+        "[data-slot='design-system-card']"
+      )
       expect(cards.length).toBe(1)
       expect(cards[0].textContent).toContain("Linear")
     })
@@ -506,7 +539,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("filters design systems by category selection", () => {
       renderWithProviders(<ResourceNavigator />)
 
-      const categorySelect = container.querySelector("[data-slot='category-filter-select']") as HTMLSelectElement
+      const categorySelect = container.querySelector(
+        "[data-slot='category-filter-select']"
+      ) as HTMLSelectElement
       expect(categorySelect).toBeTruthy()
 
       act(() => {
@@ -514,7 +549,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
         categorySelect.dispatchEvent(new Event("change", { bubbles: true }))
       })
 
-      const cards = container.querySelectorAll("[data-slot='design-system-card']")
+      const cards = container.querySelectorAll(
+        "[data-slot='design-system-card']"
+      )
       expect(cards.length).toBe(1)
       expect(cards[0].textContent).toContain("Revolut")
     })
@@ -524,14 +561,18 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
 
       // Find 'fintech' tag chip
       const tagChips = container.querySelectorAll("[data-slot='tag-chip']")
-      const fintechChip = Array.from(tagChips).find((chip) => chip.textContent?.includes("fintech")) as HTMLElement
+      const fintechChip = Array.from(tagChips).find((chip) =>
+        chip.textContent?.includes("fintech")
+      ) as HTMLElement
       expect(fintechChip).toBeTruthy()
 
       act(() => {
         fintechChip.click()
       })
 
-      const cards = container.querySelectorAll("[data-slot='design-system-card']")
+      const cards = container.querySelectorAll(
+        "[data-slot='design-system-card']"
+      )
       expect(cards.length).toBe(1)
       expect(cards[0].textContent).toContain("Revolut")
 
@@ -539,14 +580,18 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
       act(() => {
         fintechChip.click()
       })
-      const restoredCards = container.querySelectorAll("[data-slot='design-system-card']")
+      const restoredCards = container.querySelectorAll(
+        "[data-slot='design-system-card']"
+      )
       expect(restoredCards.length).toBe(3)
     })
 
     it("handles regex special characters safely in search input", () => {
       renderWithProviders(<ResourceNavigator />)
 
-      const searchInput = container.querySelector("[data-slot='catalog-search-input']") as HTMLInputElement
+      const searchInput = container.querySelector(
+        "[data-slot='catalog-search-input']"
+      ) as HTMLInputElement
 
       expect(() => {
         act(() => {
@@ -563,7 +608,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("shows empty state when search matches no systems", () => {
       renderWithProviders(<ResourceNavigator />)
 
-      const searchInput = container.querySelector("[data-slot='catalog-search-input']") as HTMLInputElement
+      const searchInput = container.querySelector(
+        "[data-slot='catalog-search-input']"
+      ) as HTMLInputElement
 
       act(() => {
         const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
@@ -582,18 +629,24 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("switches to Craft Rules tab and toggles rule state via switch", async () => {
       renderWithProviders(<ResourceNavigator />)
 
-      const rulesTab = container.querySelector("[data-slot='tab-trigger-rules']") as HTMLElement
+      const rulesTab = container.querySelector(
+        "[data-slot='tab-trigger-rules']"
+      ) as HTMLElement
       act(() => {
         rulesTab.click()
       })
 
-      const ruleCards = container.querySelectorAll("[data-slot='craft-rule-card']")
+      const ruleCards = container.querySelectorAll(
+        "[data-slot='craft-rule-card']"
+      )
       expect(ruleCards.length).toBe(2)
       expect(container.textContent).toContain("Anti-AI-Slop Discipline")
       expect(container.textContent).toContain("12 rules")
 
       // Find switch on first rule and toggle it
-      const switches = container.querySelectorAll("[data-slot='craft-rule-switch']")
+      const switches = container.querySelectorAll(
+        "[data-slot='craft-rule-switch']"
+      )
       expect(switches.length).toBe(2)
       const firstSwitch = switches[0] as HTMLElement
 
@@ -607,7 +660,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("switches to Skills tab and displays skill cards and trigger chips", () => {
       renderWithProviders(<ResourceNavigator />)
 
-      const skillsTab = container.querySelector("[data-slot='tab-trigger-skills']") as HTMLElement
+      const skillsTab = container.querySelector(
+        "[data-slot='tab-trigger-skills']"
+      ) as HTMLElement
       act(() => {
         skillsTab.click()
       })
@@ -622,7 +677,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("clicking Preview on a card opens DesignSystemPreviewModal", async () => {
       renderWithProviders(<ResourceNavigator />)
 
-      const previewButtons = container.querySelectorAll("[data-slot='preview-system-button']")
+      const previewButtons = container.querySelectorAll(
+        "[data-slot='preview-system-button']"
+      )
       expect(previewButtons.length).toBeGreaterThanOrEqual(1)
 
       await act(async () => {
@@ -638,7 +695,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("clicking Select on a card activates design system in Composer", async () => {
       renderWithProviders(<ResourceNavigator />)
 
-      const selectButtons = container.querySelectorAll("[data-slot='select-system-button']")
+      const selectButtons = container.querySelectorAll(
+        "[data-slot='select-system-button']"
+      )
       expect(selectButtons.length).toBeGreaterThanOrEqual(1)
 
       await act(async () => {
@@ -658,7 +717,9 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
         })
       }).not.toThrow()
 
-      expect(container.querySelector("[data-slot='catalog-search-input']")).toBeTruthy()
+      expect(
+        container.querySelector("[data-slot='catalog-search-input']")
+      ).toBeTruthy()
     })
   })
 })

@@ -73,24 +73,27 @@ export function TokenGaugeBar({
     <div
       data-slot="token-gauge-bar"
       data-gauge-status={status}
-      className={cn("flex flex-col gap-1.5 w-full select-none", className)}
+      className={cn("flex w-full flex-col gap-1.5 select-none", className)}
     >
       {/* Metrics Row */}
       <div className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-1.5">
           <span
             data-slot="token-gauge-indicator"
-            className={cn("size-2 rounded-full shrink-0 shadow-xs", styles.indicatorClass)}
+            className={cn(
+              "size-2 shrink-0 rounded-full shadow-xs",
+              styles.indicatorClass
+            )}
           />
-          <span className="font-semibold text-foreground font-mono text-[11px]">
+          <span className="font-mono text-[11px] font-semibold text-foreground">
             {tokenCount.toLocaleString()}
           </span>
-          <span className="text-muted-foreground text-[11px]">
+          <span className="text-[11px] text-muted-foreground">
             / {limitLabel} limit
           </span>
           <span
             className={cn(
-              "px-1.5 py-0.2 rounded text-[10px] font-mono font-medium",
+              "py-0.2 rounded px-1.5 font-mono text-[10px] font-medium",
               styles.badgeBg,
               styles.textClass
             )}
@@ -100,17 +103,20 @@ export function TokenGaugeBar({
         </div>
 
         {cost && (
-          <div className="text-[11px] font-mono text-muted-foreground">
+          <div className="font-mono text-[11px] text-muted-foreground">
             ~${cost.inputCost.toFixed(4)}
           </div>
         )}
       </div>
 
       {/* Progress Bar Track & Fill */}
-      <div className="w-full h-1.5 rounded-full overflow-hidden bg-muted/40 border border-border/30">
+      <div className="h-1.5 w-full overflow-hidden rounded-full border border-border/30 bg-muted/40">
         <div
           data-slot="token-gauge-fill"
-          className={cn("h-full transition-all duration-300 rounded-full", styles.fillClass)}
+          className={cn(
+            "h-full rounded-full transition-all duration-300",
+            styles.fillClass
+          )}
           style={{ width: `${pct}%` }}
         />
       </div>

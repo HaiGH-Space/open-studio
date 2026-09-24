@@ -23,8 +23,8 @@ export function Layer5DesignSystem() {
   const displayName = activeSystem
     ? activeSystem.name
     : selectedSystemId
-    ? selectedSystemId
-    : "No system selected"
+      ? selectedSystemId
+      : "No system selected"
 
   const handleToggleTokenMode = (checked: boolean) => {
     updateLayer("layer5BrandContract", {
@@ -35,12 +35,15 @@ export function Layer5DesignSystem() {
   return (
     <div data-slot="layer5-design-system-panel" className="space-y-4 py-2">
       {/* Active System Banner */}
-      <div className="flex items-center justify-between gap-4 p-3 rounded-xl border border-border/60 bg-muted/20">
+      <div className="flex items-center justify-between gap-4 rounded-xl border border-border/60 bg-muted/20 p-3">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <Palette className="size-4 text-primary" />
             <span>Active Design System:</span>
-            <span data-slot="l5-active-system" className="font-semibold text-primary">
+            <span
+              data-slot="l5-active-system"
+              className="font-semibold text-primary"
+            >
               {displayName}
             </span>
           </div>
@@ -53,11 +56,16 @@ export function Layer5DesignSystem() {
       </div>
 
       {/* Token Mode Switch (Condensed vs Full) */}
-      <div className="flex items-center justify-between gap-4 p-3 rounded-xl border border-border/60 bg-muted/20">
+      <div className="flex items-center justify-between gap-4 rounded-xl border border-border/60 bg-muted/20 p-3">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <FileCode2 className="size-4 text-primary" />
-            <span>Token Mode: <span className="text-primary font-mono text-xs capitalize">{tokenMode}</span></span>
+            <span>
+              Token Mode:{" "}
+              <span className="font-mono text-xs text-primary capitalize">
+                {tokenMode}
+              </span>
+            </span>
           </div>
           <p className="text-xs text-muted-foreground">
             {tokenMode === "condensed"
@@ -74,13 +82,13 @@ export function Layer5DesignSystem() {
       </div>
 
       {/* Asset Inclusion Checkboxes */}
-      <div className="space-y-2 pt-1 border-t border-border/50">
+      <div className="space-y-2 border-t border-border/50 pt-1">
         <div className="text-xs font-medium text-foreground">
           Include Brand Documentation &amp; Blueprints
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {/* tokens.css */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg border border-border/60 bg-background/50">
+          <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/50 p-2.5">
             <div className="flex items-center gap-2 text-xs text-foreground">
               <FileCode2 className="size-3.5 text-primary" />
               <span>tokens.css</span>
@@ -90,14 +98,16 @@ export function Layer5DesignSystem() {
               size="sm"
               checked={includeTokensCss}
               onCheckedChange={(checked) =>
-                updateLayer("layer5BrandContract", { includeTokensCss: checked })
+                updateLayer("layer5BrandContract", {
+                  includeTokensCss: checked,
+                })
               }
               aria-label="Include tokens.css"
             />
           </div>
 
           {/* DESIGN.md */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg border border-border/60 bg-background/50">
+          <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/50 p-2.5">
             <div className="flex items-center gap-2 text-xs text-foreground">
               <BookOpen className="size-3.5 text-primary" />
               <span>DESIGN.md</span>
@@ -114,7 +124,7 @@ export function Layer5DesignSystem() {
           </div>
 
           {/* USAGE.md */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg border border-border/60 bg-background/50">
+          <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/50 p-2.5">
             <div className="flex items-center gap-2 text-xs text-foreground">
               <CheckSquare className="size-3.5 text-primary" />
               <span>USAGE.md</span>
@@ -131,7 +141,7 @@ export function Layer5DesignSystem() {
           </div>
 
           {/* components.html */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg border border-border/60 bg-background/50">
+          <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/50 p-2.5">
             <div className="flex items-center gap-2 text-xs text-foreground">
               <Layers className="size-3.5 text-primary" />
               <span>components.html</span>
@@ -141,7 +151,9 @@ export function Layer5DesignSystem() {
               size="sm"
               checked={includeComponentsHtml}
               onCheckedChange={(checked) =>
-                updateLayer("layer5BrandContract", { includeComponentsHtml: checked })
+                updateLayer("layer5BrandContract", {
+                  includeComponentsHtml: checked,
+                })
               }
               aria-label="Include components.html"
             />

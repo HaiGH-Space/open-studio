@@ -59,7 +59,8 @@ export function Layer6CraftRules() {
             <span>Recommended Craft Rulebooks</span>
           </span>
           <span className="text-[11px] text-muted-foreground">
-            {selectedRuleIds.length} rule{selectedRuleIds.length === 1 ? "" : "s"} active
+            {selectedRuleIds.length} rule
+            {selectedRuleIds.length === 1 ? "" : "s"} active
           </span>
         </div>
 
@@ -74,7 +75,7 @@ export function Layer6CraftRules() {
                 data-rule-id={rule.id}
                 onClick={() => toggleCraftRule(rule.id)}
                 className={cn(
-                  "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all cursor-pointer select-none",
+                  "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all select-none",
                   isSelected
                     ? "border-primary bg-primary/15 text-primary"
                     : "border-border/70 bg-input/20 text-muted-foreground hover:bg-input/40 hover:text-foreground"
@@ -89,7 +90,7 @@ export function Layer6CraftRules() {
       </div>
 
       {/* Custom Craft Directives Section */}
-      <div className="space-y-2 pt-2 border-t border-border/50">
+      <div className="space-y-2 border-t border-border/50 pt-2">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-foreground">
             Custom Craft Directives
@@ -107,13 +108,13 @@ export function Layer6CraftRules() {
             value={newDirective}
             onChange={(e) => setNewDirective(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="flex-1 h-8 px-3 rounded-lg border border-border/70 bg-input/20 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="h-8 flex-1 rounded-lg border border-border/70 bg-input/20 px-3 text-xs text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-primary focus:outline-none"
           />
           <button
             type="button"
             data-slot="l6-add-directive-btn"
             onClick={handleAddDirective}
-            className="inline-flex items-center gap-1 px-3 h-8 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer"
+            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             <Plus className="size-3.5" />
             <span>Add</span>
@@ -126,14 +127,14 @@ export function Layer6CraftRules() {
               <span
                 key={`${dir}-${idx}`}
                 data-slot="l6-directive-item"
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-border/80 bg-muted/40 text-xs text-foreground"
+                className="inline-flex items-center gap-1 rounded-md border border-border/80 bg-muted/40 px-2.5 py-1 text-xs text-foreground"
               >
                 <span>{dir}</span>
                 <button
                   type="button"
                   data-slot="l6-remove-directive-btn"
                   onClick={() => handleRemoveDirective(idx)}
-                  className="text-muted-foreground hover:text-destructive cursor-pointer transition-colors p-0.5 rounded"
+                  className="cursor-pointer rounded p-0.5 text-muted-foreground transition-colors hover:text-destructive"
                   aria-label={`Remove directive: ${dir}`}
                 >
                   <X className="size-3" />

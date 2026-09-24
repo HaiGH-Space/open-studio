@@ -41,11 +41,16 @@ export class CatalogService implements ICatalogService {
 
     if (options?.fetch) {
       this.fetchFn = options.fetch
-    } else if (typeof globalThis !== "undefined" && typeof globalThis.fetch === "function") {
+    } else if (
+      typeof globalThis !== "undefined" &&
+      typeof globalThis.fetch === "function"
+    ) {
       this.fetchFn = globalThis.fetch.bind(globalThis)
     } else {
       this.fetchFn = () => {
-        throw new Error("No fetch implementation available in the current environment")
+        throw new Error(
+          "No fetch implementation available in the current environment"
+        )
       }
     }
   }
@@ -190,7 +195,8 @@ export class CatalogService implements ICatalogService {
         : Promise.resolve(undefined)
 
     const componentsHtmlPromise =
-      system.assetPaths.componentsHtml && system.availableFiles.hasComponentsHtml
+      system.assetPaths.componentsHtml &&
+      system.availableFiles.hasComponentsHtml
         ? this.fetchAssetContent(system.assetPaths.componentsHtml)
         : Promise.resolve(undefined)
 

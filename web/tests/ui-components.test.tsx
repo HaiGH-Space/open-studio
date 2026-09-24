@@ -3,7 +3,12 @@ import { createRoot } from "react-dom/client"
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
 
 // Import atomic UI components from web/src/components/ui/
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../src/components/ui/accordion"
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "../src/components/ui/accordion"
 import { Badge, badgeVariants } from "../src/components/ui/badge"
 import {
   Dialog,
@@ -18,7 +23,12 @@ import {
 import { Input } from "../src/components/ui/input"
 import { Textarea } from "../src/components/ui/textarea"
 import { Switch } from "../src/components/ui/switch"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../src/components/ui/tabs"
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "../src/components/ui/tabs"
 import {
   Select,
   SelectTrigger,
@@ -69,7 +79,9 @@ describe("Atomic UI Components (Task 10)", () => {
   describe("Badge Component", () => {
     it("renders default badge with text and correct attributes", () => {
       render(<Badge>Default Badge</Badge>)
-      const badge = container.querySelector("[data-slot='badge']") as HTMLElement
+      const badge = container.querySelector(
+        "[data-slot='badge']"
+      ) as HTMLElement
       expect(badge).toBeTruthy()
       expect(badge.textContent).toBe("Default Badge")
     })
@@ -93,7 +105,9 @@ describe("Atomic UI Components (Task 10)", () => {
 
     it("applies custom classNames without dropping base styles", () => {
       render(<Badge className="custom-test-class">Custom</Badge>)
-      const badge = container.querySelector("[data-slot='badge']") as HTMLElement
+      const badge = container.querySelector(
+        "[data-slot='badge']"
+      ) as HTMLElement
       expect(badge.className).toContain("custom-test-class")
     })
 
@@ -144,8 +158,16 @@ describe("Atomic UI Components (Task 10)", () => {
 
   describe("Textarea Component", () => {
     it("renders textarea with rows, placeholder, and defaultValue", () => {
-      render(<Textarea placeholder="Detailed brief..." rows={5} defaultValue="Multilined text" />)
-      const textarea = container.querySelector("textarea") as HTMLTextAreaElement
+      render(
+        <Textarea
+          placeholder="Detailed brief..."
+          rows={5}
+          defaultValue="Multilined text"
+        />
+      )
+      const textarea = container.querySelector(
+        "textarea"
+      ) as HTMLTextAreaElement
       expect(textarea).toBeTruthy()
       expect(textarea.placeholder).toBe("Detailed brief...")
       expect(Number(textarea.rows)).toBe(5)
@@ -155,7 +177,9 @@ describe("Atomic UI Components (Task 10)", () => {
     it("handles onChange event and disabled state", () => {
       const handleChange = vi.fn()
       render(<Textarea onChange={handleChange} disabled />)
-      const textarea = container.querySelector("textarea") as HTMLTextAreaElement
+      const textarea = container.querySelector(
+        "textarea"
+      ) as HTMLTextAreaElement
       expect(textarea.disabled).toBe(true)
     })
   })
@@ -291,7 +315,9 @@ describe("Atomic UI Components (Task 10)", () => {
           </AccordionItem>
         </Accordion>
       )
-      const triggers = container.querySelectorAll("[data-slot='accordion-trigger']")
+      const triggers = container.querySelectorAll(
+        "[data-slot='accordion-trigger']"
+      )
       expect(triggers.length).toBe(2)
       expect(triggers[0].getAttribute("aria-expanded")).toBe("true")
       expect(container.textContent).toContain("Security Constraints Body")
@@ -317,7 +343,9 @@ describe("Atomic UI Components (Task 10)", () => {
           </AccordionItem>
         </Accordion>
       )
-      const triggers = container.querySelectorAll("[data-slot='accordion-trigger']")
+      const triggers = container.querySelectorAll(
+        "[data-slot='accordion-trigger']"
+      )
       expect(triggers[0].getAttribute("aria-expanded")).toBe("true")
       expect(triggers[1].getAttribute("aria-expanded")).toBe("false")
 
@@ -338,7 +366,9 @@ describe("Atomic UI Components (Task 10)", () => {
           </AccordionItem>
         </Accordion>
       )
-      const trigger = container.querySelector("[data-slot='accordion-trigger']") as HTMLElement
+      const trigger = container.querySelector(
+        "[data-slot='accordion-trigger']"
+      ) as HTMLElement
       expect(trigger.getAttribute("aria-disabled")).toBe("true")
       act(() => {
         trigger.click()
@@ -355,7 +385,9 @@ describe("Atomic UI Components (Task 10)", () => {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Preset Selector</DialogTitle>
-              <DialogDescription>Select your framework and styling preset</DialogDescription>
+              <DialogDescription>
+                Select your framework and styling preset
+              </DialogDescription>
             </DialogHeader>
             <div>Dialog Main Body</div>
             <DialogFooter>
@@ -364,7 +396,9 @@ describe("Atomic UI Components (Task 10)", () => {
           </DialogContent>
         </Dialog>
       )
-      const trigger = container.querySelector("[data-slot='dialog-trigger']") as HTMLElement
+      const trigger = container.querySelector(
+        "[data-slot='dialog-trigger']"
+      ) as HTMLElement
       expect(trigger).toBeTruthy()
       expect(trigger.textContent).toBe("Open Dialog")
 
@@ -378,10 +412,14 @@ describe("Atomic UI Components (Task 10)", () => {
       expect(dialog).toBeTruthy()
       expect(dialog?.getAttribute("data-open")).not.toBeNull()
       expect(document.body.textContent).toContain("Preset Selector")
-      expect(document.body.textContent).toContain("Select your framework and styling preset")
+      expect(document.body.textContent).toContain(
+        "Select your framework and styling preset"
+      )
 
       // Close dialog via close button
-      const closeButton = document.querySelector("[data-slot='dialog-close']") as HTMLElement
+      const closeButton = document.querySelector(
+        "[data-slot='dialog-close']"
+      ) as HTMLElement
       expect(closeButton).toBeTruthy()
       act(() => {
         closeButton.click()
@@ -407,7 +445,9 @@ describe("Atomic UI Components (Task 10)", () => {
           </SelectContent>
         </Select>
       )
-      const trigger = container.querySelector("[data-slot='select-trigger']") as HTMLElement
+      const trigger = container.querySelector(
+        "[data-slot='select-trigger']"
+      ) as HTMLElement
       expect(trigger).toBeTruthy()
       expect(trigger.textContent?.toLowerCase()).toContain("react")
     })
@@ -425,7 +465,9 @@ describe("Atomic UI Components (Task 10)", () => {
           </SelectContent>
         </Select>
       )
-      const trigger = container.querySelector("[data-slot='select-trigger']") as HTMLElement
+      const trigger = container.querySelector(
+        "[data-slot='select-trigger']"
+      ) as HTMLElement
       act(() => {
         trigger.click()
       })
@@ -451,7 +493,9 @@ describe("Atomic UI Components (Task 10)", () => {
           </Tooltip>
         </TooltipProvider>
       )
-      const trigger = container.querySelector("[data-slot='tooltip-trigger']") as HTMLElement
+      const trigger = container.querySelector(
+        "[data-slot='tooltip-trigger']"
+      ) as HTMLElement
       expect(trigger).toBeTruthy()
       expect(trigger.textContent).toBe("Hover me")
     })
@@ -464,11 +508,15 @@ describe("Atomic UI Components (Task 10)", () => {
           <div data-testid="scroll-content">Scrollable Content</div>
         </ScrollArea>
       )
-      const rootEl = container.querySelector("[data-slot='scroll-area']") as HTMLElement
+      const rootEl = container.querySelector(
+        "[data-slot='scroll-area']"
+      ) as HTMLElement
       expect(rootEl).toBeTruthy()
       expect(rootEl.className).toContain("h-64")
 
-      const viewportEl = container.querySelector("[data-slot='scroll-area-viewport']") as HTMLElement
+      const viewportEl = container.querySelector(
+        "[data-slot='scroll-area-viewport']"
+      ) as HTMLElement
       expect(viewportEl).toBeTruthy()
       expect(viewportEl.className).toContain("p-4")
 
@@ -483,7 +531,9 @@ describe("Atomic UI Components (Task 10)", () => {
           <div>Vertical Content</div>
         </ScrollArea>
       )
-      const scrollbars = container.querySelectorAll("[data-slot='scroll-area-scrollbar']")
+      const scrollbars = container.querySelectorAll(
+        "[data-slot='scroll-area-scrollbar']"
+      )
       expect(scrollbars.length).toBe(1)
       expect(scrollbars[0].getAttribute("data-orientation")).toBe("vertical")
 
@@ -497,9 +547,13 @@ describe("Atomic UI Components (Task 10)", () => {
           <div style={{ width: "1000px" }}>Wide Content</div>
         </ScrollArea>
       )
-      const scrollbars = container.querySelectorAll("[data-slot='scroll-area-scrollbar']")
+      const scrollbars = container.querySelectorAll(
+        "[data-slot='scroll-area-scrollbar']"
+      )
       expect(scrollbars.length).toBe(2)
-      const orientations = Array.from(scrollbars).map((sb) => sb.getAttribute("data-orientation"))
+      const orientations = Array.from(scrollbars).map((sb) =>
+        sb.getAttribute("data-orientation")
+      )
       expect(orientations).toContain("vertical")
       expect(orientations).toContain("horizontal")
     })
@@ -511,7 +565,9 @@ describe("Atomic UI Components (Task 10)", () => {
           <ScrollBar orientation="horizontal" data-slot="custom-scrollbar" />
         </ScrollArea>
       )
-      const scrollbar = container.querySelector("[data-slot='custom-scrollbar']")
+      const scrollbar = container.querySelector(
+        "[data-slot='custom-scrollbar']"
+      )
       expect(scrollbar).toBeTruthy()
       expect(scrollbar?.getAttribute("data-orientation")).toBe("horizontal")
     })

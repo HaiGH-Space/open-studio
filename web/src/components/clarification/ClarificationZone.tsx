@@ -52,7 +52,9 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
   const [pasteInput, setPasteInput] = useState<string>("")
   const [answersMap, setAnswersMap] = useState<Record<string, string[]>>({})
   const [showManualEditor, setShowManualEditor] = useState<boolean>(false)
-  const [manualRows, setManualRows] = useState<Array<{ key: string; value: string }>>([
+  const [manualRows, setManualRows] = useState<
+    Array<{ key: string; value: string }>
+  >([
     { key: "Target Audience", value: "Enterprise power users" },
     { key: "Visual Density", value: "Compact high-density dashboard" },
   ])
@@ -64,12 +66,15 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
   }, [pasteInput, parseAndIngestAiResponse])
 
   // Handle field value updates in active clarification form
-  const handleFieldChange = useCallback((questionId: string, values: string[]) => {
-    setAnswersMap((prev) => ({
-      ...prev,
-      [questionId]: values,
-    }))
-  }, [])
+  const handleFieldChange = useCallback(
+    (questionId: string, values: string[]) => {
+      setAnswersMap((prev) => ({
+        ...prev,
+        [questionId]: values,
+      }))
+    },
+    []
+  )
 
   // Submit questions in CLARIFICATION_ACTIVE
   const handleSubmitQuestions = useCallback(() => {
@@ -139,11 +144,11 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
       <div
         data-slot="clarification-zone"
         className={cn(
-          "rounded-xl border border-border/60 bg-card/40 p-4 sm:p-5 flex flex-col gap-3 shadow-xs",
+          "flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-4 shadow-xs sm:p-5",
           className
         )}
       >
-        <div className="flex items-center gap-2.5 text-foreground font-semibold text-sm">
+        <div className="flex items-center gap-2.5 text-sm font-semibold text-foreground">
           <SparklesIcon className="size-4 text-primary" />
           <span>
             {roundtripStep === "STEP_1_CONFIGURING"
@@ -152,18 +157,19 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
           </span>
         </div>
 
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          Copy the generated Turn 1 prompt from the Prompt Inspector panel on the
-          right and paste it into Claude, ChatGPT, or Gemini. The external AI will
-          analyze your brief and formulate a structured clarification questionnaire.
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          Copy the generated Turn 1 prompt from the Prompt Inspector panel on
+          the right and paste it into Claude, ChatGPT, or Gemini. The external
+          AI will analyze your brief and formulate a structured clarification
+          questionnaire.
         </p>
 
-        <div className="pt-2 flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 pt-2">
           <Button
             size="sm"
             data-slot="advance-to-awaiting-ai-btn"
             onClick={() => setRoundtripStep("AWAITING_AI_RESPONSE")}
-            className="text-xs gap-1.5 cursor-pointer"
+            className="cursor-pointer gap-1.5 text-xs"
           >
             <span>I have pasted to AI → Enter AI Response</span>
             <ArrowRightIcon className="size-3.5" />
@@ -173,7 +179,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
             variant="outline"
             size="sm"
             onClick={skipClarification}
-            className="text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+            className="cursor-pointer text-xs text-muted-foreground hover:text-foreground"
           >
             Skip Clarification & Go straight to Turn 2
           </Button>
@@ -187,12 +193,12 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
       <div
         data-slot="clarification-zone"
         className={cn(
-          "rounded-xl border border-border/60 bg-card/40 p-4 sm:p-5 flex flex-col gap-4 shadow-xs",
+          "flex flex-col gap-4 rounded-xl border border-border/60 bg-card/40 p-4 shadow-xs sm:p-5",
           className
         )}
       >
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-foreground font-semibold text-sm">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <QuestionIcon className="size-4 text-primary" />
             <span>Paste AI Clarification Response</span>
           </div>
@@ -201,7 +207,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
             variant="ghost"
             size="xs"
             onClick={() => setPasteInput(SAMPLE_AI_RESPONSE)}
-            className="text-[11px] text-muted-foreground hover:text-foreground cursor-pointer"
+            className="cursor-pointer text-[11px] text-muted-foreground hover:text-foreground"
           >
             Load Sample XML
           </Button>
@@ -213,7 +219,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
           onChange={(e) => setPasteInput(e.target.value)}
           placeholder={`Paste external model output here (prose, markdown, or <question-form> XML)...\n\nExample:\n<question-form>\n  <field name="target_audience" type="select" label="Target audience?" options="B2B, B2C" />\n</question-form>`}
           rows={6}
-          className="text-xs font-mono bg-background/60 min-h-[9rem]"
+          className="min-h-[9rem] bg-background/60 font-mono text-xs"
         />
 
         {/* Action Buttons */}
@@ -223,7 +229,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
             data-slot="parse-questions-btn"
             onClick={handleParse}
             disabled={!pasteInput.trim()}
-            className="text-xs gap-1.5 cursor-pointer"
+            className="cursor-pointer gap-1.5 text-xs"
           >
             <CheckCircleIcon className="size-3.5" />
             <span>Parse Questions</span>
@@ -234,7 +240,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
             size="sm"
             data-slot="skip-clarification-btn"
             onClick={skipClarification}
-            className="text-xs cursor-pointer text-muted-foreground hover:text-foreground"
+            className="cursor-pointer text-xs text-muted-foreground hover:text-foreground"
           >
             Skip Clarification
           </Button>
@@ -244,15 +250,15 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
         {isDisobedientAi && (
           <div
             data-slot="ai-disobedience-banner"
-            className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3.5 flex flex-col gap-2.5 animate-in fade-in"
+            className="flex animate-in flex-col gap-2.5 rounded-lg border border-amber-500/40 bg-amber-500/10 p-3.5 fade-in"
           >
-            <div className="flex items-start gap-2 text-amber-700 dark:text-amber-400 font-medium text-xs">
-              <AlertTriangleIcon className="size-4 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 text-xs font-medium text-amber-700 dark:text-amber-400">
+              <AlertTriangleIcon className="mt-0.5 size-4 shrink-0" />
               <div>
                 <p className="font-semibold">
                   No structured question form detected
                 </p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">
+                <p className="mt-0.5 text-[11px] text-muted-foreground">
                   {parseError ? `${parseError} ` : ""}
                   The AI returned plain prose, markdown, or code instead of a
                   &lt;question-form&gt; tag. Don't worry—you can easily proceed
@@ -267,7 +273,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
                 variant="outline"
                 data-slot="manual-clarifications-btn"
                 onClick={() => setShowManualEditor((v) => !v)}
-                className="text-xs gap-1.5 border-amber-500/30 hover:bg-amber-500/20 cursor-pointer"
+                className="cursor-pointer gap-1.5 border-amber-500/30 text-xs hover:bg-amber-500/20"
               >
                 <EditIcon className="size-3" />
                 <span>
@@ -282,7 +288,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
                 variant="secondary"
                 data-slot="use-skill-defaults-btn"
                 onClick={useSkillDefaultsAndProceed}
-                className="text-xs gap-1.5 cursor-pointer"
+                className="cursor-pointer gap-1.5 text-xs"
               >
                 <ZapIcon className="size-3 text-amber-500" />
                 <span>Use Skill Defaults & Proceed</span>
@@ -295,7 +301,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
         {showManualEditor && (
           <div
             data-slot="manual-clarifications-editor"
-            className="rounded-lg border border-border/80 bg-background/80 p-3.5 flex flex-col gap-3"
+            className="flex flex-col gap-3 rounded-lg border border-border/80 bg-background/80 p-3.5"
           >
             <div className="flex items-center justify-between text-xs font-semibold">
               <span>Manual Clarifications (Key & Value)</span>
@@ -304,7 +310,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
                 onClick={() =>
                   setManualRows((prev) => [...prev, { key: "", value: "" }])
                 }
-                className="text-[11px] text-primary hover:underline inline-flex items-center gap-1 cursor-pointer"
+                className="inline-flex cursor-pointer items-center gap-1 text-[11px] text-primary hover:underline"
               >
                 <PlusIcon className="size-3" /> Add Item
               </button>
@@ -321,7 +327,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
                       next[idx].key = e.target.value
                       setManualRows(next)
                     }}
-                    className="text-xs h-7 w-1/3"
+                    className="h-7 w-1/3 text-xs"
                   />
                   <Input
                     placeholder="Value (e.g. B2B Founders)"
@@ -331,14 +337,14 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
                       next[idx].value = e.target.value
                       setManualRows(next)
                     }}
-                    className="text-xs h-7 flex-1"
+                    className="h-7 flex-1 text-xs"
                   />
                   <button
                     type="button"
                     onClick={() =>
                       setManualRows(manualRows.filter((_, i) => i !== idx))
                     }
-                    className="text-muted-foreground hover:text-destructive cursor-pointer p-1"
+                    className="cursor-pointer p-1 text-muted-foreground hover:text-destructive"
                   >
                     <TrashIcon className="size-3.5" />
                   </button>
@@ -358,7 +364,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
               size="sm"
               data-slot="apply-manual-clarifications-btn"
               onClick={handleApplyManualClarifications}
-              className="text-xs gap-1.5 self-start cursor-pointer"
+              className="cursor-pointer gap-1.5 self-start text-xs"
             >
               <CheckCircleIcon className="size-3.5" />
               <span>Apply Clarifications & Generate Turn 2 Prompt</span>
@@ -374,7 +380,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
       <div
         data-slot="clarification-zone"
         className={cn(
-          "rounded-xl border border-border/60 bg-card/40 p-4 sm:p-5 flex flex-col gap-4 shadow-xs",
+          "flex flex-col gap-4 rounded-xl border border-border/60 bg-card/40 p-4 shadow-xs sm:p-5",
           className
         )}
       >
@@ -384,7 +390,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
               {parsedFormAst.title || "Clarification Questions"}
             </h3>
             {parsedFormAst.description && (
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 {parsedFormAst.description}
               </p>
             )}
@@ -394,9 +400,9 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
             variant="ghost"
             size="xs"
             onClick={() => setRoundtripStep("AWAITING_AI_RESPONSE")}
-            className="text-[11px] text-muted-foreground hover:text-foreground cursor-pointer"
+            className="cursor-pointer text-[11px] text-muted-foreground hover:text-foreground"
           >
-            <ResetIcon className="size-3 mr-1" />
+            <ResetIcon className="mr-1 size-3" />
             Repaste
           </Button>
         </div>
@@ -404,11 +410,11 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
         {/* Dynamic Fields */}
         <div className="space-y-3">
           {parsedFormAst.questions.map((question: QuestionNode) => {
-            const currentValue = answersMap[question.id] ?? (
-              question.options?.find((o) => o.defaultChecked)?.value
+            const currentValue =
+              answersMap[question.id] ??
+              (question.options?.find((o) => o.defaultChecked)?.value
                 ? [question.options.find((o) => o.defaultChecked)!.value]
-                : []
-            )
+                : [])
 
             return (
               <QuestionFieldRenderer
@@ -422,12 +428,12 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
         </div>
 
         {/* Submit Questions to Turn 2 */}
-        <div className="pt-2 flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 pt-2">
           <Button
             size="sm"
             data-slot="submit-clarifications-btn"
             onClick={handleSubmitQuestions}
-            className="text-xs gap-1.5 cursor-pointer font-medium"
+            className="cursor-pointer gap-1.5 text-xs font-medium"
           >
             <span>Generate Turn 2 Execution Prompt</span>
             <ArrowRightIcon className="size-3.5" />
@@ -437,7 +443,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
             variant="outline"
             size="sm"
             onClick={useSkillDefaultsAndProceed}
-            className="text-xs cursor-pointer text-muted-foreground hover:text-foreground"
+            className="cursor-pointer text-xs text-muted-foreground hover:text-foreground"
           >
             Use Skill Defaults Instead
           </Button>
@@ -452,18 +458,19 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
       <div
         data-slot="clarification-zone"
         className={cn(
-          "rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3.5 sm:p-4 flex items-center justify-between gap-3 shadow-xs",
+          "flex items-center justify-between gap-3 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3.5 shadow-xs sm:p-4",
           className
         )}
       >
         <div className="flex items-center gap-2.5">
-          <CheckCircleIcon className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <CheckCircleIcon className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
           <div>
             <div className="text-xs font-semibold text-foreground">
               Turn 2 Execution Prompt Compiled
             </div>
             <div className="text-[11px] text-muted-foreground">
-              Clarification answers incorporated with full brand tokens re-injected.
+              Clarification answers incorporated with full brand tokens
+              re-injected.
             </div>
           </div>
         </div>
@@ -472,7 +479,7 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
           variant="outline"
           size="xs"
           onClick={() => setRoundtripStep("AWAITING_AI_RESPONSE")}
-          className="text-[11px] cursor-pointer shrink-0"
+          className="shrink-0 cursor-pointer text-[11px]"
         >
           Re-open Clarifications
         </Button>

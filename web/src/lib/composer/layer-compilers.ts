@@ -81,7 +81,14 @@ export function compileLayer1Security(
   const xmlTag = "security-guardrails"
 
   if (!config.enabled) {
-    return { layerIndex, layerName, xmlTag, content: "", tokenCount: 0, enabled: false }
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content: "",
+      tokenCount: 0,
+      enabled: false,
+    }
   }
 
   const lines: string[] = [
@@ -124,14 +131,21 @@ export function compileLayer2RuntimeContract(
   const xmlTag = "inspection-runtime-contract"
 
   if (!config.enabled) {
-    return { layerIndex, layerName, xmlTag, content: "", tokenCount: 0, enabled: false }
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content: "",
+      tokenCount: 0,
+      enabled: false,
+    }
   }
 
   const lines: string[] = [`<${xmlTag}>`]
 
   if (config.enforceDataOdId) {
     lines.push(
-      "  MANDATORY DOM INSPECTION CONTRACT: Every key interactive element, component boundary, card, input, button, and navigation container MUST include a unique, semantic `data-od-id=\"...\"` attribute (e.g. data-od-id=\"sidebar-nav-item\", data-od-id=\"chart-velocity-container\") to support automated test verification."
+      '  MANDATORY DOM INSPECTION CONTRACT: Every key interactive element, component boundary, card, input, button, and navigation container MUST include a unique, semantic `data-od-id="..."` attribute (e.g. data-od-id="sidebar-nav-item", data-od-id="chart-velocity-container") to support automated test verification.'
     )
   }
 
@@ -173,7 +187,14 @@ export function compileLayer3AuthoritativeConstraints(
   const xmlTag = "authoritative-constraints"
 
   if (!config.enabled) {
-    return { layerIndex, layerName, xmlTag, content: "", tokenCount: 0, enabled: false }
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content: "",
+      tokenCount: 0,
+      enabled: false,
+    }
   }
 
   const lines: string[] = [
@@ -221,22 +242,35 @@ export function compileLayer4WorkflowManifest(
   const xmlTag = "workflow-stage"
 
   if (!config.enabled) {
-    return { layerIndex, layerName, xmlTag, content: "", tokenCount: 0, enabled: false }
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content: "",
+      tokenCount: 0,
+      enabled: false,
+    }
   }
 
   const kindDescriptions: Record<string, string> = {
     prototype: "Rapid Prototype Wireframe (focus on UX flow and speed)",
     deck: "Presentation / Pitch Deck Canvas (focus on visual punch and slide pacing)",
-    dashboard: "Dashboard Interface (focus on data density, charts, and metric hierarchy)",
-    "marketing-landing": "Marketing Landing Page (focus on conversion, social proof, and typography)",
-    application: "Production Web Application (focus on component polish, interaction states, and accessibility)",
+    dashboard:
+      "Dashboard Interface (focus on data density, charts, and metric hierarchy)",
+    "marketing-landing":
+      "Marketing Landing Page (focus on conversion, social proof, and typography)",
+    application:
+      "Production Web Application (focus on component polish, interaction states, and accessibility)",
   }
 
   const phaseDescriptions: Record<string, string> = {
     discovery: "Discovery Phase: Exploring structure and initial requirements",
-    draft: "Draft Phase: Initial functional implementation and layout composition",
-    refine: "Refine Phase: Micro-interactions, spacing precision, and visual polish",
-    "production-ready": "Production-Ready Phase: Strict accessibility, performance, and responsive rigor",
+    draft:
+      "Draft Phase: Initial functional implementation and layout composition",
+    refine:
+      "Refine Phase: Micro-interactions, spacing precision, and visual polish",
+    "production-ready":
+      "Production-Ready Phase: Strict accessibility, performance, and responsive rigor",
   }
 
   const lines: string[] = [
@@ -274,7 +308,14 @@ export function compileLayer5BrandContract(
   const xmlTag = "brand-contract"
 
   if (!config.enabled) {
-    return { layerIndex, layerName, xmlTag, content: "", tokenCount: 0, enabled: false }
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content: "",
+      tokenCount: 0,
+      enabled: false,
+    }
   }
 
   const systemId = config.selectedSystemId || "custom"
@@ -298,7 +339,11 @@ export function compileLayer5BrandContract(
 
   // Design Guidelines (Both turns)
   if (config.includeDesignMd && assets?.designMd?.trim()) {
-    lines.push("  <design-guidelines>", assets.designMd.trim(), "  </design-guidelines>")
+    lines.push(
+      "  <design-guidelines>",
+      assets.designMd.trim(),
+      "  </design-guidelines>"
+    )
   }
 
   // Usage Notes (Both turns)
@@ -307,8 +352,16 @@ export function compileLayer5BrandContract(
   }
 
   // Component Blueprints (Turn 2 only)
-  if (isTurn2 && config.includeComponentsHtml && assets?.componentsHtml?.trim()) {
-    lines.push("  <component-blueprints>", assets.componentsHtml.trim(), "  </component-blueprints>")
+  if (
+    isTurn2 &&
+    config.includeComponentsHtml &&
+    assets?.componentsHtml?.trim()
+  ) {
+    lines.push(
+      "  <component-blueprints>",
+      assets.componentsHtml.trim(),
+      "  </component-blueprints>"
+    )
   }
 
   lines.push(`</${xmlTag}>`)
@@ -336,7 +389,14 @@ export function compileLayer6CraftRules(
   const xmlTag = "craft-discipline"
 
   if (!config.enabled) {
-    return { layerIndex, layerName, xmlTag, content: "", tokenCount: 0, enabled: false }
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content: "",
+      tokenCount: 0,
+      enabled: false,
+    }
   }
 
   const lines: string[] = [
@@ -391,7 +451,14 @@ export function compileLayer7SkillTemplate(
   const xmlTag = "skill-blueprint"
 
   if (!config.enabled) {
-    return { layerIndex, layerName, xmlTag, content: "", tokenCount: 0, enabled: false }
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content: "",
+      tokenCount: 0,
+      enabled: false,
+    }
   }
 
   const attrs: string[] = []
@@ -410,7 +477,11 @@ export function compileLayer7SkillTemplate(
   }
 
   if (templateContent && templateContent.trim()) {
-    lines.push("  <template-scaffold>", templateContent.trim(), "  </template-scaffold>")
+    lines.push(
+      "  <template-scaffold>",
+      templateContent.trim(),
+      "  </template-scaffold>"
+    )
   }
 
   lines.push(`</${xmlTag}>`)
@@ -445,14 +516,23 @@ export function compileLayer8UserMemory(
   const xmlTag = "user-memory-rules"
 
   if (!config.enabled) {
-    return { layerIndex, layerName, xmlTag, content: "", tokenCount: 0, enabled: false }
+    return {
+      layerIndex,
+      layerName,
+      xmlTag,
+      content: "",
+      tokenCount: 0,
+      enabled: false,
+    }
   }
 
   const lines: string[] = [`<${xmlTag}>`]
 
   // Inject user objective and feature requirements if provided
   if (brief?.userObjective && brief.userObjective.trim().length > 0) {
-    lines.push(`  <objective>${sanitizeXmlContent(brief.userObjective.trim())}</objective>`)
+    lines.push(
+      `  <objective>${sanitizeXmlContent(brief.userObjective.trim())}</objective>`
+    )
   }
 
   if (brief?.featureRequirements && brief.featureRequirements.length > 0) {
@@ -518,7 +598,10 @@ export function compileLayer9BriefAndClarification(
 
   // In turn 2 (Execution), strictly serialize clarification answers
   if (turn === "turn2_execution") {
-    if (!config.clarificationAnswers || config.clarificationAnswers.length === 0) {
+    if (
+      !config.clarificationAnswers ||
+      config.clarificationAnswers.length === 0
+    ) {
       return {
         layerIndex,
         layerName,
@@ -544,7 +627,9 @@ export function compileLayer9BriefAndClarification(
   const lines: string[] = ["<task-brief>"]
 
   // Objective
-  const sanitizedObjective = sanitizeXmlContent(config.userObjective?.trim() || "")
+  const sanitizedObjective = sanitizeXmlContent(
+    config.userObjective?.trim() || ""
+  )
   lines.push(`  <objective>${sanitizedObjective}</objective>`)
 
   // Requirements

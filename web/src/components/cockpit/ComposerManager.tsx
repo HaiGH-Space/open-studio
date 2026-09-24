@@ -1,6 +1,11 @@
 import { useComposer } from "../../hooks/useComposer"
 import { useCatalog } from "../../hooks/useCatalog"
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../ui/accordion"
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "../ui/accordion"
 import { ScrollArea } from "../ui/scroll-area"
 import { Badge } from "../ui/badge"
 import { Switch } from "../ui/switch"
@@ -136,13 +141,13 @@ export function ComposerManager({ className }: ComposerManagerProps) {
   )
   const activeSystemName = activeSystem
     ? activeSystem.name
-    : config.layer5BrandContract.selectedSystemId ?? "None"
+    : (config.layer5BrandContract.selectedSystemId ?? "None")
 
   return (
     <section
       data-slot="composer-manager"
       className={cn(
-        "flex-1 flex flex-col h-full overflow-hidden bg-background/60 select-none",
+        "flex h-full flex-1 flex-col overflow-hidden bg-background/60 select-none",
         className
       )}
     >
@@ -152,7 +157,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
       {/* Preset Action Bar */}
       <div
         data-slot="preset-action-bar"
-        className="flex items-center justify-between p-3.5 border-b border-border/70 bg-card/60 backdrop-blur-sm shrink-0 gap-3"
+        className="flex shrink-0 items-center justify-between gap-3 border-b border-border/70 bg-card/60 p-3.5 backdrop-blur-sm"
       >
         <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
           <SlidersHorizontal className="size-4 text-primary" />
@@ -164,7 +169,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
             type="button"
             data-slot="preset-saas"
             onClick={handleApplySaas}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border/70 bg-input/20 hover:bg-input/40 text-xs font-medium text-foreground transition-all cursor-pointer hover:border-primary/50"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border/70 bg-input/20 px-3 py-1 text-xs font-medium text-foreground transition-all hover:border-primary/50 hover:bg-input/40"
           >
             <Flame className="size-3 text-orange-400" />
             <span>SaaS Starter</span>
@@ -174,7 +179,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
             type="button"
             data-slot="preset-fintech"
             onClick={handleApplyFintech}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border/70 bg-input/20 hover:bg-input/40 text-xs font-medium text-foreground transition-all cursor-pointer hover:border-primary/50"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border/70 bg-input/20 px-3 py-1 text-xs font-medium text-foreground transition-all hover:border-primary/50 hover:bg-input/40"
           >
             <Sparkles className="size-3 text-emerald-400" />
             <span>Fintech Dark</span>
@@ -184,7 +189,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
             type="button"
             data-slot="preset-dashboard"
             onClick={handleApplyDashboard}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border/70 bg-input/20 hover:bg-input/40 text-xs font-medium text-foreground transition-all cursor-pointer hover:border-primary/50"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border/70 bg-input/20 px-3 py-1 text-xs font-medium text-foreground transition-all hover:border-primary/50 hover:bg-input/40"
           >
             <Layers className="size-3 text-cyan-400" />
             <span>Dashboard</span>
@@ -194,7 +199,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
             type="button"
             data-slot="preset-reset"
             onClick={resetConfig}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-border/70 bg-input/20 hover:bg-destructive/15 hover:text-destructive hover:border-destructive/40 text-xs font-medium text-muted-foreground transition-all cursor-pointer"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border/70 bg-input/20 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-all hover:border-destructive/40 hover:bg-destructive/15 hover:text-destructive"
             title="Reset all layers to default configuration"
           >
             <RotateCcw className="size-3" />
@@ -204,33 +209,35 @@ export function ComposerManager({ className }: ComposerManagerProps) {
       </div>
 
       {/* Accordion Panels & Clarification Zone (Scrollable with shadcn ScrollArea) */}
-      <ScrollArea className="flex-1 min-h-0" viewportClassName="p-4 space-y-4">
+      <ScrollArea className="min-h-0 flex-1" viewportClassName="p-4 space-y-4">
         {/* Interactive Clarification Center Panel */}
         <ClarificationZone className="mb-4" />
 
         <Accordion
           type="multiple"
           defaultValue={["l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9"]}
-          className="border-border/70 bg-card/40 rounded-xl divide-y divide-border/60 overflow-hidden"
+          className="divide-y divide-border/60 overflow-hidden rounded-xl border-border/70 bg-card/40"
         >
           {/* L1: Security Guardrails */}
           <AccordionItem value="l1" data-slot="layer-accordion-l1">
-            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+            <div className="flex items-center justify-between bg-muted/10 pr-4 transition-colors hover:bg-muted/20">
               <div className="flex-1">
                 <AccordionTrigger className="p-3.5 hover:no-underline">
                   <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
-                    <ShieldCheck className="size-4 text-primary shrink-0" />
+                    <ShieldCheck className="size-4 shrink-0 text-primary" />
                     <span>L1: Security Guardrails</span>
                     <Badge
                       data-slot="layer-badge-l1"
-                      variant={config.layer1Security.enabled ? "default" : "outline"}
-                      className="ml-1 text-[10px] font-mono capitalize"
+                      variant={
+                        config.layer1Security.enabled ? "default" : "outline"
+                      }
+                      className="ml-1 font-mono text-[10px] capitalize"
                     >
                       {!config.layer1Security.enabled
                         ? "Off"
                         : config.layer1Security.strictMode
-                        ? "Strict"
-                        : "Active"}
+                          ? "Strict"
+                          : "Active"}
                     </Badge>
                   </div>
                 </AccordionTrigger>
@@ -245,29 +252,33 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 1 Security Guardrails"
               />
             </div>
-            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
               <Layer1Security />
             </AccordionContent>
           </AccordionItem>
 
           {/* L2: Runtime Contract */}
           <AccordionItem value="l2" data-slot="layer-accordion-l2">
-            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+            <div className="flex items-center justify-between bg-muted/10 pr-4 transition-colors hover:bg-muted/20">
               <div className="flex-1">
                 <AccordionTrigger className="p-3.5 hover:no-underline">
                   <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
-                    <Code2 className="size-4 text-primary shrink-0" />
+                    <Code2 className="size-4 shrink-0 text-primary" />
                     <span>L2: Runtime Contract</span>
                     <Badge
                       data-slot="layer-badge-l2"
-                      variant={config.layer2RuntimeContract.enabled ? "default" : "outline"}
-                      className="ml-1 text-[10px] font-mono capitalize"
+                      variant={
+                        config.layer2RuntimeContract.enabled
+                          ? "default"
+                          : "outline"
+                      }
+                      className="ml-1 font-mono text-[10px] capitalize"
                     >
                       {!config.layer2RuntimeContract.enabled
                         ? "Off"
                         : config.layer2RuntimeContract.enforceDataOdId
-                        ? "data-od-id"
-                        : "Active"}
+                          ? "data-od-id"
+                          : "Active"}
                     </Badge>
                   </div>
                 </AccordionTrigger>
@@ -282,18 +293,18 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 2 Runtime Contract"
               />
             </div>
-            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
               <Layer2RuntimeContract />
             </AccordionContent>
           </AccordionItem>
 
           {/* L3: Authoritative Technical Constraints */}
           <AccordionItem value="l3" data-slot="layer-accordion-l3">
-            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+            <div className="flex items-center justify-between bg-muted/10 pr-4 transition-colors hover:bg-muted/20">
               <div className="flex-1">
                 <AccordionTrigger className="p-3.5 hover:no-underline">
                   <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
-                    <Layers className="size-4 text-primary shrink-0" />
+                    <Layers className="size-4 shrink-0 text-primary" />
                     <span>L3: Technical Constraints</span>
                     <Badge
                       data-slot="layer-badge-l3"
@@ -302,7 +313,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                           ? "default"
                           : "outline"
                       }
-                      className="ml-1 text-[10px] font-mono capitalize"
+                      className="ml-1 font-mono text-[10px] capitalize"
                     >
                       {!config.layer3AuthoritativeConstraints.enabled
                         ? "Off"
@@ -316,28 +327,34 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 size="sm"
                 checked={config.layer3AuthoritativeConstraints.enabled}
                 onCheckedChange={(checked) =>
-                  updateLayer("layer3AuthoritativeConstraints", { enabled: checked })
+                  updateLayer("layer3AuthoritativeConstraints", {
+                    enabled: checked,
+                  })
                 }
                 aria-label="Toggle Layer 3 Constraints"
               />
             </div>
-            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
               <Layer3Constraints />
             </AccordionContent>
           </AccordionItem>
 
           {/* L4: Workflow Manifest */}
           <AccordionItem value="l4" data-slot="layer-accordion-l4">
-            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+            <div className="flex items-center justify-between bg-muted/10 pr-4 transition-colors hover:bg-muted/20">
               <div className="flex-1">
                 <AccordionTrigger className="p-3.5 hover:no-underline">
                   <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
-                    <GitBranch className="size-4 text-primary shrink-0" />
+                    <GitBranch className="size-4 shrink-0 text-primary" />
                     <span>L4: Workflow Manifest</span>
                     <Badge
                       data-slot="layer-badge-l4"
-                      variant={config.layer4WorkflowManifest.enabled ? "default" : "outline"}
-                      className="ml-1 text-[10px] font-mono capitalize"
+                      variant={
+                        config.layer4WorkflowManifest.enabled
+                          ? "default"
+                          : "outline"
+                      }
+                      className="ml-1 font-mono text-[10px] capitalize"
                     >
                       {!config.layer4WorkflowManifest.enabled
                         ? "Off"
@@ -356,23 +373,27 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 4 Workflow"
               />
             </div>
-            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
               <Layer4Workflow />
             </AccordionContent>
           </AccordionItem>
 
           {/* L5: Brand Contract (Design System) */}
           <AccordionItem value="l5" data-slot="layer-accordion-l5">
-            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+            <div className="flex items-center justify-between bg-muted/10 pr-4 transition-colors hover:bg-muted/20">
               <div className="flex-1">
                 <AccordionTrigger className="p-3.5 hover:no-underline">
                   <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
-                    <Palette className="size-4 text-primary shrink-0" />
+                    <Palette className="size-4 shrink-0 text-primary" />
                     <span>L5: Brand Contract</span>
                     <Badge
                       data-slot="layer-badge-l5"
-                      variant={config.layer5BrandContract.enabled ? "default" : "outline"}
-                      className="ml-1 text-[10px] font-mono capitalize"
+                      variant={
+                        config.layer5BrandContract.enabled
+                          ? "default"
+                          : "outline"
+                      }
+                      className="ml-1 font-mono text-[10px] capitalize"
                     >
                       {!config.layer5BrandContract.enabled
                         ? "Off"
@@ -391,28 +412,32 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 5 Brand Contract"
               />
             </div>
-            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
               <Layer5DesignSystem />
             </AccordionContent>
           </AccordionItem>
 
           {/* L6: Craft Discipline & Rules */}
           <AccordionItem value="l6" data-slot="layer-accordion-l6">
-            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+            <div className="flex items-center justify-between bg-muted/10 pr-4 transition-colors hover:bg-muted/20">
               <div className="flex-1">
                 <AccordionTrigger className="p-3.5 hover:no-underline">
                   <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
-                    <Sparkles className="size-4 text-primary shrink-0" />
+                    <Sparkles className="size-4 shrink-0 text-primary" />
                     <span>L6: Craft Discipline</span>
                     <Badge
                       data-slot="layer-badge-l6"
-                      variant={config.layer6CraftRules.enabled ? "default" : "outline"}
-                      className="ml-1 text-[10px] font-mono capitalize"
+                      variant={
+                        config.layer6CraftRules.enabled ? "default" : "outline"
+                      }
+                      className="ml-1 font-mono text-[10px] capitalize"
                     >
                       {!config.layer6CraftRules.enabled
                         ? "Off"
                         : `${config.layer6CraftRules.selectedRuleIds.length} rule${
-                            config.layer6CraftRules.selectedRuleIds.length === 1 ? "" : "s"
+                            config.layer6CraftRules.selectedRuleIds.length === 1
+                              ? ""
+                              : "s"
                           }`}
                     </Badge>
                   </div>
@@ -428,29 +453,33 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 6 Craft Discipline"
               />
             </div>
-            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
               <Layer6CraftRules />
             </AccordionContent>
           </AccordionItem>
 
           {/* L7: Skill & Blueprint */}
           <AccordionItem value="l7" data-slot="layer-accordion-l7">
-            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+            <div className="flex items-center justify-between bg-muted/10 pr-4 transition-colors hover:bg-muted/20">
               <div className="flex-1">
                 <AccordionTrigger className="p-3.5 hover:no-underline">
                   <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
-                    <Zap className="size-4 text-primary shrink-0" />
+                    <Zap className="size-4 shrink-0 text-primary" />
                     <span>L7: Skill &amp; Blueprint</span>
                     <Badge
                       data-slot="layer-badge-l7"
-                      variant={config.layer7SkillTemplate.enabled ? "default" : "outline"}
-                      className="ml-1 text-[10px] font-mono capitalize"
+                      variant={
+                        config.layer7SkillTemplate.enabled
+                          ? "default"
+                          : "outline"
+                      }
+                      className="ml-1 font-mono text-[10px] capitalize"
                     >
                       {!config.layer7SkillTemplate.enabled
                         ? "Off"
                         : config.layer7SkillTemplate.selectedSkillId
-                        ? "Skill Active"
-                        : "Default"}
+                          ? "Skill Active"
+                          : "Default"}
                     </Badge>
                   </div>
                 </AccordionTrigger>
@@ -465,28 +494,31 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 7 Skill & Blueprint"
               />
             </div>
-            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
               <Layer7SkillTemplate />
             </AccordionContent>
           </AccordionItem>
 
           {/* L8: User Memory & Persistent Directives */}
           <AccordionItem value="l8" data-slot="layer-accordion-l8">
-            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+            <div className="flex items-center justify-between bg-muted/10 pr-4 transition-colors hover:bg-muted/20">
               <div className="flex-1">
                 <AccordionTrigger className="p-3.5 hover:no-underline">
                   <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
-                    <UserCheck className="size-4 text-primary shrink-0" />
+                    <UserCheck className="size-4 shrink-0 text-primary" />
                     <span>L8: User Memory &amp; Rules</span>
                     <Badge
                       data-slot="layer-badge-l8"
-                      variant={config.layer8UserMemory.enabled ? "default" : "outline"}
-                      className="ml-1 text-[10px] font-mono capitalize"
+                      variant={
+                        config.layer8UserMemory.enabled ? "default" : "outline"
+                      }
+                      className="ml-1 font-mono text-[10px] capitalize"
                     >
                       {!config.layer8UserMemory.enabled
                         ? "Off"
                         : `${
-                            config.layer8UserMemory.persistentDirectives.length +
+                            config.layer8UserMemory.persistentDirectives
+                              .length +
                             config.layer8UserMemory.negativeConstraints.length
                           } rules`}
                     </Badge>
@@ -503,49 +535,51 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 8 User Memory"
               />
             </div>
-            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
               <Layer8UserRules />
             </AccordionContent>
           </AccordionItem>
 
           {/* L9: Task Brief & Clarification Loop */}
           <AccordionItem value="l9" data-slot="layer-accordion-l9">
-            <div className="flex items-center justify-between pr-4 bg-muted/10 hover:bg-muted/20 transition-colors">
+            <div className="flex items-center justify-between bg-muted/10 pr-4 transition-colors hover:bg-muted/20">
               <div className="flex-1">
                 <AccordionTrigger className="p-3.5 hover:no-underline">
                   <div className="flex items-center gap-2.5 text-xs font-semibold text-foreground">
-                    <FileText className="size-4 text-primary shrink-0" />
+                    <FileText className="size-4 shrink-0 text-primary" />
                     <span>L9: Brief &amp; Clarification</span>
                     <Badge
                       data-slot="layer-badge-l9"
                       variant="default"
-                      className="ml-1 text-[10px] font-mono capitalize"
+                      className="ml-1 font-mono text-[10px] capitalize"
                     >
-                      {config.layer9BriefAndClarification.featureRequirements.length > 0 ||
-                      config.layer9BriefAndClarification.clarificationAnswers.length > 0
+                      {config.layer9BriefAndClarification.featureRequirements
+                        .length > 0 ||
+                      config.layer9BriefAndClarification.clarificationAnswers
+                        .length > 0
                         ? `${config.layer9BriefAndClarification.featureRequirements.length} reqs · ${config.layer9BriefAndClarification.clarificationAnswers.length} ans`
                         : config.layer9BriefAndClarification.userObjective
-                        ? "Active"
-                        : "Ready"}
+                          ? "Active"
+                          : "Ready"}
                     </Badge>
                   </div>
                 </AccordionTrigger>
               </div>
             </div>
-            <AccordionContent className="p-4 bg-background/50 border-t border-border/40">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
               <Layer9BriefClarification />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
 
         {/* Bottom Turn / Proceed Actions */}
-        <div className="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border/50">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/50 pt-4">
           <div className="text-xs text-muted-foreground">
             {roundtripStep === "STEP_1_CONFIGURING"
               ? "Review configurations and generate your Turn 1 Discovery Prompt."
               : roundtripStep === "STEP_1_PROMPT_READY"
-              ? "Turn 1 prompt ready. Proceed to external AI discovery."
-              : "Clarification loop in progress."}
+                ? "Turn 1 prompt ready. Proceed to external AI discovery."
+                : "Clarification loop in progress."}
           </div>
 
           <div className="flex items-center gap-2">
@@ -554,7 +588,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 type="button"
                 data-slot="generate-turn1-prompt-btn"
                 onClick={() => setRoundtripStep("STEP_1_PROMPT_READY")}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-all cursor-pointer shadow-xs"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90"
               >
                 <span>Generate Turn 1 Prompt</span>
                 <Sparkles className="size-3.5" />
@@ -566,7 +600,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 type="button"
                 data-slot="proceed-to-clarification-btn"
                 onClick={() => setRoundtripStep("AWAITING_AI_RESPONSE")}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-all cursor-pointer shadow-xs"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90"
               >
                 <span>Proceed to Clarification</span>
                 <Sparkles className="size-3.5" />

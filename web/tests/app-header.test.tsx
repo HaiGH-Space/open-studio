@@ -5,7 +5,10 @@ import { CatalogProvider } from "../src/context/CatalogContext"
 import { ComposerProvider } from "../src/context/ComposerContext"
 import { AppHeader } from "../src/components/cockpit/AppHeader"
 import { CommandMenuDialog } from "../src/components/cockpit/CommandMenuDialog"
-import type { CatalogIndex, ICatalogService } from "../src/lib/catalog/catalog-types"
+import type {
+  CatalogIndex,
+  ICatalogService,
+} from "../src/lib/catalog/catalog-types"
 import type { ComposerConfig } from "../src/lib/composer/composer-types"
 import { createDefaultComposerConfig } from "../src/lib/composer/composer-types"
 
@@ -67,7 +70,8 @@ const mockCatalog: CatalogIndex = {
         tokensCss: "data/design-systems/linear-app/tokens.css",
         tailwindCss: "data/design-systems/linear-app/tailwind-v4.css",
         componentsHtml: "data/design-systems/linear-app/components.html",
-        componentsManifest: "data/design-systems/linear-app/components.manifest.json",
+        componentsManifest:
+          "data/design-systems/linear-app/components.manifest.json",
       },
     },
     {
@@ -108,7 +112,8 @@ const mockCatalog: CatalogIndex = {
         tokensCss: "data/design-systems/stripe-dev/tokens.css",
         tailwindCss: "data/design-systems/stripe-dev/tailwind-v4.css",
         componentsHtml: "data/design-systems/stripe-dev/components.html",
-        componentsManifest: "data/design-systems/stripe-dev/components.manifest.json",
+        componentsManifest:
+          "data/design-systems/stripe-dev/components.manifest.json",
       },
     },
   ],
@@ -117,7 +122,8 @@ const mockCatalog: CatalogIndex = {
       id: "anti-ai-slop",
       name: "Anti-AI-Slop Discipline",
       category: "discipline",
-      description: "Rules against generic AI generated styles and purple gradients",
+      description:
+        "Rules against generic AI generated styles and purple gradients",
       ruleCount: 12,
       isDefaultEnabled: true,
       assetPath: "data/craft/anti-ai-slop.md",
@@ -136,7 +142,9 @@ const mockCatalog: CatalogIndex = {
   templates: [],
 }
 
-function createMockCatalogService(catalogData: CatalogIndex | null = mockCatalog): ICatalogService {
+function createMockCatalogService(
+  catalogData: CatalogIndex | null = mockCatalog
+): ICatalogService {
   return {
     loadCatalog: vi.fn().mockResolvedValue(catalogData),
     getLoadedCatalog: vi.fn().mockReturnValue(catalogData),
@@ -192,7 +200,8 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
     }
   ) {
     const service = options?.catalogService ?? mockService
-    const initialCatalog = options && "catalog" in options ? options.catalog : mockCatalog
+    const initialCatalog =
+      options && "catalog" in options ? options.catalog : mockCatalog
     act(() => {
       root.render(
         <CatalogProvider
@@ -252,7 +261,9 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
       renderWithProviders(<AppHeader />, { config })
       const badge = container.querySelector("[data-slot='active-brand-badge']")
       expect(badge).toBeTruthy()
-      expect(badge?.textContent?.toLowerCase()).toMatch(/(no system|select system|none)/)
+      expect(badge?.textContent?.toLowerCase()).toMatch(
+        /(no system|select system|none)/
+      )
     })
 
     it("displays token gauge summary with token count and budget", () => {
@@ -274,13 +285,17 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
       }
 
       renderWithProviders(<AppHeader budgetLimit={5000} />, { config })
-      const overBudgetIndicator = container.querySelector("[data-slot='token-overbudget']")
+      const overBudgetIndicator = container.querySelector(
+        "[data-slot='token-overbudget']"
+      )
       expect(overBudgetIndicator).toBeTruthy()
     })
 
     it("copies prompt to clipboard when quick export button is clicked", async () => {
       renderWithProviders(<AppHeader />)
-      const exportButton = container.querySelector("[data-slot='quick-export-button']") as HTMLButtonElement
+      const exportButton = container.querySelector(
+        "[data-slot='quick-export-button']"
+      ) as HTMLButtonElement
       expect(exportButton).toBeTruthy()
 
       await act(async () => {
@@ -294,7 +309,9 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
     it("invokes onExport callback prop when export button is clicked", async () => {
       const handleExport = vi.fn()
       renderWithProviders(<AppHeader onExport={handleExport} />)
-      const exportButton = container.querySelector("[data-slot='quick-export-button']") as HTMLButtonElement
+      const exportButton = container.querySelector(
+        "[data-slot='quick-export-button']"
+      ) as HTMLButtonElement
       expect(exportButton).toBeTruthy()
 
       await act(async () => {
@@ -306,14 +323,18 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
 
     it("contains command palette trigger showing shortcut key hint", () => {
       renderWithProviders(<AppHeader />)
-      const commandTrigger = container.querySelector("[data-slot='command-menu-trigger']") as HTMLButtonElement
+      const commandTrigger = container.querySelector(
+        "[data-slot='command-menu-trigger']"
+      ) as HTMLButtonElement
       expect(commandTrigger).toBeTruthy()
       expect(commandTrigger.textContent).toMatch(/(⌘k|ctrl\+k|search)/i)
     })
 
     it("clicking command palette trigger opens CommandMenuDialog", () => {
       renderWithProviders(<AppHeader />)
-      const commandTrigger = container.querySelector("[data-slot='command-menu-trigger']") as HTMLButtonElement
+      const commandTrigger = container.querySelector(
+        "[data-slot='command-menu-trigger']"
+      ) as HTMLButtonElement
       expect(commandTrigger).toBeTruthy()
 
       act(() => {
@@ -364,7 +385,9 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
     it("filters design systems and craft rules by query", () => {
       renderWithProviders(<CommandMenuDialog defaultOpen />)
 
-      const searchInput = document.querySelector("[data-slot='command-search-input']") as HTMLInputElement
+      const searchInput = document.querySelector(
+        "[data-slot='command-search-input']"
+      ) as HTMLInputElement
       expect(searchInput).toBeTruthy()
 
       // Type "linear"
@@ -386,7 +409,9 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
     it("selecting a design system updates composer and closes dialog", async () => {
       renderWithProviders(<CommandMenuDialog defaultOpen />)
 
-      const items = document.querySelectorAll("[data-slot='command-item-system']")
+      const items = document.querySelectorAll(
+        "[data-slot='command-item-system']"
+      )
       expect(items.length).toBeGreaterThanOrEqual(1)
 
       const firstSystem = items[0] as HTMLElement
@@ -402,7 +427,9 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
     it("activating a craft rule toggles it in composer", () => {
       renderWithProviders(<CommandMenuDialog defaultOpen />)
 
-      const ruleItems = document.querySelectorAll("[data-slot='command-item-rule']")
+      const ruleItems = document.querySelectorAll(
+        "[data-slot='command-item-rule']"
+      )
       expect(ruleItems.length).toBeGreaterThanOrEqual(1)
 
       const firstRule = ruleItems[0] as HTMLElement
@@ -416,7 +443,9 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
     it("shows empty state when no items match search query", () => {
       renderWithProviders(<CommandMenuDialog defaultOpen />)
 
-      const searchInput = document.querySelector("[data-slot='command-search-input']") as HTMLInputElement
+      const searchInput = document.querySelector(
+        "[data-slot='command-search-input']"
+      ) as HTMLInputElement
       expect(searchInput).toBeTruthy()
 
       // Type a query that matches nothing
@@ -431,7 +460,9 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
 
       const emptySlot = document.querySelector("[data-slot='command-empty']")
       expect(emptySlot).toBeTruthy()
-      expect(emptySlot?.textContent).toMatch(/no (matching )?results|no (matching )?resources/i)
+      expect(emptySlot?.textContent).toMatch(
+        /no (matching )?results|no (matching )?resources/i
+      )
     })
 
     it("handles null or empty catalog gracefully", () => {
@@ -441,7 +472,9 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
         catalogService: emptyService,
       })
 
-      const searchInput = document.querySelector("[data-slot='command-search-input']")
+      const searchInput = document.querySelector(
+        "[data-slot='command-search-input']"
+      )
       expect(searchInput).toBeTruthy()
       const emptySlot = document.querySelector("[data-slot='command-empty']")
       expect(emptySlot).toBeTruthy()
@@ -450,7 +483,9 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
     it("handles regex special characters in search input without error", () => {
       renderWithProviders(<CommandMenuDialog defaultOpen />)
 
-      const searchInput = document.querySelector("[data-slot='command-search-input']") as HTMLInputElement
+      const searchInput = document.querySelector(
+        "[data-slot='command-search-input']"
+      ) as HTMLInputElement
       expect(searchInput).toBeTruthy()
 
       // Type special regex characters: "[+*?"

@@ -19,8 +19,11 @@ export function App({
   return (
     <ThemeProvider defaultTheme={defaultTheme}>
       <CatalogProvider catalogService={catalogService}>
-        <ComposerProvider catalogService={catalogService} debounceMs={debounceMs}>
-          <div className="flex flex-col h-screen w-screen overflow-hidden bg-background text-foreground select-none">
+        <ComposerProvider
+          catalogService={catalogService}
+          debounceMs={debounceMs}
+        >
+          <div className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground select-none">
             {/* Top Bar: AppHeader with Brand pill, Cmd+K search, Token gauge, Export */}
             <AppHeader />
 
@@ -34,4 +37,3 @@ export function App({
 }
 
 export default App
-

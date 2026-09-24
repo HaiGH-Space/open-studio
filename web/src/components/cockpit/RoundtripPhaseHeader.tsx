@@ -69,11 +69,11 @@ export function RoundtripPhaseHeader({ className }: RoundtripPhaseHeaderProps) {
     <div
       data-slot="roundtrip-phase-header"
       className={cn(
-        "flex items-center justify-between gap-2 px-4 py-2 border-b border-border/50 bg-background/60 backdrop-blur-xs select-none",
+        "flex items-center justify-between gap-2 border-b border-border/50 bg-background/60 px-4 py-2 backdrop-blur-xs select-none",
         className
       )}
     >
-      <div className="flex items-center gap-1 sm:gap-2 flex-1 max-w-2xl">
+      <div className="flex max-w-2xl flex-1 items-center gap-1 sm:gap-2">
         {PHASES.map((phase, idx) => {
           const Icon = phase.icon
           const isActive = currentPhaseId === phase.id
@@ -83,7 +83,7 @@ export function RoundtripPhaseHeader({ className }: RoundtripPhaseHeaderProps) {
           return (
             <React.Fragment key={phase.id}>
               {idx > 0 && (
-                <ArrowRightIcon className="size-3 text-muted-foreground/40 shrink-0" />
+                <ArrowRightIcon className="size-3 shrink-0 text-muted-foreground/40" />
               )}
 
               <button
@@ -99,18 +99,18 @@ export function RoundtripPhaseHeader({ className }: RoundtripPhaseHeaderProps) {
                   }
                 }}
                 className={cn(
-                  "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer",
+                  "flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 text-left transition-all",
                   isActive &&
-                    "bg-primary/10 border border-primary/40 text-foreground shadow-xs",
+                    "border border-primary/40 bg-primary/10 text-foreground shadow-xs",
                   isCompleted &&
-                    "text-muted-foreground hover:text-foreground hover:bg-muted/30",
+                    "text-muted-foreground hover:bg-muted/30 hover:text-foreground",
                   isPending &&
-                    "text-muted-foreground/60 hover:text-muted-foreground hover:bg-muted/20"
+                    "text-muted-foreground/60 hover:bg-muted/20 hover:text-muted-foreground"
                 )}
               >
                 <div
                   className={cn(
-                    "size-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 transition-colors",
+                    "flex size-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold transition-colors",
                     isActive && "bg-primary text-primary-foreground",
                     isCompleted && "bg-muted text-foreground",
                     isPending && "bg-muted/40 text-muted-foreground"
@@ -123,19 +123,19 @@ export function RoundtripPhaseHeader({ className }: RoundtripPhaseHeaderProps) {
                   )}
                 </div>
 
-                <div className="flex flex-col min-w-0">
+                <div className="flex min-w-0 flex-col">
                   <div className="flex items-center gap-1.5">
                     <Icon className="size-3 shrink-0 text-muted-foreground" />
                     <span
                       className={cn(
-                        "text-xs font-semibold truncate",
+                        "truncate text-xs font-semibold",
                         isActive ? "text-foreground" : "text-muted-foreground"
                       )}
                     >
                       {phase.title}
                     </span>
                   </div>
-                  <span className="hidden sm:inline-block text-[10px] text-muted-foreground/80 truncate">
+                  <span className="hidden truncate text-[10px] text-muted-foreground/80 sm:inline-block">
                     {phase.subtitle}
                   </span>
                 </div>
@@ -146,14 +146,14 @@ export function RoundtripPhaseHeader({ className }: RoundtripPhaseHeaderProps) {
       </div>
 
       {/* Active Turn Pill */}
-      <div className="shrink-0 flex items-center gap-1.5 pl-2">
+      <div className="flex shrink-0 items-center gap-1.5 pl-2">
         <span
           data-slot="turn-indicator-badge"
           className={cn(
-            "text-[10px] font-mono font-medium px-2 py-0.5 rounded-full border transition-all",
+            "rounded-full border px-2 py-0.5 font-mono text-[10px] font-medium transition-all",
             activeTurn === "turn1_discovery"
-              ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30"
-              : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+              ? "border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+              : "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
           )}
         >
           {activeTurn === "turn1_discovery"

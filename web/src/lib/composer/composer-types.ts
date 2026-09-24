@@ -6,139 +6,124 @@
 import type { ClarificationAnswerEntry } from "../clarification/question-form-types"
 
 export type TargetFramework =
-  | "react"
-  | "nextjs"
-  | "vite"
-  | "html-vanilla"
-  | "vue"
-  | "svelte"
+  "react" | "nextjs" | "vite" | "html-vanilla" | "vue" | "svelte"
 
 export type CssEngine =
-  | "tailwind-v4"
-  | "tailwind-v3"
-  | "css-modules"
-  | "vanilla-css"
+  "tailwind-v4" | "tailwind-v3" | "css-modules" | "vanilla-css"
 
 export type TaskKind =
-  | "prototype"
-  | "deck"
-  | "dashboard"
-  | "marketing-landing"
-  | "application"
+  "prototype" | "deck" | "dashboard" | "marketing-landing" | "application"
 
 export type WorkflowPhase =
-  | "discovery"
-  | "draft"
-  | "refine"
-  | "production-ready"
+  "discovery" | "draft" | "refine" | "production-ready"
 
 export type TokenMode = "condensed" | "full"
 
 export type TurnMode = "turn1_discovery" | "turn2_execution"
 
 export interface Layer1SecurityConfig {
-  readonly enabled: boolean;
-  readonly strictMode: boolean;
+  readonly enabled: boolean
+  readonly strictMode: boolean
 }
 
 export interface Layer2RuntimeContractConfig {
-  readonly enabled: boolean;
-  readonly enforceDataOdId: boolean;
-  readonly injectQuestionProtocol: boolean;
+  readonly enabled: boolean
+  readonly enforceDataOdId: boolean
+  readonly injectQuestionProtocol: boolean
 }
 
 export interface Layer3AuthoritativeConstraintsConfig {
-  readonly enabled: boolean;
-  readonly targetFramework: TargetFramework;
-  readonly cssEngine: CssEngine;
-  readonly viewport: "responsive" | "desktop-only" | "mobile-only";
-  readonly aspectRatio?: string;
-  readonly strictHardRules: readonly string[];
+  readonly enabled: boolean
+  readonly targetFramework: TargetFramework
+  readonly cssEngine: CssEngine
+  readonly viewport: "responsive" | "desktop-only" | "mobile-only"
+  readonly aspectRatio?: string
+  readonly strictHardRules: readonly string[]
 }
 
 export interface Layer4WorkflowManifestConfig {
-  readonly enabled: boolean;
-  readonly taskKind: TaskKind;
-  readonly phase: WorkflowPhase;
+  readonly enabled: boolean
+  readonly taskKind: TaskKind
+  readonly phase: WorkflowPhase
 }
 
 export interface Layer5BrandContractConfig {
-  readonly enabled: boolean;
-  readonly selectedSystemId?: string;
-  readonly tokenMode: TokenMode;
-  readonly includeUsage: boolean;
-  readonly includeDesignMd: boolean;
-  readonly includeTokensCss: boolean;
-  readonly includeComponentsHtml: boolean;
+  readonly enabled: boolean
+  readonly selectedSystemId?: string
+  readonly tokenMode: TokenMode
+  readonly includeUsage: boolean
+  readonly includeDesignMd: boolean
+  readonly includeTokensCss: boolean
+  readonly includeComponentsHtml: boolean
 }
 
 export interface Layer6CraftRulesConfig {
-  readonly enabled: boolean;
-  readonly selectedRuleIds: readonly string[];
-  readonly customCraftDirectives: readonly string[];
+  readonly enabled: boolean
+  readonly selectedRuleIds: readonly string[]
+  readonly customCraftDirectives: readonly string[]
 }
 
 export interface Layer7SkillTemplateConfig {
-  readonly enabled: boolean;
-  readonly selectedSkillId?: string;
-  readonly selectedTemplateId?: string;
+  readonly enabled: boolean
+  readonly selectedSkillId?: string
+  readonly selectedTemplateId?: string
 }
 
 export interface Layer8UserMemoryConfig {
-  readonly enabled: boolean;
-  readonly persistentDirectives: readonly string[];
-  readonly negativeConstraints: readonly string[];
+  readonly enabled: boolean
+  readonly persistentDirectives: readonly string[]
+  readonly negativeConstraints: readonly string[]
 }
 
 export interface Layer9BriefAndClarificationConfig {
-  readonly userObjective: string;
-  readonly featureRequirements: readonly string[];
-  readonly clarificationAnswers: readonly ClarificationAnswerEntry[];
+  readonly userObjective: string
+  readonly featureRequirements: readonly string[]
+  readonly clarificationAnswers: readonly ClarificationAnswerEntry[]
 }
 
 export interface ComposerConfig {
-  readonly layer1Security: Layer1SecurityConfig;
-  readonly layer2RuntimeContract: Layer2RuntimeContractConfig;
-  readonly layer3AuthoritativeConstraints: Layer3AuthoritativeConstraintsConfig;
-  readonly layer4WorkflowManifest: Layer4WorkflowManifestConfig;
-  readonly layer5BrandContract: Layer5BrandContractConfig;
-  readonly layer6CraftRules: Layer6CraftRulesConfig;
-  readonly layer7SkillTemplate: Layer7SkillTemplateConfig;
-  readonly layer8UserMemory: Layer8UserMemoryConfig;
-  readonly layer9BriefAndClarification: Layer9BriefAndClarificationConfig;
+  readonly layer1Security: Layer1SecurityConfig
+  readonly layer2RuntimeContract: Layer2RuntimeContractConfig
+  readonly layer3AuthoritativeConstraints: Layer3AuthoritativeConstraintsConfig
+  readonly layer4WorkflowManifest: Layer4WorkflowManifestConfig
+  readonly layer5BrandContract: Layer5BrandContractConfig
+  readonly layer6CraftRules: Layer6CraftRulesConfig
+  readonly layer7SkillTemplate: Layer7SkillTemplateConfig
+  readonly layer8UserMemory: Layer8UserMemoryConfig
+  readonly layer9BriefAndClarification: Layer9BriefAndClarificationConfig
 }
 
 export interface DesignSystemAssets {
-  readonly usage?: string;
-  readonly designMd?: string;
-  readonly tokensCss?: string;
-  readonly componentsHtml?: string;
+  readonly usage?: string
+  readonly designMd?: string
+  readonly tokensCss?: string
+  readonly componentsHtml?: string
 }
 
 export interface ComposerAssets {
-  readonly designSystem?: DesignSystemAssets;
-  readonly craftRules?: Record<string, string>;
-  readonly skillContent?: string;
-  readonly templateContent?: string;
+  readonly designSystem?: DesignSystemAssets
+  readonly craftRules?: Record<string, string>
+  readonly skillContent?: string
+  readonly templateContent?: string
 }
 
 export interface LayerCompilationResult {
-  readonly layerIndex: number;
-  readonly layerName: string;
-  readonly xmlTag: string;
-  readonly content: string;
-  readonly tokenCount: number;
-  readonly enabled: boolean;
+  readonly layerIndex: number
+  readonly layerName: string
+  readonly xmlTag: string
+  readonly content: string
+  readonly tokenCount: number
+  readonly enabled: boolean
 }
 
 export interface CompiledPromptResult {
-  readonly fullPrompt: string;
-  readonly systemPromptBlock: string;
-  readonly userPromptBlock: string;
-  readonly totalTokens: number;
-  readonly layerBreakdown: readonly LayerCompilationResult[];
-  readonly generatedAt: string;
-  readonly turnMode: TurnMode;
+  readonly fullPrompt: string
+  readonly systemPromptBlock: string
+  readonly userPromptBlock: string
+  readonly totalTokens: number
+  readonly layerBreakdown: readonly LayerCompilationResult[]
+  readonly generatedAt: string
+  readonly turnMode: TurnMode
 }
 
 export interface IPromptComposer {
@@ -146,7 +131,7 @@ export interface IPromptComposer {
     config: ComposerConfig,
     assets?: ComposerAssets,
     turn?: TurnMode
-  ): CompiledPromptResult;
+  ): CompiledPromptResult
 }
 
 /**

@@ -5,10 +5,7 @@ import type {
   CompiledPromptResult,
   TurnMode,
 } from "../lib/composer/composer-types"
-import type {
-  AgentTarget,
-  DownloadableFile,
-} from "../lib/export"
+import type { AgentTarget, DownloadableFile } from "../lib/export"
 import type {
   ClarificationAnswerEntry,
   QuestionFormAST,
@@ -61,13 +58,20 @@ export interface ComposerContextValue {
   readonly setRoundtripStep: (step: RoundtripStep) => void
   readonly setActiveTurn: (turn: TurnMode) => void
   readonly parseAndIngestAiResponse: (rawText: string) => boolean
-  readonly enterCustomClarifications: (answers: readonly ClarificationAnswerEntry[]) => void
+  readonly enterCustomClarifications: (
+    answers: readonly ClarificationAnswerEntry[]
+  ) => void
   readonly useSkillDefaultsAndProceed: () => void
   readonly skipClarification: () => void
-  readonly submitClarificationAnswers: (answers: readonly ClarificationAnswerEntry[]) => void
+  readonly submitClarificationAnswers: (
+    answers: readonly ClarificationAnswerEntry[]
+  ) => void
   readonly goToNextStep: () => void
   readonly goToPreviousStep: () => void
-  readonly compileNow: (overrideConfig?: ComposerConfig, overrideTurn?: TurnMode) => void
+  readonly compileNow: (
+    overrideConfig?: ComposerConfig,
+    overrideTurn?: TurnMode
+  ) => void
   readonly getExportOutput: () => ExportOutput
 }
 

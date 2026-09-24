@@ -69,7 +69,10 @@ export function ExportFooterBar({
     (filename: string, content: string, mimeType: string) => {
       try {
         const blob = new Blob([content], { type: mimeType })
-        if (typeof URL !== "undefined" && typeof URL.createObjectURL === "function") {
+        if (
+          typeof URL !== "undefined" &&
+          typeof URL.createObjectURL === "function"
+        ) {
           const url = URL.createObjectURL(blob)
           const a = document.createElement("a")
           a.href = url
@@ -101,8 +104,8 @@ export function ExportFooterBar({
       getContent: () => {
         const pkg = claudeCodeExporter.formatExport(compiledPrompt, config)
         return (
-          pkg.downloadableFiles.find((f) => f.filename === "CLAUDE.md")?.content ||
-          compiledPrompt.fullPrompt
+          pkg.downloadableFiles.find((f) => f.filename === "CLAUDE.md")
+            ?.content || compiledPrompt.fullPrompt
         )
       },
     },
@@ -116,8 +119,8 @@ export function ExportFooterBar({
       getContent: () => {
         const pkg = cursorExporter.formatExport(compiledPrompt, config)
         return (
-          pkg.downloadableFiles.find((f) => f.filename === ".cursorrules")?.content ||
-          compiledPrompt.systemPromptBlock
+          pkg.downloadableFiles.find((f) => f.filename === ".cursorrules")
+            ?.content || compiledPrompt.systemPromptBlock
         )
       },
     },
@@ -166,13 +169,13 @@ export function ExportFooterBar({
     <div
       data-slot="export-footer-bar"
       className={cn(
-        "p-3 border-t border-border/70 bg-card/60 backdrop-blur-md flex items-center justify-between gap-3 shrink-0 select-none",
+        "flex shrink-0 items-center justify-between gap-3 border-t border-border/70 bg-card/60 p-3 backdrop-blur-md select-none",
         className
       )}
     >
       {/* Target Agent Indicator */}
-      <div className="flex items-center gap-2 text-xs text-muted-foreground min-w-0">
-        <span className="size-2 rounded-full bg-primary/70 shrink-0" />
+      <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
+        <span className="size-2 shrink-0 rounded-full bg-primary/70" />
         <span className="truncate">
           Ready for{" "}
           <strong className="text-foreground capitalize">
@@ -182,27 +185,32 @@ export function ExportFooterBar({
       </div>
 
       {/* Buttons */}
-      <div className="flex items-center gap-2 shrink-0 relative" ref={menuRef}>
+      <div className="relative flex shrink-0 items-center gap-2" ref={menuRef}>
         {/* Download Dropdown Trigger */}
         <button
           type="button"
           data-slot="export-download-dropdown"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/70 bg-input/20 hover:bg-input/40 text-xs font-medium text-foreground transition-all cursor-pointer shadow-xs"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border/70 bg-input/20 px-3 py-1.5 text-xs font-medium text-foreground shadow-xs transition-all hover:bg-input/40"
           title="Download artifact files"
         >
           <DownloadIcon className="size-3.5 text-muted-foreground" />
           <span>Export</span>
-          <ChevronDownIcon className={cn("size-3 text-muted-foreground transition-transform", isOpen && "rotate-180")} />
+          <ChevronDownIcon
+            className={cn(
+              "size-3 text-muted-foreground transition-transform",
+              isOpen && "rotate-180"
+            )}
+          />
         </button>
 
         {/* Dropdown Menu Popup */}
         {isOpen && (
           <div
             data-slot="export-download-menu"
-            className="absolute bottom-full right-0 mb-2 w-72 rounded-xl border border-border/80 bg-popover/95 backdrop-blur-md p-1.5 shadow-xl z-50 flex flex-col gap-1 text-xs animate-in fade-in zoom-in-95 duration-150"
+            className="absolute right-0 bottom-full z-50 mb-2 flex w-72 animate-in flex-col gap-1 rounded-xl border border-border/80 bg-popover/95 p-1.5 text-xs shadow-xl backdrop-blur-md duration-150 zoom-in-95 fade-in"
           >
-            <div className="px-2 py-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+            <div className="px-2 py-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
               Download Artifacts
             </div>
 
@@ -212,27 +220,27 @@ export function ExportFooterBar({
                 type="button"
                 data-slot={opt.dataSlot}
                 onClick={() => handleSelectOption(opt)}
-                className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-muted/70 flex items-start gap-2.5 transition-colors cursor-pointer"
+                className="flex w-full cursor-pointer items-start gap-2.5 rounded-lg px-2.5 py-1.5 text-left transition-colors hover:bg-muted/70"
               >
-                <FileCodeIcon className="size-4 text-primary shrink-0 mt-0.5" />
-                <div className="flex flex-col min-w-0">
-                  <span className="font-medium text-foreground font-mono text-xs">
+                <FileCodeIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+                <div className="flex min-w-0 flex-col">
+                  <span className="font-mono text-xs font-medium text-foreground">
                     {opt.label}
                   </span>
-                  <span className="text-[11px] text-muted-foreground truncate">
+                  <span className="truncate text-[11px] text-muted-foreground">
                     {opt.description}
                   </span>
                 </div>
               </button>
             ))}
 
-            <div className="h-px bg-border/50 my-0.5" />
+            <div className="my-0.5 h-px bg-border/50" />
 
             <button
               type="button"
               data-slot="download-all-files"
               onClick={handleDownloadAll}
-              className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-primary/15 text-primary flex items-center gap-2 transition-colors cursor-pointer font-medium"
+              className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 text-left font-medium text-primary transition-colors hover:bg-primary/15"
             >
               <ArchiveIcon className="size-3.5 shrink-0" />
               <span>Download All (4 files)</span>
@@ -245,7 +253,7 @@ export function ExportFooterBar({
           type="button"
           data-slot="export-copy-btn"
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-xs transition-all cursor-pointer"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-all hover:bg-primary/90"
         >
           {isCopied ? (
             <>

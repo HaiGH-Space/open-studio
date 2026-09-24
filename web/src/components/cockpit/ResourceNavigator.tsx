@@ -95,29 +95,29 @@ export function ResourceNavigator({
     <aside
       data-slot="resource-navigator"
       className={cn(
-        "w-80 md:w-96 flex flex-col h-full border-r border-border/70 bg-sidebar/50 select-none overflow-hidden",
+        "flex h-full w-80 flex-col overflow-hidden border-r border-border/70 bg-sidebar/50 select-none md:w-96",
         className
       )}
     >
       {/* Top Search & Filter Bar */}
-      <div className="p-3.5 space-y-2.5 border-b border-border/60 bg-background/40">
+      <div className="space-y-2.5 border-b border-border/60 bg-background/40 p-3.5">
         {/* Search Input */}
         <div className="relative">
-          <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+          <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             data-slot="catalog-search-input"
             type="text"
             placeholder="Filter systems, rules, skills..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 pr-7 h-8 text-xs bg-input/20 border-border/70 focus-visible:ring-1 focus-visible:ring-primary"
+            className="h-8 border-border/70 bg-input/20 pr-7 pl-8 text-xs focus-visible:ring-1 focus-visible:ring-primary"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={handleClearSearch}
               aria-label="Clear search"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+              className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground"
             >
               <XIcon className="size-3.5" />
             </button>
@@ -133,7 +133,7 @@ export function ResourceNavigator({
               const val = e.target.value
               setSelectedCategory(val === "all" ? null : val)
             }}
-            className="w-full text-xs h-7 px-2.5 rounded-lg border border-border/70 bg-input/25 text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+            className="h-7 w-full cursor-pointer rounded-lg border border-border/70 bg-input/25 px-2.5 text-xs text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
           >
             <option value="all">All Categories</option>
             {categories.map((cat) => (
@@ -148,7 +148,7 @@ export function ResourceNavigator({
         {popularTags.length > 0 && (
           <div
             data-slot="tag-filter-chips"
-            className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar"
+            className="no-scrollbar flex items-center gap-1.5 overflow-x-auto pb-1 text-xs"
           >
             {popularTags.slice(0, 10).map((tag) => {
               const isSelected = selectedTags.some(
@@ -161,10 +161,10 @@ export function ResourceNavigator({
                   data-slot="tag-chip"
                   onClick={() => handleToggleTag(tag)}
                   className={cn(
-                    "text-[10px] px-2 py-0.5 rounded-full border transition-colors cursor-pointer shrink-0 font-mono",
+                    "shrink-0 cursor-pointer rounded-full border px-2 py-0.5 font-mono text-[10px] transition-colors",
                     isSelected
-                      ? "bg-primary text-primary-foreground border-primary shadow-2xs font-semibold"
-                      : "bg-muted/40 text-muted-foreground border-border/60 hover:text-foreground hover:border-border"
+                      ? "border-primary bg-primary font-semibold text-primary-foreground shadow-2xs"
+                      : "border-border/60 bg-muted/40 text-muted-foreground hover:border-border hover:text-foreground"
                   )}
                 >
                   #{tag}
@@ -180,18 +180,18 @@ export function ResourceNavigator({
         value={activeTab}
         onValueChange={setActiveTab}
         data-slot="resource-tabs"
-        className="flex-1 flex flex-col overflow-hidden"
+        className="flex flex-1 flex-col overflow-hidden"
       >
-        <div className="px-3.5 pt-2 border-b border-border/40">
-          <TabsList className="w-full grid grid-cols-3 h-8 bg-muted/50 p-0.5 rounded-lg text-xs">
+        <div className="border-b border-border/40 px-3.5 pt-2">
+          <TabsList className="grid h-8 w-full grid-cols-3 rounded-lg bg-muted/50 p-0.5 text-xs">
             <TabsTrigger
               value="systems"
               data-slot="tab-trigger-systems"
-              className="gap-1.5 text-xs py-1 px-2 rounded-md font-medium cursor-pointer"
+              className="cursor-pointer gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
             >
               <PaletteIcon className="size-3" />
               <span>Systems</span>
-              <span className="ml-0.5 text-[10px] opacity-75 font-mono">
+              <span className="ml-0.5 font-mono text-[10px] opacity-75">
                 ({filteredDesignSystems.length})
               </span>
             </TabsTrigger>
@@ -199,11 +199,11 @@ export function ResourceNavigator({
             <TabsTrigger
               value="rules"
               data-slot="tab-trigger-rules"
-              className="gap-1.5 text-xs py-1 px-2 rounded-md font-medium cursor-pointer"
+              className="cursor-pointer gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
             >
               <RuleIcon className="size-3" />
               <span>Rules</span>
-              <span className="ml-0.5 text-[10px] opacity-75 font-mono">
+              <span className="ml-0.5 font-mono text-[10px] opacity-75">
                 ({filteredCraftRules.length})
               </span>
             </TabsTrigger>
@@ -211,11 +211,11 @@ export function ResourceNavigator({
             <TabsTrigger
               value="skills"
               data-slot="tab-trigger-skills"
-              className="gap-1.5 text-xs py-1 px-2 rounded-md font-medium cursor-pointer"
+              className="cursor-pointer gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
             >
               <ZapIcon className="size-3" />
               <span>Skills</span>
-              <span className="ml-0.5 text-[10px] opacity-75 font-mono">
+              <span className="ml-0.5 font-mono text-[10px] opacity-75">
                 ({filteredSkills.length})
               </span>
             </TabsTrigger>
@@ -226,17 +226,21 @@ export function ResourceNavigator({
         <TabsContent
           value="systems"
           data-slot="tab-content-systems"
-          className="flex-1 min-h-0 outline-none"
+          className="min-h-0 flex-1 outline-none"
         >
           <ScrollArea className="h-full" viewportClassName="p-3 space-y-2.5">
             {filteredDesignSystems.length === 0 ? (
               <div
                 data-slot="empty-systems"
-                className="py-12 px-4 text-center text-xs text-muted-foreground space-y-1.5"
+                className="space-y-1.5 px-4 py-12 text-center text-xs text-muted-foreground"
               >
-                <PaletteIcon className="size-6 text-muted-foreground/40 mx-auto" />
-                <p className="font-medium text-foreground/80">No design systems found</p>
-                <p className="text-[11px]">Try adjusting your search query or filters</p>
+                <PaletteIcon className="mx-auto size-6 text-muted-foreground/40" />
+                <p className="font-medium text-foreground/80">
+                  No design systems found
+                </p>
+                <p className="text-[11px]">
+                  Try adjusting your search query or filters
+                </p>
               </div>
             ) : (
               filteredDesignSystems.map((ds) => (
@@ -256,16 +260,18 @@ export function ResourceNavigator({
         <TabsContent
           value="rules"
           data-slot="tab-content-rules"
-          className="flex-1 min-h-0 outline-none"
+          className="min-h-0 flex-1 outline-none"
         >
           <ScrollArea className="h-full" viewportClassName="p-3 space-y-2">
             {filteredCraftRules.length === 0 ? (
               <div
                 data-slot="empty-rules"
-                className="py-12 px-4 text-center text-xs text-muted-foreground space-y-1.5"
+                className="space-y-1.5 px-4 py-12 text-center text-xs text-muted-foreground"
               >
-                <RuleIcon className="size-6 text-muted-foreground/40 mx-auto" />
-                <p className="font-medium text-foreground/80">No craft rules found</p>
+                <RuleIcon className="mx-auto size-6 text-muted-foreground/40" />
+                <p className="font-medium text-foreground/80">
+                  No craft rules found
+                </p>
                 <p className="text-[11px]">Try clearing search filters</p>
               </div>
             ) : (
@@ -277,25 +283,31 @@ export function ResourceNavigator({
                     data-slot="craft-rule-card"
                     data-rule-id={cr.id}
                     className={cn(
-                      "p-3 rounded-xl border transition-all duration-150 flex items-start justify-between gap-3 select-none",
+                      "flex items-start justify-between gap-3 rounded-xl border p-3 transition-all duration-150 select-none",
                       isEnabled
                         ? "border-primary/50 bg-primary/5"
-                        : "border-border/70 bg-card/60 hover:bg-card/90 hover:border-border"
+                        : "border-border/70 bg-card/60 hover:border-border hover:bg-card/90"
                     )}
                   >
-                    <div className="space-y-1 min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-medium text-xs text-foreground truncate">
+                    <div className="min-w-0 space-y-1">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="truncate text-xs font-medium text-foreground">
                           {cr.name}
                         </span>
-                        <Badge variant="outline" className="text-[9px] py-0 px-1 h-3.5 capitalize">
+                        <Badge
+                          variant="outline"
+                          className="h-3.5 px-1 py-0 text-[9px] capitalize"
+                        >
                           {cr.category}
                         </Badge>
-                        <Badge variant="secondary" className="text-[9px] py-0 px-1 h-3.5 font-mono">
+                        <Badge
+                          variant="secondary"
+                          className="h-3.5 px-1 py-0 font-mono text-[9px]"
+                        >
                           {cr.ruleCount} rules
                         </Badge>
                       </div>
-                      <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                      <p className="line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">
                         {cr.description}
                       </p>
                     </div>
@@ -320,16 +332,18 @@ export function ResourceNavigator({
         <TabsContent
           value="skills"
           data-slot="tab-content-skills"
-          className="flex-1 min-h-0 outline-none"
+          className="min-h-0 flex-1 outline-none"
         >
           <ScrollArea className="h-full" viewportClassName="p-3 space-y-2">
             {filteredSkills.length === 0 ? (
               <div
                 data-slot="empty-skills"
-                className="py-12 px-4 text-center text-xs text-muted-foreground space-y-1.5"
+                className="space-y-1.5 px-4 py-12 text-center text-xs text-muted-foreground"
               >
-                <ZapIcon className="size-6 text-muted-foreground/40 mx-auto" />
-                <p className="font-medium text-foreground/80">No skills found</p>
+                <ZapIcon className="mx-auto size-6 text-muted-foreground/40" />
+                <p className="font-medium text-foreground/80">
+                  No skills found
+                </p>
                 <p className="text-[11px]">Try clearing search filters</p>
               </div>
             ) : (
@@ -337,17 +351,20 @@ export function ResourceNavigator({
                 <div
                   key={sk.id}
                   data-slot="skill-card"
-                  className="p-3 rounded-xl border border-border/70 bg-card/60 hover:bg-card/90 hover:border-border transition-all duration-150 space-y-1.5 select-none"
+                  className="space-y-1.5 rounded-xl border border-border/70 bg-card/60 p-3 transition-all duration-150 select-none hover:border-border hover:bg-card/90"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-medium text-xs text-foreground truncate">
+                    <span className="truncate text-xs font-medium text-foreground">
                       {sk.name}
                     </span>
-                    <Badge variant="outline" className="text-[9px] py-0 px-1.5 h-4">
+                    <Badge
+                      variant="outline"
+                      className="h-4 px-1.5 py-0 text-[9px]"
+                    >
                       {sk.category}
                     </Badge>
                   </div>
-                  <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                  <p className="line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">
                     {sk.description}
                   </p>
                   {sk.triggers && sk.triggers.length > 0 && (
@@ -356,7 +373,7 @@ export function ResourceNavigator({
                         <span
                           key={trig}
                           data-slot="skill-trigger-chip"
-                          className="text-[9px] px-1.5 py-0.2 rounded bg-muted/60 text-muted-foreground border border-border/40 font-mono"
+                          className="py-0.2 rounded border border-border/40 bg-muted/60 px-1.5 font-mono text-[9px] text-muted-foreground"
                         >
                           {trig}
                         </span>

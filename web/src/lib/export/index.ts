@@ -3,8 +3,15 @@
  * Spec reference: SPEC-open-studio.md Section 7.3.
  */
 
-import type { CompiledPromptResult, ComposerConfig } from "../composer/composer-types"
-import type { AgentTarget, AgentExportPackage, IAgentExporter } from "./export-types"
+import type {
+  CompiledPromptResult,
+  ComposerConfig,
+} from "../composer/composer-types"
+import type {
+  AgentTarget,
+  AgentExportPackage,
+  IAgentExporter,
+} from "./export-types"
 import { claudeCodeExporter, ClaudeCodeExporter } from "./claude-code-exporter"
 import { cursorExporter, CursorExporter } from "./cursor-exporter"
 import { genericLlmExporter, GenericLlmExporter } from "./generic-llm-exporter"
@@ -16,7 +23,7 @@ export { genericLlmExporter, GenericLlmExporter }
 
 export const AGENT_EXPORTERS: Record<AgentTarget, IAgentExporter> = {
   "claude-code": claudeCodeExporter,
-  "cursor": cursorExporter,
+  cursor: cursorExporter,
   "generic-llm": genericLlmExporter,
 }
 
@@ -27,7 +34,9 @@ export const AGENT_EXPORTERS: Record<AgentTarget, IAgentExporter> = {
 export function getExporter(agentName: AgentTarget): IAgentExporter {
   const exporter = AGENT_EXPORTERS[agentName]
   if (!exporter) {
-    throw new Error(`Unsupported agent target: "${agentName}". Supported: ${Object.keys(AGENT_EXPORTERS).join(", ")}`)
+    throw new Error(
+      `Unsupported agent target: "${agentName}". Supported: ${Object.keys(AGENT_EXPORTERS).join(", ")}`
+    )
   }
   return exporter
 }

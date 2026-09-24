@@ -6,13 +6,23 @@
  * v0, Lovable, Gemini, and general LLM chat interfaces.
  */
 
-import type { CompiledPromptResult, ComposerConfig } from "../composer/composer-types"
-import type { AgentExportPackage, DownloadableFile, IAgentExporter } from "./export-types"
+import type {
+  CompiledPromptResult,
+  ComposerConfig,
+} from "../composer/composer-types"
+import type {
+  AgentExportPackage,
+  DownloadableFile,
+  IAgentExporter,
+} from "./export-types"
 
 export class GenericLlmExporter implements IAgentExporter {
   readonly agentName = "generic-llm" as const
 
-  formatExport(result: CompiledPromptResult, config: ComposerConfig): AgentExportPackage {
+  formatExport(
+    result: CompiledPromptResult,
+    config: ComposerConfig
+  ): AgentExportPackage {
     const primaryClipboardText = this.buildMarkdownPrompt(result, config)
     const secondaryClipboardText = this.buildUserPrompt(result, config)
 
@@ -36,27 +46,32 @@ export class GenericLlmExporter implements IAgentExporter {
     }
   }
 
-  private buildMarkdownPrompt(result: CompiledPromptResult, config: ComposerConfig): string {
+  private buildMarkdownPrompt(
+    result: CompiledPromptResult,
+    config: ComposerConfig
+  ): string {
     const l3 = config.layer3AuthoritativeConstraints
     const l5 = config.layer5BrandContract
     const l8 = config.layer8UserMemory
     const l9 = config.layer9BriefAndClarification
 
-    const hardRules = l3.enabled && l3.strictHardRules.length > 0
-      ? [
-          "",
-          "### Hard Rules",
-          ...l3.strictHardRules.map((r) => `- ${r}`),
-        ].join("\n")
-      : ""
+    const hardRules =
+      l3.enabled && l3.strictHardRules.length > 0
+        ? [
+            "",
+            "### Hard Rules",
+            ...l3.strictHardRules.map((r) => `- ${r}`),
+          ].join("\n")
+        : ""
 
-    const persistentDirectives = l8.enabled && l8.persistentDirectives.length > 0
-      ? [
-          "",
-          "### User Preferences",
-          ...l8.persistentDirectives.map((d) => `- ${d}`),
-        ].join("\n")
-      : ""
+    const persistentDirectives =
+      l8.enabled && l8.persistentDirectives.length > 0
+        ? [
+            "",
+            "### User Preferences",
+            ...l8.persistentDirectives.map((d) => `- ${d}`),
+          ].join("\n")
+        : ""
 
     const userBriefSection = this.formatUserBrief(l9)
 
@@ -84,15 +99,24 @@ export class GenericLlmExporter implements IAgentExporter {
       .join("\n")
   }
 
-  private buildUserPrompt(_result: CompiledPromptResult, config: ComposerConfig): string {
+  private buildUserPrompt(
+    _result: CompiledPromptResult,
+    config: ComposerConfig
+  ): string {
     const l9 = config.layer9BriefAndClarification
-    if (!l9.userObjective && l9.featureRequirements.length === 0 && l9.clarificationAnswers.length === 0) {
+    if (
+      !l9.userObjective &&
+      l9.featureRequirements.length === 0 &&
+      l9.clarificationAnswers.length === 0
+    ) {
       return ""
     }
     return this.formatUserBrief(l9)
   }
 
-  private formatUserBrief(l9: ComposerConfig["layer9BriefAndClarification"]): string {
+  private formatUserBrief(
+    l9: ComposerConfig["layer9BriefAndClarification"]
+  ): string {
     const parts: string[] = []
 
     if (l9.userObjective) {
@@ -100,14 +124,20 @@ export class GenericLlmExporter implements IAgentExporter {
     }
 
     if (l9.featureRequirements.length > 0) {
-      parts.push("\n### Feature Requirements:\n" + l9.featureRequirements.map((r) => `- ${r}`).join("\n"))
+      parts.push(
+        "\n### Feature Requirements:\n" +
+          l9.featureRequirements.map((r) => `- ${r}`).join("\n")
+      )
     }
 
     if (l9.clarificationAnswers.length > 0) {
       parts.push(
         "\n### Clarification Answers:\n" +
           l9.clarificationAnswers
-            .map((ans) => `- **${ans.questionLabel}:** ${ans.selectedValues.join(", ")}`)
+            .map(
+              (ans) =>
+                `- **${ans.questionLabel}:** ${ans.selectedValues.join(", ")}`
+            )
             .join("\n")
       )
     }

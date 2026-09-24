@@ -78,19 +78,19 @@ export function PromptInspector({
     <aside
       data-slot="prompt-inspector"
       className={cn(
-        "w-80 lg:w-[30rem] shrink-0 flex flex-col h-full bg-card/30 overflow-hidden border-l border-border/60",
+        "flex h-full w-80 shrink-0 flex-col overflow-hidden border-l border-border/60 bg-card/30 lg:w-[30rem]",
         className
       )}
     >
       {/* Top Header: Agent Target Selector Tabs */}
-      <div className="p-3 border-b border-border/60 bg-background/50 backdrop-blur-md flex flex-col gap-2 shrink-0 select-none">
+      <div className="flex shrink-0 flex-col gap-2 border-b border-border/60 bg-background/50 p-3 backdrop-blur-md select-none">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
             <LayersIcon className="size-3.5 text-primary" />
             <span>Prompt Inspector</span>
           </div>
 
-          <span className="text-[10px] text-muted-foreground font-mono">
+          <span className="font-mono text-[10px] text-muted-foreground">
             {compiledPrompt.totalTokens.toLocaleString()} tokens
           </span>
         </div>
@@ -98,16 +98,16 @@ export function PromptInspector({
         {/* Turn Mode Selector Toggle */}
         <div
           data-slot="turn-mode-toggle"
-          className="flex items-center rounded-lg bg-muted/40 p-0.5 border border-border/40 gap-1 text-[11px]"
+          className="flex items-center gap-1 rounded-lg border border-border/40 bg-muted/40 p-0.5 text-[11px]"
         >
           <button
             type="button"
             data-slot="turn-mode-turn1-btn"
             onClick={() => setActiveTurn("turn1_discovery")}
             className={cn(
-              "flex-1 py-1 px-2 rounded-md font-medium text-center transition-all cursor-pointer truncate",
+              "flex-1 cursor-pointer truncate rounded-md px-2 py-1 text-center font-medium transition-all",
               activeTurn === "turn1_discovery"
-                ? "bg-amber-500/15 text-amber-700 dark:text-amber-300 font-semibold shadow-2xs border border-amber-500/30"
+                ? "border border-amber-500/30 bg-amber-500/15 font-semibold text-amber-700 shadow-2xs dark:text-amber-300"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -118,9 +118,9 @@ export function PromptInspector({
             data-slot="turn-mode-turn2-btn"
             onClick={() => setActiveTurn("turn2_execution")}
             className={cn(
-              "flex-1 py-1 px-2 rounded-md font-medium text-center transition-all cursor-pointer truncate",
+              "flex-1 cursor-pointer truncate rounded-md px-2 py-1 text-center font-medium transition-all",
               activeTurn === "turn2_execution"
-                ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-semibold shadow-2xs border border-emerald-500/30"
+                ? "border border-emerald-500/30 bg-emerald-500/15 font-semibold text-emerald-700 shadow-2xs dark:text-emerald-300"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -131,7 +131,7 @@ export function PromptInspector({
         {/* Tab Pills */}
         <div
           data-slot="agent-target-tabs"
-          className="flex items-center rounded-lg bg-muted/40 p-0.5 border border-border/40 gap-0.5"
+          className="flex items-center gap-0.5 rounded-lg border border-border/40 bg-muted/40 p-0.5"
         >
           {AGENT_TARGET_TABS.map((tab) => {
             const Icon = tab.icon
@@ -143,14 +143,19 @@ export function PromptInspector({
                 data-slot={tab.dataSlot}
                 onClick={() => setAgentTarget(tab.id)}
                 className={cn(
-                  "flex-1 inline-flex items-center justify-center gap-1.5 py-1 px-1.5 rounded-md text-[11px] font-medium transition-all cursor-pointer truncate",
+                  "inline-flex flex-1 cursor-pointer items-center justify-center gap-1.5 truncate rounded-md px-1.5 py-1 text-[11px] font-medium transition-all",
                   isActive
-                    ? "bg-background text-foreground shadow-xs font-semibold"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                    ? "bg-background font-semibold text-foreground shadow-xs"
+                    : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                 )}
                 title={tab.hint}
               >
-                <Icon className={cn("size-3 shrink-0", isActive ? "text-primary" : "text-muted-foreground")} />
+                <Icon
+                  className={cn(
+                    "size-3 shrink-0",
+                    isActive ? "text-primary" : "text-muted-foreground"
+                  )}
+                />
                 <span className="truncate">{tab.label}</span>
               </button>
             )
@@ -159,14 +164,14 @@ export function PromptInspector({
 
         {/* Active Target Format Subtitle */}
         {activeTabMeta && (
-          <div className="text-[11px] text-muted-foreground truncate">
+          <div className="truncate text-[11px] text-muted-foreground">
             {activeTabMeta.hint}
           </div>
         )}
       </div>
 
       {/* Live Token Gauge & Layer Breakdown Bar */}
-      <div className="px-3.5 py-2.5 border-b border-border/50 bg-background/30 flex flex-col gap-2 shrink-0">
+      <div className="flex shrink-0 flex-col gap-2 border-b border-border/50 bg-background/30 px-3.5 py-2.5">
         <TokenGaugeBar
           tokenCount={compiledPrompt.totalTokens}
           modelLimit={modelLimit}
@@ -178,7 +183,7 @@ export function PromptInspector({
       </div>
 
       {/* Prompt Output Code Viewer */}
-      <div className="flex-1 flex flex-col min-h-0 p-2.5">
+      <div className="flex min-h-0 flex-1 flex-col p-2.5">
         <PromptOutputViewer
           content={exportOutput.primaryClipboardText}
           secondaryContent={exportOutput.secondaryClipboardText}

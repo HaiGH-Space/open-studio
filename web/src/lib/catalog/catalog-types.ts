@@ -4,133 +4,137 @@
  */
 
 export interface CatalogIndex {
-  readonly schemaVersion: 'open-studio-catalog/v1';
-  readonly generatedAt: string; // ISO 8601
-  readonly stats: CatalogStats;
-  readonly taxonomies: CatalogTaxonomies;
-  readonly designSystems: readonly DesignSystemCatalogEntry[];
-  readonly craftRules: readonly CraftRuleCatalogEntry[];
-  readonly skills: readonly SkillCatalogEntry[];
-  readonly templates: readonly TemplateCatalogEntry[];
+  readonly schemaVersion: "open-studio-catalog/v1"
+  readonly generatedAt: string // ISO 8601
+  readonly stats: CatalogStats
+  readonly taxonomies: CatalogTaxonomies
+  readonly designSystems: readonly DesignSystemCatalogEntry[]
+  readonly craftRules: readonly CraftRuleCatalogEntry[]
+  readonly skills: readonly SkillCatalogEntry[]
+  readonly templates: readonly TemplateCatalogEntry[]
 }
 
 export interface CatalogStats {
-  readonly totalDesignSystems: number;
-  readonly totalCraftRules: number;
-  readonly totalSkills: number;
-  readonly totalTemplates: number;
+  readonly totalDesignSystems: number
+  readonly totalCraftRules: number
+  readonly totalSkills: number
+  readonly totalTemplates: number
 }
 
 export interface CatalogTaxonomies {
-  readonly categories: readonly string[];
-  readonly tags: readonly string[];
-  readonly surfaces: readonly string[];
+  readonly categories: readonly string[]
+  readonly tags: readonly string[]
+  readonly surfaces: readonly string[]
 }
 
 export interface ColorSwatches {
-  readonly primary?: string;
-  readonly background?: string;
-  readonly foreground?: string;
-  readonly accent?: string;
-  readonly muted?: string;
+  readonly primary?: string
+  readonly background?: string
+  readonly foreground?: string
+  readonly accent?: string
+  readonly muted?: string
 }
 
 export interface TokenSummary {
-  readonly totalCssVariables: number;
-  readonly hasColorRamps: boolean;
-  readonly hasRadiusTokens: boolean;
-  readonly hasTypographyTokens: boolean;
-  readonly condensedCssVariablesCount: number;
-  readonly previewDeclarations: readonly string[]; // Top 8 key declarations
+  readonly totalCssVariables: number
+  readonly hasColorRamps: boolean
+  readonly hasRadiusTokens: boolean
+  readonly hasTypographyTokens: boolean
+  readonly condensedCssVariablesCount: number
+  readonly previewDeclarations: readonly string[] // Top 8 key declarations
 }
 
 export interface DesignSystemCatalogEntry {
-  readonly id: string; // e.g. "linear-app", "stripe", "apple"
-  readonly name: string; // e.g. "Linear"
-  readonly category: string; // e.g. "Productivity & SaaS"
-  readonly description: string;
-  readonly tags: readonly string[]; // e.g. ["dark-mode", "minimal", "bento", "saas"]
-  readonly swatches: ColorSwatches;
-  readonly tokenSummary: TokenSummary;
+  readonly id: string // e.g. "linear-app", "stripe", "apple"
+  readonly name: string // e.g. "Linear"
+  readonly category: string // e.g. "Productivity & SaaS"
+  readonly description: string
+  readonly tags: readonly string[] // e.g. ["dark-mode", "minimal", "bento", "saas"]
+  readonly swatches: ColorSwatches
+  readonly tokenSummary: TokenSummary
   readonly craft: {
-    readonly suggested: readonly string[];
-    readonly exemptions: readonly string[];
-  };
+    readonly suggested: readonly string[]
+    readonly exemptions: readonly string[]
+  }
   readonly availableFiles: {
-    readonly hasUsage: boolean;
-    readonly hasDesignMd: boolean;
-    readonly hasTokensCss: boolean;
-    readonly hasTailwindCss: boolean;
-    readonly hasComponentsHtml: boolean;
-    readonly hasComponentsManifest: boolean;
-  };
+    readonly hasUsage: boolean
+    readonly hasDesignMd: boolean
+    readonly hasTokensCss: boolean
+    readonly hasTailwindCss: boolean
+    readonly hasComponentsHtml: boolean
+    readonly hasComponentsManifest: boolean
+  }
   readonly assetPaths: {
-    readonly basePath: string; // e.g. "data/design-systems/linear-app"
-    readonly usage?: string;
-    readonly designMd?: string;
-    readonly tokensCss?: string;
-    readonly tailwindCss?: string;
-    readonly componentsHtml?: string;
-    readonly componentsManifest?: string;
-  };
+    readonly basePath: string // e.g. "data/design-systems/linear-app"
+    readonly usage?: string
+    readonly designMd?: string
+    readonly tokensCss?: string
+    readonly tailwindCss?: string
+    readonly componentsHtml?: string
+    readonly componentsManifest?: string
+  }
 }
 
 export interface CraftRuleCatalogEntry {
-  readonly id: string; // e.g. "anti-ai-slop", "typography-hierarchy"
-  readonly name: string; // e.g. "Anti-AI-Slop Discipline"
-  readonly category: 'discipline' | 'typography' | 'color' | 'ux' | 'accessibility' | 'motion';
-  readonly description: string;
-  readonly ruleCount: number;
-  readonly isDefaultEnabled: boolean;
-  readonly assetPath: string; // e.g. "data/craft/anti-ai-slop.md"
+  readonly id: string // e.g. "anti-ai-slop", "typography-hierarchy"
+  readonly name: string // e.g. "Anti-AI-Slop Discipline"
+  readonly category:
+    "discipline" | "typography" | "color" | "ux" | "accessibility" | "motion"
+  readonly description: string
+  readonly ruleCount: number
+  readonly isDefaultEnabled: boolean
+  readonly assetPath: string // e.g. "data/craft/anti-ai-slop.md"
 }
 
 export interface SkillCatalogEntry {
-  readonly id: string; // e.g. "emilkowalski-motion", "d3-visualization"
-  readonly name: string;
-  readonly description: string;
-  readonly category: string;
-  readonly triggers: readonly string[];
-  readonly assetPath: string; // e.g. "data/skills/emilkowalski-motion/SKILL.md"
+  readonly id: string // e.g. "emilkowalski-motion", "d3-visualization"
+  readonly name: string
+  readonly description: string
+  readonly category: string
+  readonly triggers: readonly string[]
+  readonly assetPath: string // e.g. "data/skills/emilkowalski-motion/SKILL.md"
 }
 
 export interface TemplateCatalogEntry {
-  readonly id: string; // e.g. "saas-landing", "fintech-dashboard"
-  readonly name: string;
-  readonly category: 'design-template' | 'prompt-template';
-  readonly description: string;
-  readonly surface: 'landing' | 'dashboard' | 'mobile' | 'deck' | 'form' | 'component' | 'media';
-  readonly assetPath: string;
-  readonly suggestedSystems?: readonly string[];
+  readonly id: string // e.g. "saas-landing", "fintech-dashboard"
+  readonly name: string
+  readonly category: "design-template" | "prompt-template"
+  readonly description: string
+  readonly surface:
+    "landing" | "dashboard" | "mobile" | "deck" | "form" | "component" | "media"
+  readonly assetPath: string
+  readonly suggestedSystems?: readonly string[]
 }
 
 export interface DesignSystemBundle {
-  readonly usage?: string;
-  readonly designMd?: string;
-  readonly tokensCss?: string;
-  readonly componentsHtml?: string;
+  readonly usage?: string
+  readonly designMd?: string
+  readonly tokensCss?: string
+  readonly componentsHtml?: string
 }
 
 export interface ICatalogService {
   /** Loads the cached catalog index or fetches from public/catalog-index.json */
-  loadCatalog(): Promise<CatalogIndex>;
+  loadCatalog(): Promise<CatalogIndex>
 
   /** Retrieves a raw Markdown, CSS, or JSON text file on demand */
-  fetchAssetContent(assetRelativePath: string): Promise<string>;
+  fetchAssetContent(assetRelativePath: string): Promise<string>
 
   /** Retrieves full or condensed CSS tokens for a design system */
-  fetchDesignTokens(systemId: string, mode: 'full' | 'condensed'): Promise<string>;
+  fetchDesignTokens(
+    systemId: string,
+    mode: "full" | "condensed"
+  ): Promise<string>
 
   /** Retrieves the bundled design system assets for composition */
-  fetchDesignSystemBundle(systemId: string): Promise<DesignSystemBundle>;
+  fetchDesignSystemBundle(systemId: string): Promise<DesignSystemBundle>
 
   /** Clears the in-memory cache for catalog index and assets */
-  clearCache(): void;
+  clearCache(): void
 
   /** Returns whether a given asset path is currently cached */
-  hasAssetCached(assetRelativePath: string): boolean;
+  hasAssetCached(assetRelativePath: string): boolean
 
   /** Synchronously returns the cached catalog index if already loaded, or null */
-  getLoadedCatalog(): CatalogIndex | null;
+  getLoadedCatalog(): CatalogIndex | null
 }
-
