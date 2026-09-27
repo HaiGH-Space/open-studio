@@ -346,6 +346,16 @@ describe("AppHeader & CommandMenuDialog (Task 11)", () => {
       expect(dialog?.getAttribute("data-open")).not.toBeNull()
       expect(document.body.textContent).toContain("Quick Command Palette")
     })
+
+    it("renders sidebar toggle trigger button with correct accessibility and shortcut hint", () => {
+      renderWithProviders(<AppHeader />)
+      const sidebarTrigger = container.querySelector(
+        "[data-slot='sidebar-trigger']"
+      ) as HTMLButtonElement
+      expect(sidebarTrigger).toBeTruthy()
+      expect(sidebarTrigger.getAttribute("aria-label")).toContain("Toggle Prompt Inspector")
+      expect(sidebarTrigger.getAttribute("title")).toContain("Ctrl+B")
+    })
   })
 
   describe("CommandMenuDialog Component", () => {

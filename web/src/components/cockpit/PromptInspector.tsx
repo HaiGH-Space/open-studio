@@ -1,10 +1,21 @@
 import type { ComponentType } from "react"
+import React from "react"
 import { useComposer } from "../../hooks/useComposer"
 import { type ActiveAgentTarget } from "../../context/composer-context-def"
 import { TokenGaugeBar } from "./TokenGaugeBar"
 import { LayerTokenStackedBar } from "./LayerTokenStackedBar"
 import { PromptOutputViewer } from "./PromptOutputViewer"
 import { ExportFooterBar } from "./ExportFooterBar"
+import {
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+  SidebarRail,
+  SidebarTrigger,
+  SidebarProvider,
+  SidebarContext,
+} from "@/components/ui/sidebar"
 import { cn } from "cn"
 import {
   Cpu as CpuIcon,
@@ -12,6 +23,7 @@ import {
   Sparkles as SparklesIcon,
   Code as CodeIcon,
   Layers as LayersIcon,
+  PanelRightClose as PanelRightCloseIcon,
 } from "lucide-react"
 
 export interface PromptInspectorProps {
@@ -58,7 +70,7 @@ const AGENT_TARGET_TABS: readonly AgentTabOption[] = [
   },
 ]
 
-export function PromptInspector({
+function PromptInspectorInner({
   className,
   modelLimit = 128000,
 }: PromptInspectorProps) {
@@ -75,24 +87,36 @@ export function PromptInspector({
   const activeTabMeta = AGENT_TARGET_TABS.find((tab) => tab.id === agentTarget)
 
   return (
-    <aside
+    <Sidebar
+      side="right"
+      collapsible="offcanvas"
       data-slot="prompt-inspector"
       className={cn(
-        "flex h-full w-80 shrink-0 flex-col overflow-hidden border-l border-border/60 bg-card/30 lg:w-[30rem]",
+        "top-13 h-[calc(100svh-3.25rem)] border-l border-border/60 bg-card/30",
         className
       )}
     >
       {/* Top Header: Agent Target Selector Tabs */}
-      <div className="flex shrink-0 flex-col gap-2 border-b border-border/60 bg-background/50 p-3 backdrop-blur-md select-none">
+      <SidebarHeader className="shrink-0 flex-col gap-2 border-b border-border/60 bg-background/50 p-3 backdrop-blur-md select-none">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
             <LayersIcon className="size-3.5 text-primary" />
             <span>Prompt Inspector</span>
           </div>
 
-          <span className="font-mono text-[10px] text-muted-foreground">
-            {compiledPrompt.totalTokens.toLocaleString()} tokens
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-[10px] text-muted-foreground">
+              {compiledPrompt.totalTokens.toLocaleString()} tokens
+            </span>
+            <SidebarTrigger
+              data-slot="sidebar-collapse-trigger"
+              title="Collapse Prompt Inspector (Ctrl+B)"
+              aria-label="Collapse Prompt Inspector"
+              className="size-6 cursor-pointer rounded-md p-0 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+            >
+              <PanelRightCloseIcon className="size-3.5" />
+            </SidebarTrigger>
+          </div>
         </div>
 
         {/* Turn Mode Selector Toggle */}
@@ -168,31 +192,59 @@ export function PromptInspector({
             {activeTabMeta.hint}
           </div>
         )}
-      </div>
+      </SidebarHeader>
 
-      {/* Live Token Gauge & Layer Breakdown Bar */}
-      <div className="flex shrink-0 flex-col gap-2 border-b border-border/50 bg-background/30 px-3.5 py-2.5">
-        <TokenGaugeBar
-          tokenCount={compiledPrompt.totalTokens}
-          modelLimit={modelLimit}
-        />
-        <LayerTokenStackedBar
-          breakdown={compiledPrompt.layerBreakdown}
-          totalTokens={compiledPrompt.totalTokens}
-        />
-      </div>
+      {/* Main Scrollable Content */}
+      <SidebarContent className="no-scrollbar flex min-h-0 flex-1 flex-col gap-0 overflow-hidden p-0">
+        {/* Live Token Gauge & Layer Breakdown Bar */}
+        <div className="flex shrink-0 flex-col gap-2 border-b border-border/50 bg-background/30 px-3.5 py-2.5">
+          <TokenGaugeBar
+            tokenCount={compiledPrompt.totalTokens}
+            modelLimit={modelLimit}
+          />
+          <LayerTokenStackedBar
+            breakdown={compiledPrompt.layerBreakdown}
+            totalTokens={compiledPrompt.totalTokens}
+          />
+        </div>
 
-      {/* Prompt Output Code Viewer */}
-      <div className="flex min-h-0 flex-1 flex-col p-2.5">
-        <PromptOutputViewer
-          content={exportOutput.primaryClipboardText}
-          secondaryContent={exportOutput.secondaryClipboardText}
-          format={agentTarget}
-        />
-      </div>
+        {/* Prompt Output Code Viewer */}
+        <div className="flex min-h-0 flex-1 flex-col p-2.5">
+          <PromptOutputViewer
+            content={exportOutput.primaryClipboardText}
+            secondaryContent={exportOutput.secondaryClipboardText}
+            format={agentTarget}
+          />
+        </div>
+      </SidebarContent>
 
-      {/* Bottom Export Action Bar */}
-      <ExportFooterBar />
-    </aside>
+      {/* Bottom Export Action Bar in SidebarFooter */}
+      <SidebarFooter className="p-0">
+        <ExportFooterBar />
+      </SidebarFooter>
+
+      {/* Edge Rail for click-to-toggle or resize */}
+      <SidebarRail />
+    </Sidebar>
   )
+}
+
+export function PromptInspector(props: PromptInspectorProps) {
+  const hasSidebarContext = React.useContext(SidebarContext) !== null
+  if (!hasSidebarContext) {
+    return (
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "30rem",
+            "--sidebar-width-mobile": "22rem",
+          } as React.CSSProperties
+        }
+      >
+        <PromptInspectorInner {...props} />
+      </SidebarProvider>
+    )
+  }
+
+  return <PromptInspectorInner {...props} />
 }

@@ -672,5 +672,57 @@ describe("Right Column: Prompt Inspector & Exporters (Task 15)", () => {
       viewer = container.querySelector('[data-slot="prompt-output-viewer"]')
       expect(viewer?.textContent).toContain("<open-studio-directive")
     })
+
+    it("renders shadcn Sidebar primitives including SidebarHeader, SidebarContent, SidebarFooter, and SidebarRail", async () => {
+      const mockService = createMockCatalogService()
+      await act(async () => {
+        root.render(
+          <CatalogProvider catalogService={mockService} autoLoad={false}>
+            <ComposerProvider catalogService={mockService}>
+              <PromptInspector />
+            </ComposerProvider>
+          </CatalogProvider>
+        )
+      })
+
+      expect(container.querySelector('[data-slot="sidebar-header"]')).not.toBeNull()
+      expect(container.querySelector('[data-slot="sidebar-content"]')).not.toBeNull()
+      expect(container.querySelector('[data-slot="sidebar-footer"]')).not.toBeNull()
+      expect(container.querySelector('[data-slot="sidebar-rail"]')).not.toBeNull()
+      expect(container.querySelector('[data-slot="sidebar-collapse-trigger"]')).not.toBeNull()
+    })
+
+    it("collapses and expands sidebar when collapse trigger button is clicked", async () => {
+      const mockService = createMockCatalogService()
+      await act(async () => {
+        root.render(
+          <CatalogProvider catalogService={mockService} autoLoad={false}>
+            <ComposerProvider catalogService={mockService}>
+              <PromptInspector />
+            </ComposerProvider>
+          </CatalogProvider>
+        )
+      })
+
+      const collapseBtn = container.querySelector(
+        '[data-slot="sidebar-collapse-trigger"]'
+      ) as HTMLButtonElement
+      expect(collapseBtn).not.toBeNull()
+
+      const sidebarEl = container.querySelector('[data-slot="prompt-inspector"]')
+      expect(sidebarEl?.getAttribute("data-state")).toBe("expanded")
+
+      await act(async () => {
+        collapseBtn.click()
+      })
+
+      expect(sidebarEl?.getAttribute("data-state")).toBe("collapsed")
+
+      await act(async () => {
+        collapseBtn.click()
+      })
+
+      expect(sidebarEl?.getAttribute("data-state")).toBe("expanded")
+    })
   })
 })

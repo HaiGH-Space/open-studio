@@ -12,7 +12,9 @@ import {
   Check as CheckIcon,
   Palette as PaletteIcon,
   AlertTriangle as AlertTriangleIcon,
+  PanelRight as PanelRightIcon,
 } from "lucide-react"
+import { SidebarTrigger } from "../ui/sidebar"
 import { cn } from "cn"
 
 export interface AppHeaderProps {
@@ -77,7 +79,7 @@ export function AppHeader({
       <header
         data-slot="app-header"
         className={cn(
-          "sticky top-0 z-40 flex w-full items-center justify-between gap-4 border-b border-border/70 bg-background/80 px-4 py-2.5 backdrop-blur-md select-none",
+          "sticky top-0 z-40 flex h-13 w-full items-center justify-between gap-4 border-b border-border/70 bg-background/80 px-4 py-2.5 backdrop-blur-md select-none",
           className
         )}
       >
@@ -217,6 +219,16 @@ export function AppHeader({
               </>
             )}
           </Button>
+
+          {/* Toggle Prompt Inspector Sidebar Button */}
+          <SidebarTrigger
+            data-slot="sidebar-trigger"
+            title="Toggle Prompt Inspector (Ctrl+B)"
+            aria-label="Toggle Prompt Inspector"
+            className="h-8 w-8 cursor-pointer rounded-full border border-border/70 bg-input/20 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <PanelRightIcon className="size-4" />
+          </SidebarTrigger>
         </div>
       </header>
 

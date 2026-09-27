@@ -1,4 +1,5 @@
 "use client"
+/* eslint-disable react-refresh/only-export-components */
 
 import * as React from "react"
 import { mergeProps } from "@base-ui/react/merge-props"
@@ -156,18 +157,20 @@ function Sidebar({
   className,
   children,
   dir,
+  "data-slot": dataSlot = "sidebar",
   ...props
 }: React.ComponentProps<"div"> & {
   side?: "left" | "right"
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
+  "data-slot"?: string
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
   if (collapsible === "none") {
     return (
       <div
-        data-slot="sidebar"
+        data-slot={dataSlot}
         className={cn(
           "flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground",
           className
@@ -185,7 +188,7 @@ function Sidebar({
         <SheetContent
           dir={dir}
           data-sidebar="sidebar"
-          data-slot="sidebar"
+          data-slot={dataSlot}
           data-mobile="true"
           className="w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
           style={
@@ -212,7 +215,7 @@ function Sidebar({
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}
       data-side={side}
-      data-slot="sidebar"
+      data-slot={dataSlot}
     >
       {/* This is what handles the sidebar gap on desktop */}
       <div
@@ -254,9 +257,10 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
+  children,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  const context = React.useContext(SidebarContext)
 
   return (
     <Button
@@ -267,18 +271,18 @@ function SidebarTrigger({
       className={cn(className)}
       onClick={(event) => {
         onClick?.(event)
-        toggleSidebar()
+        context?.toggleSidebar()
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      {children ?? <PanelLeftIcon />}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
-  const { toggleSidebar } = useSidebar()
+  const context = React.useContext(SidebarContext)
 
   return (
     <button
@@ -286,7 +290,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       data-slot="sidebar-rail"
       aria-label="Toggle Sidebar"
       tabIndex={-1}
-      onClick={toggleSidebar}
+      onClick={() => context?.toggleSidebar()}
       title="Toggle Sidebar"
       className={cn(
         "absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] hover:after:bg-sidebar-border sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2",
@@ -719,6 +723,7 @@ export {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarProvider,
+  SidebarContext,
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
