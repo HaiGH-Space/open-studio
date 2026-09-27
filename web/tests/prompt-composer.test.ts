@@ -70,12 +70,12 @@ describe("9-Layer Prompt Composer Core Engine & Compilers", () => {
 
       expect(config.layer3AuthoritativeConstraints.enabled).toBe(true)
       expect(config.layer3AuthoritativeConstraints.targetFramework).toBe(
-        "react"
+        "html-vanilla"
       )
       expect(config.layer3AuthoritativeConstraints.cssEngine).toBe(
-        "tailwind-v4"
+        "vanilla-css"
       )
-      expect(config.layer3AuthoritativeConstraints.viewport).toBe("responsive")
+      expect(config.layer3AuthoritativeConstraints.viewport).toBe("desktop-only")
 
       expect(config.layer4WorkflowManifest.enabled).toBe(true)
       expect(config.layer4WorkflowManifest.taskKind).toBe("application")

@@ -314,7 +314,7 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       })
 
       const badgeL3 = container.querySelector("[data-slot='layer-badge-l3']")
-      expect(badgeL3?.textContent?.toLowerCase()).toContain("react")
+      expect(badgeL3?.textContent?.toLowerCase()).toContain("html-vanilla")
     })
   })
 
@@ -445,11 +445,11 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       expect(viewportSelect).toBeTruthy()
 
       await act(async () => {
-        viewportSelect.value = "desktop-only"
+        viewportSelect.value = "responsive"
         viewportSelect.dispatchEvent(new Event("change", { bubbles: true }))
       })
 
-      expect(viewportSelect.value).toBe("desktop-only")
+      expect(viewportSelect.value).toBe("responsive")
     })
 
     it("allows adding and removing strict hard rules", async () => {

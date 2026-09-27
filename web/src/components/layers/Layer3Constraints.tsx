@@ -18,7 +18,7 @@ const FRAMEWORK_ITEMS = [
   { value: "react", label: "React 19" },
   { value: "nextjs", label: "Next.js (App Router)" },
   { value: "vite", label: "Vite + React" },
-  { value: "html-vanilla", label: "HTML Vanilla" },
+  { value: "html-vanilla", label: "HTML Vanilla + JS" },
   { value: "vue", label: "Vue 3" },
   { value: "svelte", label: "Svelte 5" },
 ]

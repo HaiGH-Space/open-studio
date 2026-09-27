@@ -150,9 +150,9 @@ export function createDefaultComposerConfig(): ComposerConfig {
     },
     layer3AuthoritativeConstraints: {
       enabled: true,
-      targetFramework: "react",
-      cssEngine: "tailwind-v4",
-      viewport: "responsive",
+      targetFramework: "html-vanilla",
+      cssEngine: "vanilla-css",
+      viewport: "desktop-only",
       strictHardRules: [],
     },
     layer4WorkflowManifest: {

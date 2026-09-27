@@ -430,7 +430,7 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       expect(result.current.config.layer1Security.enabled).toBe(true)
       expect(
         result.current.config.layer3AuthoritativeConstraints.targetFramework
-      ).toBe("react")
+      ).toBe("html-vanilla")
       expect(result.current.compiledPrompt).toBeDefined()
       expect(result.current.compiledPrompt.fullPrompt).toContain(
         "<open-studio-directive"
@@ -783,7 +783,7 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       })
       expect(
         result.current.config.layer3AuthoritativeConstraints.targetFramework
-      ).toBe("react")
+      ).toBe("html-vanilla")
     })
   })
 
