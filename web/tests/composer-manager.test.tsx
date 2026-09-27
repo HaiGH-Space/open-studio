@@ -400,11 +400,34 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       const badgeL3 = container.querySelector("[data-slot='layer-badge-l3']")
       expect(badgeL3?.textContent?.toLowerCase()).toContain("off")
     })
+    it("defaults L1 and L2 to collapsed while L3 through L9 default to expanded", () => {
+      renderWithProviders(<ComposerManager />)
+      const triggerL1 = container.querySelector(
+        "[data-slot='layer-accordion-l1'] [data-slot='accordion-trigger']"
+      )
+      const triggerL2 = container.querySelector(
+        "[data-slot='layer-accordion-l2'] [data-slot='accordion-trigger']"
+      )
+      const triggerL3 = container.querySelector(
+        "[data-slot='layer-accordion-l3'] [data-slot='accordion-trigger']"
+      )
+
+      expect(triggerL1?.getAttribute("aria-expanded")).toBe("false")
+      expect(triggerL2?.getAttribute("aria-expanded")).toBe("false")
+      expect(triggerL3?.getAttribute("aria-expanded")).toBe("true")
+    })
   })
 
   describe("Layer 1: Security Guardrails", () => {
-    it("renders strict mode switch as permanently enabled and non-interactive", async () => {
+    it("renders strict mode switch as permanently enabled and non-interactive when expanded", async () => {
       renderWithProviders(<ComposerManager />)
+      const triggerL1 = container.querySelector(
+        "[data-slot='layer-accordion-l1'] [data-slot='accordion-trigger']"
+      ) as HTMLElement
+      await act(async () => {
+        triggerL1.click()
+      })
+
       const strictSwitch = container.querySelector(
         "[data-slot='l1-strict-mode-toggle']"
       ) as HTMLElement
@@ -425,8 +448,15 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
   })
 
   describe("Layer 2: Runtime Inspection Contract", () => {
-    it("renders enforceDataOdId and injectQuestionProtocol toggles as permanently enabled and non-interactive", async () => {
+    it("renders enforceDataOdId and injectQuestionProtocol toggles as permanently enabled and non-interactive when expanded", async () => {
       renderWithProviders(<ComposerManager />)
+      const triggerL2 = container.querySelector(
+        "[data-slot='layer-accordion-l2'] [data-slot='accordion-trigger']"
+      ) as HTMLElement
+      await act(async () => {
+        triggerL2.click()
+      })
+
       const odIdToggle = container.querySelector(
         "[data-slot='l2-enforce-data-od-id-toggle']"
       ) as HTMLElement

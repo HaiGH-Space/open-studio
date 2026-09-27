@@ -215,7 +215,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
 
         <Accordion
           type="multiple"
-          defaultValue={["l1", "l2", "l3", "l4", "l5", "l6", "l7", "l8", "l9"]}
+          defaultValue={["l3", "l4", "l5", "l6", "l7", "l8", "l9"]}
           className="divide-y divide-border/60 overflow-hidden rounded-xl border-border/70 bg-card/40"
         >
           {/* L1: Security Guardrails */}
