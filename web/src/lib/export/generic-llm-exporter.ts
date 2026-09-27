@@ -54,6 +54,7 @@ export class GenericLlmExporter implements IAgentExporter {
     const l5 = config.layer5BrandContract
     const l8 = config.layer8UserMemory
     const l9 = config.layer9BriefAndClarification
+    const isTurn1 = result.turnMode === "turn1_discovery"
 
     const hardRules =
       l3.enabled && l3.strictHardRules.length > 0
@@ -75,9 +76,38 @@ export class GenericLlmExporter implements IAgentExporter {
 
     const userBriefSection = this.formatUserBrief(l9)
 
-    return [
+    const turn1Callout = [
+      "> ### MANDATORY INSTRUCTION FOR THE AI (TURN 1 OF 2: CLARIFICATION ONLY)",
+      "> - **DO NOT WRITE CODE, HTML, CSS, OR PROJECT FILES YET.**",
+      "> - **DO NOT summarize, review, or analyze the requirements or prompt components.**",
+      "> - **DO NOT provide conversational filler, preambles, or acknowledgment prose.**",
+      "> - **YOUR SOLE AND IMMEDIATE TASK:** Formulate 3 to 6 targeted clarification questions to resolve ambiguities in the brief below.",
+      "> - **OUTPUT FORMAT:** You MUST reply with an inline `<question-form>` XML artifact conforming to this schema:",
+      ">",
+      "> ```xml",
+      "> <question-form>",
+      '>   <field name="field_name" type="select" label="Question Label" options="Option A, Option B, Option C" default="Option A" />',
+      '>   <field name="another_field" type="text" label="Short text question" placeholder="Brief hint..." />',
+      "> </question-form>",
+      "> ```",
+      "> *(Supported types: select, checkbox, text, textarea)*",
+    ].join("\n")
+
+    const turn2Callout = [
+      "> ### PRODUCTION EXECUTION MANDATE (TURN 2 OF 2: FINAL CODE)",
+      "> - All design directions and requirements are finalized in the clarification answers below.",
+      "> - Do NOT ask further questions and do NOT output `<question-form>`.",
+      "> - Proceed immediately to generate the complete production-grade files and implementation code.",
+    ].join("\n")
+
+    const lines = [
       "# Open Studio Design Directive",
       "<!-- Formatted for ChatGPT, v0, Lovable, and Gemini -->",
+      "",
+      isTurn1 ? turn1Callout : turn2Callout,
+      "",
+      "## User Objective & Requirements",
+      userBriefSection,
       "",
       "## System Directives & Constraints",
       `- **Framework:** ${l3.targetFramework}`,
@@ -91,16 +121,21 @@ export class GenericLlmExporter implements IAgentExporter {
       "```xml",
       result.systemPromptBlock,
       "```",
-      "",
-      "## User Objective & Requirements",
-      userBriefSection,
     ]
-      .filter((line) => line !== "")
-      .join("\n")
+
+    if (isTurn1) {
+      lines.push(
+        "",
+        "---",
+        "**FINAL MANDATE:** Output ONLY the `<question-form>` XML artifact with your 3-6 clarification questions. Do not write code or prompt analysis."
+      )
+    }
+
+    return lines.filter((line) => line !== "").join("\n")
   }
 
   private buildUserPrompt(
-    _result: CompiledPromptResult,
+    result: CompiledPromptResult,
     config: ComposerConfig
   ): string {
     const l9 = config.layer9BriefAndClarification
@@ -111,7 +146,20 @@ export class GenericLlmExporter implements IAgentExporter {
     ) {
       return ""
     }
-    return this.formatUserBrief(l9)
+    const brief = this.formatUserBrief(l9)
+    if (result.turnMode === "turn1_discovery") {
+      return [
+        "[TURN 1: CLARIFICATION ONLY - DO NOT WRITE CODE - DO NOT SUMMARIZE]",
+        "Formulate 3-6 clarification questions wrapped in <question-form> conforming to:",
+        "<question-form>",
+        '  <field name="field_name" type="select" label="Question Label" options="Option A, Option B" default="Option A" />',
+        '  <field name="another_field" type="text" label="Short text question" placeholder="Brief hint..." />',
+        "</question-form>",
+        "",
+        brief,
+      ].join("\n")
+    }
+    return brief
   }
 
   private formatUserBrief(

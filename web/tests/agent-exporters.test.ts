@@ -266,6 +266,36 @@ describe("Agent-Specific Export Formatters", () => {
       expect(promptXml?.mimeType).toBe("application/xml")
       expect(promptXml?.content).toBe(result.fullPrompt)
     })
+
+    it("enforces Turn 1 question elicitation callout and Turn 2 execution mandate", () => {
+      const config = createSampleConfig()
+      const turn1Result = compilePrompt(config, sampleAssets, "turn1_discovery")
+      const turn2Result = compilePrompt(config, sampleAssets, "turn2_execution")
+
+      const turn1Pkg = genericLlmExporter.formatExport(turn1Result, config)
+      const turn2Pkg = genericLlmExporter.formatExport(turn2Result, config)
+
+      // Turn 1 Generic LLM
+      expect(turn1Pkg.primaryClipboardText).toContain("MANDATORY INSTRUCTION FOR THE AI (TURN 1 OF 2: CLARIFICATION ONLY)")
+      expect(turn1Pkg.primaryClipboardText).toContain("DO NOT WRITE CODE")
+      expect(turn1Pkg.primaryClipboardText).toContain("DO NOT summarize, review, or analyze")
+      expect(turn1Pkg.primaryClipboardText).toContain("<question-form>")
+      expect(turn1Pkg.secondaryClipboardText).toContain("[TURN 1: CLARIFICATION ONLY")
+
+      // Turn 2 Generic LLM
+      expect(turn2Pkg.primaryClipboardText).toContain("PRODUCTION EXECUTION MANDATE (TURN 2 OF 2: FINAL CODE)")
+      expect(turn2Pkg.primaryClipboardText).not.toContain("TURN 1 OF 2: CLARIFICATION ONLY")
+
+      // Turn 1 Claude Code
+      const claudeTurn1 = claudeCodeExporter.formatExport(turn1Result, config)
+      expect(claudeTurn1.primaryClipboardText).toContain("TURN 1 MANDATE: Do NOT write code")
+      expect(claudeTurn1.primaryClipboardText).toContain("DO NOT summarize, analyze, or explain")
+      expect(claudeTurn1.primaryClipboardText).toContain("<discovery-directive>")
+
+      // Turn 1 Cursor
+      const cursorTurn1 = cursorExporter.formatExport(turn1Result, config)
+      expect(cursorTurn1.secondaryClipboardText).toContain("[TURN 1: CLARIFICATION ONLY - DO NOT WRITE CODE - DO NOT SUMMARIZE]")
+    })
   })
 
   describe("Exporter Registry & Helper Utilities", () => {

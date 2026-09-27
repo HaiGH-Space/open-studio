@@ -387,7 +387,18 @@ describe("9-Layer Prompt Composer Core Engine & Compilers", () => {
       expect(result.fullPrompt).toContain(
         "<objective>Design an executive dashboard</objective>"
       )
+      expect(result.fullPrompt).toContain(
+        "TURN 1 MANDATE: DISCOVERY & CLARIFICATION ONLY"
+      )
+      expect(result.fullPrompt).toContain("DO NOT WRITE CODE")
+      expect(result.fullPrompt).toContain(
+        "DO NOT SUMMARIZE OR ANALYZE THIS PROMPT"
+      )
       expect(result.fullPrompt).toContain("<discovery-directive>")
+      expect(result.fullPrompt).toContain(
+        "CRITICAL MANDATE & STRICT NEGATIVE CONSTRAINTS"
+      )
+      expect(result.fullPrompt).toContain("YOUR SOLE AND IMMEDIATE DELIVERABLE")
       expect(result.fullPrompt).toContain(
         '<field name="field_name" type="select"'
       )

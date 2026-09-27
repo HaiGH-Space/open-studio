@@ -115,19 +115,38 @@ export function compilePrompt(
   // Turn 1: Discovery Directive with micro-schema
   // Turn 2: Execution Mandate
   if (turn === "turn1_discovery") {
+    // Top banner for Turn 1 to prime the LLM immediately before reading long constraints
+    directiveBlocks.unshift(
+      [
+        "  <!-- ============================================================================== -->",
+        "  <!-- TURN 1 MANDATE: DISCOVERY & CLARIFICATION ONLY                                  -->",
+        "  <!-- DO NOT WRITE CODE. DO NOT SUMMARIZE OR ANALYZE THIS PROMPT.                    -->",
+        "  <!-- YOUR ONLY ACTION IS TO ASK 3-6 CLARIFICATION QUESTIONS VIA <question-form>.     -->",
+        "  <!-- SEE <discovery-directive> AT THE END FOR THE EXACT REQUIRED XML SCHEMA.         -->",
+        "  <!-- ============================================================================== -->",
+      ].join("\n")
+    )
+
     const discoveryDirective = [
       "  <discovery-directive>",
-      "    DISCOVERY & QUESTION ELICITATION PROTOCOL:",
-      "    - Do NOT write code, scaffold files, or complete the design implementation yet.",
-      "    - Analyze the user brief (Layer 8), authoritative constraints, brand contract, and craft requirements.",
-      "    - Elicit design clarifications by outputting an inline <question-form> XML artifact conforming EXACTLY to this schema:",
+      "    DISCOVERY & QUESTION ELICITATION PROTOCOL (TURN 1 OF 2):",
+      "    CRITICAL MANDATE & STRICT NEGATIVE CONSTRAINTS:",
+      "    1. DO NOT write code, scaffold files, or complete the design implementation yet.",
+      "    2. DO NOT summarize, analyze, or explain this prompt or its constraints in your response.",
+      "    3. DO NOT output conversational filler, preambles, or acknowledgment prose.",
+      "    4. YOUR SOLE AND IMMEDIATE DELIVERABLE in Turn 1 is to ask 3 to 6 targeted clarification questions.",
+      "    5. Elicit design clarifications by outputting an inline <question-form> XML artifact conforming EXACTLY to this schema:",
       "",
       "    <question-form>",
       '      <field name="field_name" type="select" label="Question Label" options="Option A, Option B, Option C" default="Option A" />',
       '      <field name="another_field" type="text" label="Short text question" placeholder="Brief hint..." />',
       "    </question-form>",
       "",
-      "    - Focus questions strictly on ambiguities in layout, target audience, visual hierarchy, or interaction density.",
+      "    RULES FOR CLARIFICATION QUESTIONS:",
+      "    - Supported field types: select (for single-choice radio/dropdown), checkbox (for multi-select), text, textarea.",
+      "    - Focus questions strictly on key design decisions: visual direction, layout structure, color/theme emphasis, component behaviors, or data density.",
+      "    - For 'select' or 'checkbox' fields, always provide 2 to 4 realistic options with a sensible default.",
+      "    - Your response must immediately output the <question-form> XML block so the user can answer it.",
       "  </discovery-directive>",
     ].join("\n")
     directiveBlocks.push(discoveryDirective)

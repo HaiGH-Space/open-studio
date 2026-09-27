@@ -131,15 +131,12 @@ export function compileLayer2RuntimeContract(
 
   if (config.injectQuestionProtocol) {
     lines.push(
-      "  INTERACTIVE CLARIFICATION PROTOCOL: When user requirements are ambiguous, contradictory, or lack essential visual specifications, do NOT guess or produce generic AI placeholder styling. Instead, formulate a structured `<question-form>` XML response matching this schema:",
-      '  <question-form id="unique-form-id" title="Clarification Request">',
-      '    <question id="q1" type="radio" required="true">',
-      "      <label>Question label</label>",
-      '      <option value="opt-1">Option 1</option>',
-      '      <option value="opt-2">Option 2</option>',
-      "    </question>",
+      "  INTERACTIVE CLARIFICATION PROTOCOL (MANDATORY IN TURN 1): When in Turn 1, do NOT guess, do NOT write code, and do NOT summarize the prompt. Instead, formulate a structured `<question-form>` XML response matching this schema:",
+      '  <question-form id="clarification-request" title="Clarification Request">',
+      '    <field name="field_name" type="select" label="Question label" options="Option 1, Option 2" default="Option 1" />',
+      '    <field name="another_field" type="text" label="Short text question" placeholder="Brief hint..." />',
       "  </question-form>",
-      "  Supported question types: radio, checkbox, text, textarea."
+      "  Supported question types: select (radio/choice), checkbox, text, textarea."
     )
   }
 
