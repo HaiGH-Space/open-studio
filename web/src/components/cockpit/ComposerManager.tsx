@@ -228,16 +228,10 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                     <span>L1: Security Guardrails</span>
                     <Badge
                       data-slot="layer-badge-l1"
-                      variant={
-                        config.layer1Security.enabled ? "default" : "outline"
-                      }
+                      variant="default"
                       className="ml-1 font-mono text-[10px] capitalize"
                     >
-                      {!config.layer1Security.enabled
-                        ? "Off"
-                        : config.layer1Security.strictMode
-                          ? "Strict"
-                          : "Active"}
+                      {config.layer1Security.strictMode ? "Strict" : "Active"}
                     </Badge>
                   </div>
                 </AccordionTrigger>
@@ -246,10 +240,10 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 data-slot="layer-toggle-l1"
                 size="sm"
                 checked={config.layer1Security.enabled}
-                onCheckedChange={(checked) =>
-                  updateLayer("layer1Security", { enabled: checked })
-                }
-                aria-label="Toggle Layer 1 Security Guardrails"
+                disabled={true}
+                aria-disabled="true"
+                aria-label="Layer 1 Security Guardrails is always enabled"
+                title="Layer 1 is always applied and enabled"
               />
             </div>
             <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
@@ -267,18 +261,12 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                     <span>L2: Runtime Contract</span>
                     <Badge
                       data-slot="layer-badge-l2"
-                      variant={
-                        config.layer2RuntimeContract.enabled
-                          ? "default"
-                          : "outline"
-                      }
+                      variant="default"
                       className="ml-1 font-mono text-[10px] capitalize"
                     >
-                      {!config.layer2RuntimeContract.enabled
-                        ? "Off"
-                        : config.layer2RuntimeContract.enforceDataOdId
-                          ? "data-od-id"
-                          : "Active"}
+                      {config.layer2RuntimeContract.enforceDataOdId
+                        ? "data-od-id"
+                        : "Active"}
                     </Badge>
                   </div>
                 </AccordionTrigger>
@@ -287,10 +275,10 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 data-slot="layer-toggle-l2"
                 size="sm"
                 checked={config.layer2RuntimeContract.enabled}
-                onCheckedChange={(checked) =>
-                  updateLayer("layer2RuntimeContract", { enabled: checked })
-                }
-                aria-label="Toggle Layer 2 Runtime Contract"
+                disabled={true}
+                aria-disabled="true"
+                aria-label="Layer 2 Runtime Contract is always enabled"
+                title="Layer 2 is always applied and enabled"
               />
             </div>
             <AccordionContent className="border-t border-border/40 bg-background/50 p-4">

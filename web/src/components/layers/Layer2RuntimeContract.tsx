@@ -3,7 +3,7 @@ import { Switch } from "../ui/switch"
 import { Code2, HelpCircle } from "lucide-react"
 
 export function Layer2RuntimeContract() {
-  const { config, updateLayer } = useComposer()
+  const { config } = useComposer()
   const { enforceDataOdId, injectQuestionProtocol } =
     config.layer2RuntimeContract
 
@@ -30,10 +30,10 @@ export function Layer2RuntimeContract() {
         <Switch
           data-slot="l2-enforce-data-od-id-toggle"
           checked={enforceDataOdId}
-          onCheckedChange={(checked) =>
-            updateLayer("layer2RuntimeContract", { enforceDataOdId: checked })
-          }
-          aria-label="Toggle enforce data-od-id"
+          disabled={true}
+          aria-disabled="true"
+          aria-label="Enforce DOM inspection tags is permanently enabled"
+          title="DOM Inspection Tags (data-od-id) are permanently enforced"
         />
       </div>
 
@@ -59,12 +59,10 @@ export function Layer2RuntimeContract() {
         <Switch
           data-slot="l2-inject-question-protocol-toggle"
           checked={injectQuestionProtocol}
-          onCheckedChange={(checked) =>
-            updateLayer("layer2RuntimeContract", {
-              injectQuestionProtocol: checked,
-            })
-          }
-          aria-label="Toggle question form protocol"
+          disabled={true}
+          aria-disabled="true"
+          aria-label="Clarification question form protocol is permanently enabled"
+          title="Clarification Protocol is permanently enabled"
         />
       </div>
     </div>

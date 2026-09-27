@@ -80,17 +80,7 @@ export function compileLayer1Security(
   const layerName = "Security Guardrails"
   const xmlTag = "security-guardrails"
 
-  if (!config.enabled) {
-    return {
-      layerIndex,
-      layerName,
-      xmlTag,
-      content: "",
-      tokenCount: 0,
-      enabled: false,
-    }
-  }
-
+  // Layer 1 Security Guardrails are permanently active and enabled
   const lines: string[] = [
     `<${xmlTag}>`,
     "  PRECEDENCE HIERARCHY:",
@@ -130,17 +120,7 @@ export function compileLayer2RuntimeContract(
   const layerName = "Inspection Runtime Contract"
   const xmlTag = "inspection-runtime-contract"
 
-  if (!config.enabled) {
-    return {
-      layerIndex,
-      layerName,
-      xmlTag,
-      content: "",
-      tokenCount: 0,
-      enabled: false,
-    }
-  }
-
+  // Layer 2 Inspection Runtime Contract is permanently active and enabled
   const lines: string[] = [`<${xmlTag}>`]
 
   if (config.enforceDataOdId) {

@@ -59,23 +59,42 @@ export function ComposerProvider({
 }: ComposerProviderProps) {
   // Compute initial config, restoring from persistence if requested
   const getInitialConfig = (): ComposerConfig => {
-    if (initialConfig) return initialConfig
-    const base = createDefaultComposerConfig()
-    if (autoPersist) {
-      const savedMemory = getUserMemory()
-      const savedBrief = getDraftBrief()
-      return {
-        ...base,
-        layer8UserMemory: savedMemory ?? base.layer8UserMemory,
-        layer9BriefAndClarification: savedBrief
-          ? {
-              ...base.layer9BriefAndClarification,
-              ...savedBrief,
-            }
-          : base.layer9BriefAndClarification,
+    let resolved: ComposerConfig
+    if (initialConfig) {
+      resolved = initialConfig
+    } else {
+      const base = createDefaultComposerConfig()
+      if (autoPersist) {
+        const savedMemory = getUserMemory()
+        const savedBrief = getDraftBrief()
+        resolved = {
+          ...base,
+          layer8UserMemory: savedMemory ?? base.layer8UserMemory,
+          layer9BriefAndClarification: savedBrief
+            ? {
+                ...base.layer9BriefAndClarification,
+                ...savedBrief,
+              }
+            : base.layer9BriefAndClarification,
+        }
+      } else {
+        resolved = base
       }
     }
-    return base
+    return {
+      ...resolved,
+      layer1Security: {
+        ...resolved.layer1Security,
+        enabled: true,
+        strictMode: true,
+      },
+      layer2RuntimeContract: {
+        ...resolved.layer2RuntimeContract,
+        enabled: true,
+        enforceDataOdId: true,
+        injectQuestionProtocol: true,
+      },
+    }
   }
 
   const [config, setConfigState] = useState<ComposerConfig>(getInitialConfig)
@@ -108,8 +127,22 @@ export function ComposerProvider({
     (action) => {
       setConfigState((prev) => {
         const next = typeof action === "function" ? action(prev) : action
-        currentConfigRef.current = next
-        return next
+        const enforced: ComposerConfig = {
+          ...next,
+          layer1Security: {
+            ...next.layer1Security,
+            enabled: true,
+            strictMode: true,
+          },
+          layer2RuntimeContract: {
+            ...next.layer2RuntimeContract,
+            enabled: true,
+            enforceDataOdId: true,
+            injectQuestionProtocol: true,
+          },
+        }
+        currentConfigRef.current = enforced
+        return enforced
       })
     },
     []
@@ -207,11 +240,23 @@ export function ComposerProvider({
       layerKey: K,
       patch: Partial<ComposerConfig[K]>
     ) => {
+      const enforcedPatch =
+        layerKey === "layer1Security"
+          ? { ...patch, enabled: true, strictMode: true }
+          : layerKey === "layer2RuntimeContract"
+            ? {
+                ...patch,
+                enabled: true,
+                enforceDataOdId: true,
+                injectQuestionProtocol: true,
+              }
+            : patch
+
       const next: ComposerConfig = {
         ...currentConfigRef.current,
         [layerKey]: {
           ...currentConfigRef.current[layerKey],
-          ...patch,
+          ...enforcedPatch,
         },
       }
       currentConfigRef.current = next

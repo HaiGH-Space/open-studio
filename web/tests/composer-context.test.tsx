@@ -785,6 +785,40 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
         result.current.config.layer3AuthoritativeConstraints.targetFramework
       ).toBe("html-vanilla")
     })
+
+    it("enforces layers L1 and L2 to always remain enabled when updating layers or setting config", () => {
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <ComposerProvider catalogService={mockCatalogService}>
+          {children}
+        </ComposerProvider>
+      )
+
+      const { result } = renderHook(() => useComposer(), { wrapper })
+
+      expect(result.current.config.layer1Security.enabled).toBe(true)
+      expect(result.current.config.layer2RuntimeContract.enabled).toBe(true)
+
+      act(() => {
+        result.current.updateLayer("layer1Security", {
+          enabled: false,
+          strictMode: false,
+        })
+        result.current.updateLayer("layer2RuntimeContract", {
+          enabled: false,
+          enforceDataOdId: false,
+        })
+      })
+
+      expect(result.current.config.layer1Security.enabled).toBe(true)
+      expect(result.current.config.layer1Security.strictMode).toBe(true)
+      expect(result.current.config.layer2RuntimeContract.enabled).toBe(true)
+      expect(
+        result.current.config.layer2RuntimeContract.enforceDataOdId
+      ).toBe(true)
+      expect(
+        result.current.config.layer2RuntimeContract.injectQuestionProtocol
+      ).toBe(true)
+    })
   })
 
   describe("useTokenCount Hook", () => {

@@ -3,7 +3,7 @@ import { Switch } from "../ui/switch"
 import { ShieldCheck, Lock } from "lucide-react"
 
 export function Layer1Security() {
-  const { config, updateLayer } = useComposer()
+  const { config } = useComposer()
   const { strictMode } = config.layer1Security
 
   return (
@@ -22,10 +22,10 @@ export function Layer1Security() {
         <Switch
           data-slot="l1-strict-mode-toggle"
           checked={strictMode}
-          onCheckedChange={(checked) =>
-            updateLayer("layer1Security", { strictMode: checked })
-          }
-          aria-label="Toggle strict security mode"
+          disabled={true}
+          aria-disabled="true"
+          aria-label="Strict security mode is permanently enabled"
+          title="Strict Security Mode is permanently enabled"
         />
       </div>
 

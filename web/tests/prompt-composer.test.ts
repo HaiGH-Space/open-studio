@@ -478,10 +478,13 @@ describe("9-Layer Prompt Composer Core Engine & Compilers", () => {
       )
     })
 
-    it("omits disabled layers from output and zeroes their token count", () => {
+    it("omits configurable disabled layers from output and zeroes their token count", () => {
       const config: ComposerConfig = {
         ...createDefaultComposerConfig(),
-        layer1Security: { enabled: false, strictMode: false },
+        layer3AuthoritativeConstraints: {
+          ...createDefaultComposerConfig().layer3AuthoritativeConstraints,
+          enabled: false,
+        },
         layer4WorkflowManifest: {
           enabled: false,
           taskKind: "application",
@@ -492,17 +495,17 @@ describe("9-Layer Prompt Composer Core Engine & Compilers", () => {
 
       const result = compilePrompt(config, sampleAssets)
 
-      expect(result.fullPrompt).not.toContain("<security-guardrails>")
+      expect(result.fullPrompt).not.toContain("<authoritative-constraints>")
       expect(result.fullPrompt).not.toContain("<workflow-stage")
       expect(result.fullPrompt).not.toContain("<skill-blueprint")
 
-      const l1 = result.layerBreakdown.find((l) => l.layerIndex === 1)
+      const l3 = result.layerBreakdown.find((l) => l.layerIndex === 3)
       const l4 = result.layerBreakdown.find((l) => l.layerIndex === 4)
       const l7 = result.layerBreakdown.find((l) => l.layerIndex === 7)
 
-      expect(l1?.enabled).toBe(false)
-      expect(l1?.tokenCount).toBe(0)
-      expect(l1?.content).toBe("")
+      expect(l3?.enabled).toBe(false)
+      expect(l3?.tokenCount).toBe(0)
+      expect(l3?.content).toBe("")
 
       expect(l4?.enabled).toBe(false)
       expect(l4?.tokenCount).toBe(0)
@@ -512,9 +515,37 @@ describe("9-Layer Prompt Composer Core Engine & Compilers", () => {
       expect(l7?.tokenCount).toBe(0)
       expect(l7?.content).toBe("")
 
-      // Other enabled layers still present
-      expect(result.fullPrompt).toContain("<authoritative-constraints>")
+      // L1 and other enabled layers still present
+      expect(result.fullPrompt).toContain("<security-guardrails>")
       expect(result.fullPrompt).toContain("<brand-contract")
+    })
+
+    it("always applies and enables layers L1 and L2 even if config attempts to disable them", () => {
+      const config: ComposerConfig = {
+        ...createDefaultComposerConfig(),
+        layer1Security: { enabled: false, strictMode: false },
+        layer2RuntimeContract: {
+          enabled: false,
+          enforceDataOdId: false,
+          injectQuestionProtocol: false,
+        },
+      }
+
+      const result = compilePrompt(config, sampleAssets)
+
+      expect(result.fullPrompt).toContain("<security-guardrails>")
+      expect(result.fullPrompt).toContain("<inspection-runtime-contract>")
+
+      const l1 = result.layerBreakdown.find((l) => l.layerIndex === 1)
+      const l2 = result.layerBreakdown.find((l) => l.layerIndex === 2)
+
+      expect(l1?.enabled).toBe(true)
+      expect(l1?.tokenCount).toBeGreaterThan(0)
+      expect(l1?.content).toContain("<security-guardrails>")
+
+      expect(l2?.enabled).toBe(true)
+      expect(l2?.tokenCount).toBeGreaterThan(0)
+      expect(l2?.content).toContain("<inspection-runtime-contract>")
     })
 
     it("sanitizes user objective containing potential prompt-injection tags", () => {

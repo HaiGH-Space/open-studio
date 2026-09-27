@@ -341,46 +341,91 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       }
     })
 
-    it("toggling layer toggle updates enabled state in composer", async () => {
+    it("disables layer toggles for L1 and L2, preventing user interaction", async () => {
       renderWithProviders(<ComposerManager />)
       const toggleL1 = container.querySelector(
         `[data-slot='layer-toggle-l1']`
       ) as HTMLElement
-      expect(toggleL1).toBeTruthy()
+      const toggleL2 = container.querySelector(
+        `[data-slot='layer-toggle-l2']`
+      ) as HTMLElement
 
-      // L1 is initially enabled
+      expect(toggleL1).toBeTruthy()
+      expect(toggleL2).toBeTruthy()
+
+      // L1 and L2 are initially enabled and disabled from user interaction
       expect(toggleL1.getAttribute("data-checked")).not.toBeNull()
+      expect(toggleL2.getAttribute("data-checked")).not.toBeNull()
+      expect(
+        toggleL1.hasAttribute("disabled") ||
+          toggleL1.getAttribute("data-disabled") !== null ||
+          toggleL1.getAttribute("aria-disabled") === "true"
+      ).toBe(true)
+      expect(
+        toggleL2.hasAttribute("disabled") ||
+          toggleL2.getAttribute("data-disabled") !== null ||
+          toggleL2.getAttribute("aria-disabled") === "true"
+      ).toBe(true)
 
       await act(async () => {
         toggleL1.click()
+        toggleL2.click()
       })
 
-      // Now L1 should be disabled
-      expect(toggleL1.getAttribute("data-checked")).toBeNull()
+      // L1 and L2 must remain enabled
+      expect(toggleL1.getAttribute("data-checked")).not.toBeNull()
+      expect(toggleL2.getAttribute("data-checked")).not.toBeNull()
       const badgeL1 = container.querySelector("[data-slot='layer-badge-l1']")
-      expect(badgeL1?.textContent?.toLowerCase()).toContain("off")
+      const badgeL2 = container.querySelector("[data-slot='layer-badge-l2']")
+      expect(badgeL1?.textContent?.toLowerCase()).not.toContain("off")
+      expect(badgeL2?.textContent?.toLowerCase()).not.toContain("off")
+    })
+
+    it("toggling configurable layer toggle updates enabled state in composer", async () => {
+      renderWithProviders(<ComposerManager />)
+      const toggleL3 = container.querySelector(
+        `[data-slot='layer-toggle-l3']`
+      ) as HTMLElement
+      expect(toggleL3).toBeTruthy()
+
+      // L3 is initially enabled
+      expect(toggleL3.getAttribute("data-checked")).not.toBeNull()
+
+      await act(async () => {
+        toggleL3.click()
+      })
+
+      // Now L3 should be disabled
+      expect(toggleL3.getAttribute("data-checked")).toBeNull()
+      const badgeL3 = container.querySelector("[data-slot='layer-badge-l3']")
+      expect(badgeL3?.textContent?.toLowerCase()).toContain("off")
     })
   })
 
   describe("Layer 1: Security Guardrails", () => {
-    it("renders strict mode switch and toggling updates state", async () => {
+    it("renders strict mode switch as permanently enabled and non-interactive", async () => {
       renderWithProviders(<ComposerManager />)
       const strictSwitch = container.querySelector(
         "[data-slot='l1-strict-mode-toggle']"
       ) as HTMLElement
       expect(strictSwitch).toBeTruthy()
       expect(strictSwitch.getAttribute("data-checked")).not.toBeNull()
+      expect(
+        strictSwitch.hasAttribute("disabled") ||
+          strictSwitch.getAttribute("data-disabled") !== null ||
+          strictSwitch.getAttribute("aria-disabled") === "true"
+      ).toBe(true)
 
       await act(async () => {
         strictSwitch.click()
       })
 
-      expect(strictSwitch.getAttribute("data-checked")).toBeNull()
+      expect(strictSwitch.getAttribute("data-checked")).not.toBeNull()
     })
   })
 
   describe("Layer 2: Runtime Inspection Contract", () => {
-    it("renders enforceDataOdId and injectQuestionProtocol toggles", async () => {
+    it("renders enforceDataOdId and injectQuestionProtocol toggles as permanently enabled and non-interactive", async () => {
       renderWithProviders(<ComposerManager />)
       const odIdToggle = container.querySelector(
         "[data-slot='l2-enforce-data-od-id-toggle']"
@@ -392,15 +437,27 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       expect(odIdToggle).toBeTruthy()
       expect(questionToggle).toBeTruthy()
 
-      await act(async () => {
-        odIdToggle.click()
-      })
-      expect(odIdToggle.getAttribute("data-checked")).toBeNull()
+      expect(odIdToggle.getAttribute("data-checked")).not.toBeNull()
+      expect(questionToggle.getAttribute("data-checked")).not.toBeNull()
+
+      expect(
+        odIdToggle.hasAttribute("disabled") ||
+          odIdToggle.getAttribute("data-disabled") !== null ||
+          odIdToggle.getAttribute("aria-disabled") === "true"
+      ).toBe(true)
+      expect(
+        questionToggle.hasAttribute("disabled") ||
+          questionToggle.getAttribute("data-disabled") !== null ||
+          questionToggle.getAttribute("aria-disabled") === "true"
+      ).toBe(true)
 
       await act(async () => {
+        odIdToggle.click()
         questionToggle.click()
       })
-      expect(questionToggle.getAttribute("data-checked")).toBeNull()
+
+      expect(odIdToggle.getAttribute("data-checked")).not.toBeNull()
+      expect(questionToggle.getAttribute("data-checked")).not.toBeNull()
     })
   })
 

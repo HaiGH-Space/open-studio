@@ -39,9 +39,18 @@ export function compilePrompt(
 ): CompiledPromptResult {
   const generatedAt = new Date().toISOString()
 
-  // Compile individual layers
-  const l1 = compileLayer1Security(config.layer1Security)
-  const l2 = compileLayer2RuntimeContract(config.layer2RuntimeContract)
+  // Compile individual layers (L1 and L2 are permanently applied, enabled, and locked)
+  const l1 = compileLayer1Security({
+    ...config.layer1Security,
+    enabled: true,
+    strictMode: true,
+  })
+  const l2 = compileLayer2RuntimeContract({
+    ...config.layer2RuntimeContract,
+    enabled: true,
+    enforceDataOdId: true,
+    injectQuestionProtocol: true,
+  })
   const l3 = compileLayer3AuthoritativeConstraints(
     config.layer3AuthoritativeConstraints
   )
