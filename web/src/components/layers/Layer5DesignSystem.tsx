@@ -33,12 +33,12 @@ export function Layer5DesignSystem() {
   }
 
   return (
-    <div data-slot="layer5-design-system-panel" className="space-y-4 py-2">
+    <div data-slot="layer5-design-system-panel" className="space-y-3 py-1">
       {/* Active System Banner */}
-      <div className="flex items-center justify-between gap-4 rounded-xl border border-border/60 bg-muted/20 p-3">
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-muted/20 p-2.5">
         <div className="space-y-0.5">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <Palette className="size-4 text-primary" />
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <Palette className="size-3.5 text-primary" />
             <span>Active Design System:</span>
             <span
               data-slot="l5-active-system"
@@ -56,10 +56,10 @@ export function Layer5DesignSystem() {
       </div>
 
       {/* Token Mode Switch (Condensed vs Full) */}
-      <div className="flex items-center justify-between gap-4 rounded-xl border border-border/60 bg-muted/20 p-3">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <FileCode2 className="size-4 text-primary" />
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-muted/20 p-2.5">
+        <div className="space-y-0.5">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <FileCode2 className="size-3.5 text-primary" />
             <span>
               Token Mode:{" "}
               <span className="font-mono text-xs text-primary capitalize">
@@ -75,6 +75,7 @@ export function Layer5DesignSystem() {
         </div>
         <Switch
           data-slot="l5-token-mode-switch"
+          size="sm"
           checked={tokenMode === "condensed"}
           onCheckedChange={handleToggleTokenMode}
           aria-label="Toggle token mode"

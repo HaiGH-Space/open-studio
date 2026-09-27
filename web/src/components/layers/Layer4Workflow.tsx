@@ -49,7 +49,7 @@ export function Layer4Workflow() {
   }
 
   return (
-    <div data-slot="layer4-workflow-panel" className="space-y-4 py-2">
+    <div data-slot="layer4-workflow-panel" className="space-y-3 py-1">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {/* Task Kind Selection */}
         <div className="relative space-y-1.5">

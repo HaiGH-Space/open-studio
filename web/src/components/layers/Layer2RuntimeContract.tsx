@@ -8,12 +8,12 @@ export function Layer2RuntimeContract() {
     config.layer2RuntimeContract
 
   return (
-    <div data-slot="layer2-runtime-contract-panel" className="space-y-3 py-2">
+    <div data-slot="layer2-runtime-contract-panel" className="space-y-2.5 py-1">
       {/* Enforce data-od-id */}
-      <div className="flex items-center justify-between gap-4 rounded-xl border border-border/60 bg-muted/20 p-3">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <Code2 className="size-4 text-primary" />
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-muted/20 p-2.5">
+        <div className="space-y-0.5">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <Code2 className="size-3.5 text-primary" />
             <span>
               Enforce DOM Inspection Tags (
               <code className="font-mono text-xs text-primary">data-od-id</code>
@@ -29,6 +29,7 @@ export function Layer2RuntimeContract() {
         </div>
         <Switch
           data-slot="l2-enforce-data-od-id-toggle"
+          size="sm"
           checked={enforceDataOdId}
           disabled={true}
           aria-disabled="true"
@@ -38,10 +39,10 @@ export function Layer2RuntimeContract() {
       </div>
 
       {/* Inject Question Protocol */}
-      <div className="flex items-center justify-between gap-4 rounded-xl border border-border/60 bg-muted/20 p-3">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <HelpCircle className="size-4 text-primary" />
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-muted/20 p-2.5">
+        <div className="space-y-0.5">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <HelpCircle className="size-3.5 text-primary" />
             <span>
               Clarification Protocol (
               <code className="font-mono text-xs text-primary">
@@ -58,6 +59,7 @@ export function Layer2RuntimeContract() {
         </div>
         <Switch
           data-slot="l2-inject-question-protocol-toggle"
+          size="sm"
           checked={injectQuestionProtocol}
           disabled={true}
           aria-disabled="true"

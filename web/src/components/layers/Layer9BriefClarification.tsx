@@ -60,7 +60,7 @@ export function Layer9BriefClarification({
   return (
     <div
       data-slot="layer-9-brief-clarification"
-      className={`space-y-5 ${className ?? ""}`}
+      className={`space-y-3.5 ${className ?? ""}`}
     >
       {/* Section 1: User Objective */}
       <div className="space-y-2">
@@ -156,7 +156,7 @@ export function Layer9BriefClarification({
       {/* Section 3: Interactive Clarification Loop */}
       <div
         data-slot="layer9-clarification-section"
-        className="space-y-3 rounded-xl border border-border/70 bg-card/30 p-3.5"
+        className="space-y-3 rounded-lg border border-border/70 bg-card/30 p-3"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

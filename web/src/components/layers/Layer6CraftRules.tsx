@@ -50,7 +50,7 @@ export function Layer6CraftRules() {
   }
 
   return (
-    <div data-slot="layer6-craft-rules-panel" className="space-y-4 py-2">
+    <div data-slot="layer6-craft-rules-panel" className="space-y-3 py-1">
       {/* Recommended Rules Chip Grid */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
@@ -75,7 +75,7 @@ export function Layer6CraftRules() {
                 data-rule-id={rule.id}
                 onClick={() => toggleCraftRule(rule.id)}
                 className={cn(
-                  "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all select-none",
+                  "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all select-none",
                   isSelected
                     ? "border-primary bg-primary/15 text-primary"
                     : "border-border/70 bg-input/20 text-muted-foreground hover:bg-input/40 hover:text-foreground"

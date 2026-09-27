@@ -50,7 +50,7 @@ export function Layer7SkillTemplate() {
   }
 
   return (
-    <div data-slot="layer7-skill-template-panel" className="space-y-4 py-2">
+    <div data-slot="layer7-skill-template-panel" className="space-y-3 py-1">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {/* Skill Selection */}
         <div className="relative space-y-1.5">

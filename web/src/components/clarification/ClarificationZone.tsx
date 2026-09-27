@@ -144,12 +144,12 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
       <div
         data-slot="clarification-zone"
         className={cn(
-          "flex flex-col gap-3 rounded-xl border border-border/60 bg-card/40 p-4 shadow-xs sm:p-5",
+          "flex flex-col gap-2.5 rounded-lg border border-border/60 bg-card/40 p-3 shadow-xs",
           className
         )}
       >
-        <div className="flex items-center gap-2.5 text-sm font-semibold text-foreground">
-          <SparklesIcon className="size-4 text-primary" />
+        <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+          <SparklesIcon className="size-3.5 text-primary" />
           <span>
             {roundtripStep === "STEP_1_CONFIGURING"
               ? "Turn 1 Discovery Setup"
@@ -193,13 +193,13 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
       <div
         data-slot="clarification-zone"
         className={cn(
-          "flex flex-col gap-4 rounded-xl border border-border/60 bg-card/40 p-4 shadow-xs sm:p-5",
+          "flex flex-col gap-2.5 rounded-lg border border-border/60 bg-card/40 p-3 shadow-xs",
           className
         )}
       >
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <QuestionIcon className="size-4 text-primary" />
+          <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+            <QuestionIcon className="size-3.5 text-primary" />
             <span>Paste AI Clarification Response</span>
           </div>
 
@@ -380,13 +380,13 @@ export function ClarificationZone({ className }: ClarificationZoneProps) {
       <div
         data-slot="clarification-zone"
         className={cn(
-          "flex flex-col gap-4 rounded-xl border border-border/60 bg-card/40 p-4 shadow-xs sm:p-5",
+          "flex flex-col gap-3 rounded-lg border border-border/60 bg-card/40 p-3 shadow-xs",
           className
         )}
       >
-        <div className="flex items-center justify-between gap-2 border-b border-border/50 pb-3">
+        <div className="flex items-center justify-between gap-2 border-b border-border/50 pb-2.5">
           <div>
-            <h3 className="text-sm font-semibold text-foreground">
+            <h3 className="text-xs font-semibold text-foreground">
               {parsedFormAst.title || "Clarification Questions"}
             </h3>
             {parsedFormAst.description && (

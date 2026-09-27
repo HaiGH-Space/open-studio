@@ -246,7 +246,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 title="Layer 1 is always applied and enabled"
               />
             </div>
-            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">
               <Layer1Security />
             </AccordionContent>
           </AccordionItem>
@@ -281,7 +281,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 title="Layer 2 is always applied and enabled"
               />
             </div>
-            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">
               <Layer2RuntimeContract />
             </AccordionContent>
           </AccordionItem>
@@ -322,7 +322,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 3 Constraints"
               />
             </div>
-            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">
               <Layer3Constraints />
             </AccordionContent>
           </AccordionItem>
@@ -361,7 +361,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 4 Workflow"
               />
             </div>
-            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">
               <Layer4Workflow />
             </AccordionContent>
           </AccordionItem>
@@ -400,7 +400,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 5 Brand Contract"
               />
             </div>
-            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">
               <Layer5DesignSystem />
             </AccordionContent>
           </AccordionItem>
@@ -441,7 +441,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 6 Craft Discipline"
               />
             </div>
-            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">
               <Layer6CraftRules />
             </AccordionContent>
           </AccordionItem>
@@ -482,7 +482,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 7 Skill & Blueprint"
               />
             </div>
-            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">
               <Layer7SkillTemplate />
             </AccordionContent>
           </AccordionItem>
@@ -523,7 +523,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 aria-label="Toggle Layer 8 User Memory"
               />
             </div>
-            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">
               <Layer8UserRules />
             </AccordionContent>
           </AccordionItem>
@@ -554,7 +554,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 </AccordionTrigger>
               </div>
             </div>
-            <AccordionContent className="border-t border-border/40 bg-background/50 p-4">
+            <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">
               <Layer9BriefClarification />
             </AccordionContent>
           </AccordionItem>

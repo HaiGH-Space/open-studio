@@ -52,7 +52,7 @@ export function Layer8UserRules() {
   }
 
   return (
-    <div data-slot="layer8-user-rules-panel" className="space-y-4 py-2">
+    <div data-slot="layer8-user-rules-panel" className="space-y-3 py-1">
       {/* Persistent Directives (Always Enforce) */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
