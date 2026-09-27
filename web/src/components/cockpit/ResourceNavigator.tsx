@@ -10,12 +10,12 @@ import { DesignSystemCard } from "./DesignSystemCard"
 import { DesignSystemPreviewModal } from "../preview/DesignSystemPreviewModal"
 import {
   Combobox,
-  ComboboxInput,
   ComboboxContent,
-  ComboboxList,
-  ComboboxItem,
   ComboboxEmpty,
-} from "../ui/combobox"
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox"
 import {
   Search as SearchIcon,
   X as XIcon,
@@ -99,6 +99,30 @@ export function ResourceNavigator({
     }
   }
 
+  const handleCategoryInputChange = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) return
+      const inputEl =
+        node.tagName === "INPUT"
+          ? (node as HTMLInputElement)
+          : node.querySelector("input")
+      if (!inputEl) return
+
+      inputEl.addEventListener("change", (e: Event) => {
+        const val = (e.target as HTMLInputElement)?.value
+        if (!val || val === "all" || val === "All Categories") {
+          setSelectedCategory(null)
+        } else {
+          const matched = categories.find(
+            (c) => c.toLowerCase() === val.toLowerCase()
+          )
+          setSelectedCategory(matched ?? val)
+        }
+      })
+    },
+    [categories, setSelectedCategory]
+  )
+
   const handleClearSearch = () => {
     setSearchQuery("")
   }
@@ -140,7 +164,8 @@ export function ResourceNavigator({
         <div className="flex items-center gap-2">
           <Combobox
             items={categoryItems}
-            value={selectedCategory ?? "All Categories"}
+            defaultValue={categoryItems[0]}
+            value={selectedCategory ?? categoryItems[0]}
             onValueChange={(val) => {
               if (!val || val === "All Categories" || val === "all") {
                 setSelectedCategory(null)
@@ -150,63 +175,22 @@ export function ResourceNavigator({
             }}
           >
             <ComboboxInput
+              ref={handleCategoryInputChange}
               data-slot="category-filter-select"
-              placeholder="All Categories"
-              showClear={Boolean(selectedCategory)}
-              ref={(node: HTMLElement | null) => {
-                if (node) {
-                  const inputEl =
-                    node.tagName === "INPUT"
-                      ? (node as HTMLInputElement)
-                      : node.querySelector("input")
-                  if (inputEl) {
-                    inputEl.onchange = (e: Event) => {
-                      const target = e.target as HTMLInputElement
-                      const val = target?.value
-                      if (!val || val === "all" || val === "All Categories") {
-                        setSelectedCategory(null)
-                      } else if (
-                        categories.some(
-                          (c) => c.toLowerCase() === val.toLowerCase()
-                        )
-                      ) {
-                        const matched = categories.find(
-                          (c) => c.toLowerCase() === val.toLowerCase()
-                        )
-                        setSelectedCategory(matched ?? val)
-                      }
-                    }
-                  }
-                }
-              }}
-              onChange={(e) => {
-                const val = e.target.value
-                if (!val || val === "all" || val === "All Categories") {
-                  setSelectedCategory(null)
-                } else if (
-                  categories.some((c) => c.toLowerCase() === val.toLowerCase())
-                ) {
-                  const matched = categories.find(
-                    (c) => c.toLowerCase() === val.toLowerCase()
-                  )
-                  setSelectedCategory(matched ?? val)
-                }
-              }}
-              className="h-7 w-full rounded-lg border-border/70 bg-input/25 text-xs text-foreground focus-within:ring-1 focus-within:ring-primary [&>input]:h-7 [&>input]:py-0 [&>input]:text-xs"
+              placeholder="Select a category"
+              showClear
+              className="h-8 w-full text-xs"
             />
-            <ComboboxContent className="max-h-60 rounded-xl border border-border/80 bg-popover text-popover-foreground shadow-xl backdrop-blur-md">
-              <ComboboxEmpty className="py-2.5 text-center text-xs text-muted-foreground">
-                No category found
-              </ComboboxEmpty>
-              <ComboboxList className="p-1">
-                {(cat: string) => (
+            <ComboboxContent>
+              <ComboboxEmpty>No items found.</ComboboxEmpty>
+              <ComboboxList>
+                {(item: string) => (
                   <ComboboxItem
-                    key={cat}
-                    value={cat}
+                    key={item}
+                    value={item}
                     data-slot="category-combobox-item"
-                    className="cursor-pointer rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground data-highlighted:bg-accent data-highlighted:text-accent-foreground"
                   >
-                    {cat}
+                    {item}
                   </ComboboxItem>
                 )}
               </ComboboxList>
