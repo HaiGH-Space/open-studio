@@ -9,6 +9,14 @@ import { ScrollArea } from "../ui/scroll-area"
 import { DesignSystemCard } from "./DesignSystemCard"
 import { DesignSystemPreviewModal } from "../preview/DesignSystemPreviewModal"
 import {
+  Combobox,
+  ComboboxInput,
+  ComboboxContent,
+  ComboboxList,
+  ComboboxItem,
+  ComboboxEmpty,
+} from "../ui/combobox"
+import {
   Search as SearchIcon,
   X as XIcon,
   Palette as PaletteIcon,
@@ -53,6 +61,10 @@ export function ResourceNavigator({
   const categories = useMemo(() => {
     return catalog?.taxonomies.categories ?? []
   }, [catalog?.taxonomies.categories])
+
+  const categoryItems = useMemo(() => {
+    return ["All Categories", ...categories]
+  }, [categories])
 
   const popularTags = useMemo(() => {
     return catalog?.taxonomies.tags ?? []
@@ -124,24 +136,82 @@ export function ResourceNavigator({
           )}
         </div>
 
-        {/* Category Filter Dropdown */}
+        {/* Category Filter Combobox */}
         <div className="flex items-center gap-2">
-          <select
-            data-slot="category-filter-select"
-            value={selectedCategory ?? "all"}
-            onChange={(e) => {
-              const val = e.target.value
-              setSelectedCategory(val === "all" ? null : val)
+          <Combobox
+            items={categoryItems}
+            value={selectedCategory ?? "All Categories"}
+            onValueChange={(val) => {
+              if (!val || val === "All Categories" || val === "all") {
+                setSelectedCategory(null)
+              } else {
+                setSelectedCategory(val)
+              }
             }}
-            className="h-7 w-full cursor-pointer rounded-lg border border-border/70 bg-input/25 px-2.5 text-xs text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
           >
-            <option value="all">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+            <ComboboxInput
+              data-slot="category-filter-select"
+              placeholder="All Categories"
+              showClear={Boolean(selectedCategory)}
+              ref={(node: HTMLElement | null) => {
+                if (node) {
+                  const inputEl =
+                    node.tagName === "INPUT"
+                      ? (node as HTMLInputElement)
+                      : node.querySelector("input")
+                  if (inputEl) {
+                    inputEl.onchange = (e: Event) => {
+                      const target = e.target as HTMLInputElement
+                      const val = target?.value
+                      if (!val || val === "all" || val === "All Categories") {
+                        setSelectedCategory(null)
+                      } else if (
+                        categories.some(
+                          (c) => c.toLowerCase() === val.toLowerCase()
+                        )
+                      ) {
+                        const matched = categories.find(
+                          (c) => c.toLowerCase() === val.toLowerCase()
+                        )
+                        setSelectedCategory(matched ?? val)
+                      }
+                    }
+                  }
+                }
+              }}
+              onChange={(e) => {
+                const val = e.target.value
+                if (!val || val === "all" || val === "All Categories") {
+                  setSelectedCategory(null)
+                } else if (
+                  categories.some((c) => c.toLowerCase() === val.toLowerCase())
+                ) {
+                  const matched = categories.find(
+                    (c) => c.toLowerCase() === val.toLowerCase()
+                  )
+                  setSelectedCategory(matched ?? val)
+                }
+              }}
+              className="h-7 w-full rounded-lg border-border/70 bg-input/25 text-xs text-foreground focus-within:ring-1 focus-within:ring-primary [&>input]:h-7 [&>input]:py-0 [&>input]:text-xs"
+            />
+            <ComboboxContent className="max-h-60 rounded-xl border border-border/80 bg-popover text-popover-foreground shadow-xl backdrop-blur-md">
+              <ComboboxEmpty className="py-2.5 text-center text-xs text-muted-foreground">
+                No category found
+              </ComboboxEmpty>
+              <ComboboxList className="p-1">
+                {(cat: string) => (
+                  <ComboboxItem
+                    key={cat}
+                    value={cat}
+                    data-slot="category-combobox-item"
+                    className="cursor-pointer rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground data-highlighted:bg-accent data-highlighted:text-accent-foreground"
+                  >
+                    {cat}
+                  </ComboboxItem>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+          </Combobox>
         </div>
 
         {/* Tag Filter Chips */}

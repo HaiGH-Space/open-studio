@@ -45,6 +45,14 @@ import {
   TooltipProvider,
 } from "../src/components/ui/tooltip"
 import { ScrollArea, ScrollBar } from "../src/components/ui/scroll-area"
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxContent,
+  ComboboxList,
+  ComboboxItem,
+  ComboboxEmpty,
+} from "../src/components/ui/combobox"
 
 declare global {
   var IS_REACT_ACT_ENVIRONMENT: boolean
@@ -570,6 +578,121 @@ describe("Atomic UI Components (Task 10)", () => {
       )
       expect(scrollbar).toBeTruthy()
       expect(scrollbar?.getAttribute("data-orientation")).toBe("horizontal")
+    })
+  })
+
+  describe("Combobox Component", () => {
+    const items = ["All Categories", "Finance", "Developer Tools", "AI / ML"]
+
+    it("renders combobox input and trigger", () => {
+      render(
+        <Combobox items={items}>
+          <ComboboxInput
+            placeholder="Select category..."
+            data-slot="category-filter-select"
+          />
+          <ComboboxContent>
+            <ComboboxEmpty>No category found</ComboboxEmpty>
+            <ComboboxList>
+              {(item: string) => (
+                <ComboboxItem key={item} value={item}>
+                  {item}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      )
+
+      const input = container.querySelector(
+        "[data-slot='category-filter-select']"
+      )
+      expect(input).toBeTruthy()
+    })
+
+    it("opens popup and handles value change when selecting an item", () => {
+      const handleValueChange = vi.fn()
+      render(
+        <Combobox items={items} onValueChange={handleValueChange}>
+          <ComboboxInput
+            placeholder="Select category..."
+            data-slot="category-filter-select"
+          />
+          <ComboboxContent>
+            <ComboboxEmpty>No category found</ComboboxEmpty>
+            <ComboboxList>
+              {(item: string) => (
+                <ComboboxItem key={item} value={item} data-slot="combobox-item">
+                  {item}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      )
+
+      const trigger = container.querySelector(
+        "[data-slot='combobox-trigger']"
+      ) as HTMLElement
+      expect(trigger).toBeTruthy()
+      act(() => {
+        trigger.click()
+      })
+
+      const renderedItems = document.querySelectorAll(
+        "[data-slot='combobox-item']"
+      )
+      expect(renderedItems.length).toBe(4)
+
+      act(() => {
+        ;(renderedItems[1] as HTMLElement).click()
+      })
+
+      expect(handleValueChange).toHaveBeenCalledWith(
+        "Finance",
+        expect.anything()
+      )
+    })
+
+    it("clears selection when clear button is clicked", () => {
+      let currentCategory: string | null = "Finance"
+      render(
+        <Combobox
+          items={items}
+          value={currentCategory ?? "All Categories"}
+          onValueChange={(val) => {
+            currentCategory =
+              !val || val === "All Categories" || val === "all" ? null : val
+          }}
+        >
+          <ComboboxInput
+            placeholder="All Categories"
+            data-slot="category-filter-select"
+            showClear={Boolean(currentCategory)}
+          />
+          <ComboboxContent>
+            <ComboboxEmpty>No category found</ComboboxEmpty>
+            <ComboboxList>
+              {(item: string) => (
+                <ComboboxItem key={item} value={item} data-slot="combobox-item">
+                  {item}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      )
+
+      const clearBtn = container.querySelector(
+        "[data-slot='combobox-clear']"
+      ) as HTMLElement
+      expect(clearBtn).toBeTruthy()
+
+      act(() => {
+        clearBtn.click()
+      })
+
+      expect(currentCategory).toBeNull()
     })
   })
 })

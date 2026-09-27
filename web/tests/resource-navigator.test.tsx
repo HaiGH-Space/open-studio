@@ -480,6 +480,8 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
     it("renders search input, category dropdown, tag chips, and resource tabs", () => {
       renderWithProviders(<ResourceNavigator />)
 
+      console.log("SEARCH:", container.querySelector("[data-slot='catalog-search-input']")?.parentElement?.outerHTML)
+      console.log("CATEGORY:", container.querySelector("[data-slot='category-filter-select']")?.closest("[data-slot='input-group']")?.parentElement?.outerHTML)
       expect(
         container.querySelector("[data-slot='catalog-search-input']")
       ).toBeTruthy()
@@ -547,6 +549,37 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
       act(() => {
         categorySelect.value = "Finance"
         categorySelect.dispatchEvent(new Event("change", { bubbles: true }))
+      })
+
+      const cards = container.querySelectorAll(
+        "[data-slot='design-system-card']"
+      )
+      expect(cards.length).toBe(1)
+      expect(cards[0].textContent).toContain("Revolut")
+    })
+
+    it("filters design systems by selecting category from combobox popup", () => {
+      renderWithProviders(<ResourceNavigator />)
+
+      const trigger = container.querySelector(
+        "[data-slot='combobox-trigger']"
+      ) as HTMLElement
+      expect(trigger).toBeTruthy()
+
+      act(() => {
+        trigger.click()
+      })
+
+      const items = document.querySelectorAll(
+        "[data-slot='category-combobox-item']"
+      )
+      const financeItem = Array.from(items).find(
+        (el) => el.textContent?.trim() === "Finance"
+      ) as HTMLElement
+      expect(financeItem).toBeTruthy()
+
+      act(() => {
+        financeItem.click()
       })
 
       const cards = container.querySelectorAll(
