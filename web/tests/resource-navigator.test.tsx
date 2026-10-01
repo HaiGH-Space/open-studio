@@ -6,6 +6,7 @@ import { ComposerProvider } from "../src/context/ComposerContext"
 import { ColorSwatchBar } from "../src/components/cockpit/ColorSwatchBar"
 import { DesignSystemCard } from "../src/components/cockpit/DesignSystemCard"
 import { DesignSystemPreviewModal } from "../src/components/preview/DesignSystemPreviewModal"
+import { buildPreviewHtml } from "../src/lib/catalog/preview-utils"
 import { ResourceNavigator } from "../src/components/cockpit/ResourceNavigator"
 import type {
   CatalogIndex,
@@ -449,6 +450,126 @@ describe("ResourceNavigator & BrandPreviewModal (Task 12)", () => {
       )
       expect(componentsContent).toBeTruthy()
       expect(componentsContent?.textContent).toContain("btn-primary")
+    })
+
+    it("renders UI preview iframe by default and toggles to HTML code view", async () => {
+      await act(async () => {
+        renderWithProviders(
+          <DesignSystemPreviewModal systemId="linear-app" open={true} />
+        )
+      })
+
+      const componentsTabTrigger = document.querySelector(
+        "[data-slot='tab-trigger-components']"
+      ) as HTMLElement
+      act(() => {
+        componentsTabTrigger.click()
+      })
+
+      // In UI Preview mode by default: iframe is present
+      const iframe = document.querySelector(
+        "[data-slot='components-html-iframe']"
+      ) as HTMLIFrameElement
+      expect(iframe).toBeTruthy()
+      expect(iframe.getAttribute("srcdoc")).toContain("btn-primary")
+
+      // Toggle to HTML Code mode
+      const codeBtn = document.querySelector(
+        "[data-slot='btn-component-view-code']"
+      ) as HTMLButtonElement
+      expect(codeBtn).toBeTruthy()
+
+      act(() => {
+        codeBtn.click()
+      })
+
+      // In Code mode: pre tag is present with code
+      const pre = document.querySelector(
+        "[data-slot='components-html-preview']"
+      )
+      expect(pre).toBeTruthy()
+      expect(pre?.textContent).toContain("btn-primary")
+
+      // Toggle back to UI Preview mode
+      const previewBtn = document.querySelector(
+        "[data-slot='btn-component-view-preview']"
+      ) as HTMLButtonElement
+      act(() => {
+        previewBtn.click()
+      })
+
+      const iframeAfter = document.querySelector(
+        "[data-slot='components-html-iframe']"
+      )
+      expect(iframeAfter).toBeTruthy()
+    })
+
+    it("copies HTML code and handles open in new tab action", async () => {
+      const writeTextMock = vi.fn().mockResolvedValue(undefined)
+      Object.defineProperty(navigator, "clipboard", {
+        value: { writeText: writeTextMock },
+        writable: true,
+        configurable: true,
+      })
+
+      const windowOpenMock = vi.fn()
+      window.open = windowOpenMock
+
+      await act(async () => {
+        renderWithProviders(
+          <DesignSystemPreviewModal systemId="linear-app" open={true} />
+        )
+      })
+
+      const componentsTabTrigger = document.querySelector(
+        "[data-slot='tab-trigger-components']"
+      ) as HTMLElement
+      act(() => {
+        componentsTabTrigger.click()
+      })
+
+      // Click copy HTML button
+      const copyBtn = document.querySelector(
+        "[data-slot='btn-copy-html']"
+      ) as HTMLButtonElement
+      expect(copyBtn).toBeTruthy()
+
+      await act(async () => {
+        copyBtn.click()
+      })
+
+      expect(writeTextMock).toHaveBeenCalledWith(
+        '<div class="btn-primary">Click me</div>'
+      )
+
+      // Click open in new tab button
+      const openBtn = document.querySelector(
+        "[data-slot='btn-open-new-tab']"
+      ) as HTMLButtonElement
+      expect(openBtn).toBeTruthy()
+
+      act(() => {
+        openBtn.click()
+      })
+
+      expect(windowOpenMock).toHaveBeenCalled()
+    })
+
+    it("buildPreviewHtml wraps snippet in full HTML and injects tokens into head", () => {
+      const fragment = '<button class="custom-btn">Hello</button>'
+      const tokens = ":root { --accent: #ff0000; }"
+      const result = buildPreviewHtml(fragment, tokens)
+
+      expect(result).toContain("<!DOCTYPE html>")
+      expect(result).toContain("<style>")
+      expect(result).toContain("--accent: #ff0000")
+      expect(result).toContain(fragment)
+
+      const fullDoc = "<!doctype html><html><head><title>Test</title></head><body>Content</body></html>"
+      const docResult = buildPreviewHtml(fullDoc, tokens)
+      expect(docResult).toContain("<style id=\"injected-tokens\">")
+      expect(docResult).toContain("--accent: #ff0000")
+      expect(docResult).toContain("Content")
     })
 
     it("clicking 'Use System' button selects brand in composer and closes modal", async () => {

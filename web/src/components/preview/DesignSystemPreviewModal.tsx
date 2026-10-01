@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import {
   Dialog,
   DialogContent,
@@ -25,7 +25,10 @@ import {
   Type as TypeIcon,
   Layers as LayersIcon,
   Loader2 as Loader2Icon,
+  Eye as EyeIcon,
+  ExternalLink as ExternalLinkIcon,
 } from "lucide-react"
+import { buildPreviewHtml } from "../../lib/catalog/preview-utils"
 
 export interface DesignSystemPreviewModalProps {
   readonly systemId?: string | null
@@ -48,10 +51,21 @@ export function DesignSystemPreviewModal({
   const [bundle, setBundle] = useState<DesignSystemBundle | null>(null)
   const [isLoadingBundle, setIsLoadingBundle] = useState<boolean>(false)
   const [copiedTokens, setCopiedTokens] = useState<boolean>(false)
+  const [copiedHtml, setCopiedHtml] = useState<boolean>(false)
+  const [componentViewMode, setComponentViewMode] = useState<"preview" | "code">(
+    "preview"
+  )
 
   const activeSystem: DesignSystemCatalogEntry | null =
     catalogContext.catalog?.designSystems.find((ds) => ds.id === activeId) ??
     null
+
+  const rawHtml = bundle?.componentsHtml
+  const tokensCss = bundle?.tokensCss
+  const previewHtml = useMemo(() => {
+    if (!rawHtml) return ""
+    return buildPreviewHtml(rawHtml, tokensCss)
+  }, [rawHtml, tokensCss])
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
@@ -116,11 +130,37 @@ export function DesignSystemPreviewModal({
     }
   }
 
+  const handleCopyHtml = async () => {
+    if (!bundle?.componentsHtml) return
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(bundle.componentsHtml)
+      setCopiedHtml(true)
+      setTimeout(() => setCopiedHtml(false), 2000)
+    }
+  }
+
+  const handleOpenInNewTab = () => {
+    if (!previewHtml || typeof window === "undefined") return
+    if (
+      typeof URL !== "undefined" &&
+      URL.createObjectURL &&
+      typeof Blob !== "undefined"
+    ) {
+      const blob = new Blob([previewHtml], { type: "text/html" })
+      const url = URL.createObjectURL(blob)
+      window.open(url, "_blank")
+    } else {
+      const win = window.open("", "_blank")
+      win?.document.write(previewHtml)
+      win?.document.close()
+    }
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
         data-slot="design-system-preview-modal"
-        className="flex max-h-[90vh] max-w-3xl flex-col overflow-hidden border border-border bg-background/95 p-0 shadow-2xl backdrop-blur-md sm:max-w-3xl"
+        className="flex max-h-[90vh] max-w-4xl flex-col overflow-hidden border border-border bg-background/95 p-0 shadow-2xl backdrop-blur-md sm:max-w-4xl"
       >
         {/* Header */}
         <DialogHeader className="border-b border-border/60 p-6 pb-4">
@@ -334,17 +374,106 @@ export function DesignSystemPreviewModal({
               {isLoadingBundle ? (
                 <div className="flex items-center justify-center gap-2 p-12 text-xs text-muted-foreground">
                   <Loader2Icon className="size-4 animate-spin text-primary" />
-                  <span>Loading component HTML templates...</span>
+                  <span>Loading component UI preview...</span>
                 </div>
               ) : bundle?.componentsHtml ? (
-                <pre
-                  data-slot="components-html-preview"
-                  className="max-h-80 overflow-x-auto rounded-xl border border-border/70 bg-muted/40 p-4 font-mono text-xs leading-relaxed text-foreground/90 select-text"
-                >
-                  {bundle.componentsHtml}
-                </pre>
+                <div className="space-y-3">
+                  {/* Toolbar */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 pb-1 text-xs">
+                    {/* View Mode Toggle */}
+                    <div
+                      data-slot="component-view-mode-toggle"
+                      className="flex items-center gap-1 rounded-lg border border-border/60 bg-muted/40 p-1"
+                    >
+                      <Button
+                        type="button"
+                        variant={
+                          componentViewMode === "preview" ? "secondary" : "ghost"
+                        }
+                        size="sm"
+                        data-slot="btn-component-view-preview"
+                        onClick={() => setComponentViewMode("preview")}
+                        className="h-6.5 cursor-pointer gap-1.5 px-2.5 text-xs font-medium"
+                      >
+                        <EyeIcon className="size-3.5" />
+                        <span>UI Preview</span>
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={
+                          componentViewMode === "code" ? "secondary" : "ghost"
+                        }
+                        size="sm"
+                        data-slot="btn-component-view-code"
+                        onClick={() => setComponentViewMode("code")}
+                        className="h-6.5 cursor-pointer gap-1.5 px-2.5 text-xs font-medium"
+                      >
+                        <CodeIcon className="size-3.5" />
+                        <span>HTML Code</span>
+                      </Button>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        data-slot="btn-copy-html"
+                        onClick={handleCopyHtml}
+                        className="h-7 cursor-pointer gap-1.5 text-xs"
+                      >
+                        {copiedHtml ? (
+                          <>
+                            <CheckIcon className="size-3 text-emerald-500" />
+                            <span>Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <CopyIcon className="size-3" />
+                            <span>Copy HTML</span>
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        data-slot="btn-open-new-tab"
+                        onClick={handleOpenInNewTab}
+                        title="Open preview in new tab"
+                        className="h-7 cursor-pointer gap-1.5 text-xs"
+                      >
+                        <ExternalLinkIcon className="size-3.5" />
+                        <span>Open in New Tab</span>
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Viewport: Preview or Code */}
+                  {componentViewMode === "preview" ? (
+                    <div className="relative h-[480px] w-full overflow-hidden rounded-xl border border-border/70 bg-card shadow-inner">
+                      <iframe
+                        data-slot="components-html-iframe"
+                        title={`${activeSystem?.name ?? "Component"} UI Preview`}
+                        srcDoc={previewHtml}
+                        sandbox="allow-scripts allow-same-origin"
+                        className="h-full w-full border-0 bg-transparent"
+                      >
+                        {bundle.componentsHtml}
+                      </iframe>
+                    </div>
+                  ) : (
+                    <pre
+                      data-slot="components-html-preview"
+                      className="max-h-[480px] overflow-x-auto rounded-xl border border-border/70 bg-muted/40 p-4 font-mono text-xs leading-relaxed text-foreground/90 select-text"
+                    >
+                      {bundle.componentsHtml}
+                    </pre>
+                  )}
+                </div>
               ) : (
-                <div className="rounded-xl border border-dashed p-6 py-12 text-center text-xs text-muted-foreground">
+                <div className="rounded-xl border border-dashed border-border/80 p-6 py-12 text-center text-xs text-muted-foreground">
                   No component HTML fixtures indexed for this design system.
                 </div>
               )}
