@@ -274,9 +274,9 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
         fintechBtn.click()
       })
 
-      // Should have accessibility-contrast and anti-ai-slop rules active
+      // Should have full craft rules active
       const badgeL6 = container.querySelector("[data-slot='layer-badge-l6']")
-      expect(badgeL6?.textContent).toMatch(/(2|contrast|slop)/i)
+      expect(badgeL6?.textContent).toMatch(/(11|2|contrast|slop|rules)/i)
     })
 
     it("clicking Dashboard preset configures dashboard task kind", async () => {
@@ -341,7 +341,7 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       }
     })
 
-    it("disables layer toggles for L1 and L2, preventing user interaction", async () => {
+    it("disables layer toggles for L1, L2, and L6, preventing user interaction", async () => {
       renderWithProviders(<ComposerManager />)
       const toggleL1 = container.querySelector(
         `[data-slot='layer-toggle-l1']`
@@ -349,13 +349,18 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
       const toggleL2 = container.querySelector(
         `[data-slot='layer-toggle-l2']`
       ) as HTMLElement
+      const toggleL6 = container.querySelector(
+        `[data-slot='layer-toggle-l6']`
+      ) as HTMLElement
 
       expect(toggleL1).toBeTruthy()
       expect(toggleL2).toBeTruthy()
+      expect(toggleL6).toBeTruthy()
 
-      // L1 and L2 are initially enabled and disabled from user interaction
+      // L1, L2, and L6 are initially enabled and disabled from user interaction
       expect(toggleL1.getAttribute("data-checked")).not.toBeNull()
       expect(toggleL2.getAttribute("data-checked")).not.toBeNull()
+      expect(toggleL6.getAttribute("data-checked")).not.toBeNull()
       expect(
         toggleL1.hasAttribute("disabled") ||
           toggleL1.getAttribute("data-disabled") !== null ||
@@ -366,19 +371,28 @@ describe("ComposerManager & Layer Panels (Task 13)", () => {
           toggleL2.getAttribute("data-disabled") !== null ||
           toggleL2.getAttribute("aria-disabled") === "true"
       ).toBe(true)
+      expect(
+        toggleL6.hasAttribute("disabled") ||
+          toggleL6.getAttribute("data-disabled") !== null ||
+          toggleL6.getAttribute("aria-disabled") === "true"
+      ).toBe(true)
 
       await act(async () => {
         toggleL1.click()
         toggleL2.click()
+        toggleL6.click()
       })
 
-      // L1 and L2 must remain enabled
+      // L1, L2, and L6 must remain enabled
       expect(toggleL1.getAttribute("data-checked")).not.toBeNull()
       expect(toggleL2.getAttribute("data-checked")).not.toBeNull()
+      expect(toggleL6.getAttribute("data-checked")).not.toBeNull()
       const badgeL1 = container.querySelector("[data-slot='layer-badge-l1']")
       const badgeL2 = container.querySelector("[data-slot='layer-badge-l2']")
+      const badgeL6 = container.querySelector("[data-slot='layer-badge-l6']")
       expect(badgeL1?.textContent?.toLowerCase()).not.toContain("off")
       expect(badgeL2?.textContent?.toLowerCase()).not.toContain("off")
+      expect(badgeL6?.textContent?.toLowerCase()).not.toContain("off")
     })
 
     it("toggling configurable layer toggle updates enabled state in composer", async () => {

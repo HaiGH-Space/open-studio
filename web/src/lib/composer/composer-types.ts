@@ -134,6 +134,20 @@ export interface IPromptComposer {
   ): CompiledPromptResult
 }
 
+export const DEFAULT_FULL_CRAFT_RULE_IDS: readonly string[] = [
+  "anti-ai-slop",
+  "accessibility-baseline",
+  "color",
+  "typography",
+  "typography-hierarchy",
+  "typography-hierarchy-editorial",
+  "animation-discipline",
+  "form-validation",
+  "laws-of-ux",
+  "state-coverage",
+  "rtl-and-bidi",
+]
+
 /**
  * Creates a clean default 9-layer configuration.
  */
@@ -170,7 +184,7 @@ export function createDefaultComposerConfig(): ComposerConfig {
     },
     layer6CraftRules: {
       enabled: true,
-      selectedRuleIds: ["anti-ai-slop"],
+      selectedRuleIds: [...DEFAULT_FULL_CRAFT_RULE_IDS],
       customCraftDirectives: [],
     },
     layer7SkillTemplate: {

@@ -786,7 +786,7 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       ).toBe("html-vanilla")
     })
 
-    it("enforces layers L1 and L2 to always remain enabled when updating layers or setting config", () => {
+    it("enforces layers L1, L2, and L6 to always remain enabled when updating layers or setting config", () => {
       const wrapper = ({ children }: { children: React.ReactNode }) => (
         <ComposerProvider catalogService={mockCatalogService}>
           {children}
@@ -797,6 +797,7 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
 
       expect(result.current.config.layer1Security.enabled).toBe(true)
       expect(result.current.config.layer2RuntimeContract.enabled).toBe(true)
+      expect(result.current.config.layer6CraftRules.enabled).toBe(true)
 
       act(() => {
         result.current.updateLayer("layer1Security", {
@@ -806,6 +807,9 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
         result.current.updateLayer("layer2RuntimeContract", {
           enabled: false,
           enforceDataOdId: false,
+        })
+        result.current.updateLayer("layer6CraftRules", {
+          enabled: false,
         })
       })
 
@@ -818,6 +822,7 @@ describe("Composer & Catalog State Pipeline (Task 9)", () => {
       expect(
         result.current.config.layer2RuntimeContract.injectQuestionProtocol
       ).toBe(true)
+      expect(result.current.config.layer6CraftRules.enabled).toBe(true)
     })
   })
 

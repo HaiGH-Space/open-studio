@@ -4,13 +4,14 @@
  */
 
 import { countTokens } from "../tokenizer/token-counter"
-import type {
-  ComposerConfig,
-  ComposerAssets,
-  CompiledPromptResult,
-  LayerCompilationResult,
-  IPromptComposer,
-  TurnMode,
+import {
+  DEFAULT_FULL_CRAFT_RULE_IDS,
+  type ComposerConfig,
+  type ComposerAssets,
+  type CompiledPromptResult,
+  type LayerCompilationResult,
+  type IPromptComposer,
+  type TurnMode,
 } from "./composer-types"
 import {
   compileLayer1Security,
@@ -39,7 +40,7 @@ export function compilePrompt(
 ): CompiledPromptResult {
   const generatedAt = new Date().toISOString()
 
-  // Compile individual layers (L1 and L2 are permanently applied, enabled, and locked)
+  // Compile individual layers (L1, L2, and L6 are permanently applied, enabled, and locked)
   const l1 = compileLayer1Security({
     ...config.layer1Security,
     enabled: true,
@@ -61,7 +62,20 @@ export function compilePrompt(
     turn
   )
   const l6 = compileLayer6CraftRules(
-    config.layer6CraftRules,
+    {
+      ...config.layer6CraftRules,
+      enabled: true,
+      selectedRuleIds:
+        config.layer6CraftRules.selectedRuleIds &&
+        config.layer6CraftRules.selectedRuleIds.length > 0
+          ? Array.from(
+              new Set([
+                ...config.layer6CraftRules.selectedRuleIds,
+                ...DEFAULT_FULL_CRAFT_RULE_IDS,
+              ])
+            )
+          : [...DEFAULT_FULL_CRAFT_RULE_IDS],
+    },
     assets?.craftRules
   )
   const l7 = compileLayer7SkillTemplate(

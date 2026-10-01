@@ -10,6 +10,7 @@ import {
 } from "react"
 import {
   createDefaultComposerConfig,
+  DEFAULT_FULL_CRAFT_RULE_IDS,
   type ComposerConfig,
   type ComposerAssets,
   type CompiledPromptResult,
@@ -94,6 +95,13 @@ export function ComposerProvider({
         enforceDataOdId: true,
         injectQuestionProtocol: true,
       },
+      layer6CraftRules: {
+        ...resolved.layer6CraftRules,
+        enabled: true,
+        selectedRuleIds: resolved.layer6CraftRules?.selectedRuleIds?.length
+          ? resolved.layer6CraftRules.selectedRuleIds
+          : [...DEFAULT_FULL_CRAFT_RULE_IDS],
+      },
     }
   }
 
@@ -139,6 +147,13 @@ export function ComposerProvider({
             enabled: true,
             enforceDataOdId: true,
             injectQuestionProtocol: true,
+          },
+          layer6CraftRules: {
+            ...next.layer6CraftRules,
+            enabled: true,
+            selectedRuleIds: next.layer6CraftRules?.selectedRuleIds?.length
+              ? next.layer6CraftRules.selectedRuleIds
+              : [...DEFAULT_FULL_CRAFT_RULE_IDS],
           },
         }
         currentConfigRef.current = enforced
@@ -250,7 +265,12 @@ export function ComposerProvider({
                 enforceDataOdId: true,
                 injectQuestionProtocol: true,
               }
-            : patch
+            : layerKey === "layer6CraftRules"
+              ? {
+                  ...patch,
+                  enabled: true,
+                }
+              : patch
 
       const next: ComposerConfig = {
         ...currentConfigRef.current,

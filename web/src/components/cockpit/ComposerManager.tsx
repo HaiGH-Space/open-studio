@@ -1,5 +1,6 @@
 import { useComposer } from "../../hooks/useComposer"
 import { useCatalog } from "../../hooks/useCatalog"
+import { DEFAULT_FULL_CRAFT_RULE_IDS } from "../../lib/composer/composer-types"
 import {
   Accordion,
   AccordionItem,
@@ -76,7 +77,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
       layer6CraftRules: {
         ...prev.layer6CraftRules,
         enabled: true,
-        selectedRuleIds: ["anti-ai-slop"],
+        selectedRuleIds: [...DEFAULT_FULL_CRAFT_RULE_IDS],
       },
     }))
   }
@@ -106,7 +107,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
       layer6CraftRules: {
         ...prev.layer6CraftRules,
         enabled: true,
-        selectedRuleIds: ["anti-ai-slop", "accessibility-contrast"],
+        selectedRuleIds: [...DEFAULT_FULL_CRAFT_RULE_IDS],
       },
     }))
   }
@@ -131,7 +132,7 @@ export function ComposerManager({ className }: ComposerManagerProps) {
       layer6CraftRules: {
         ...prev.layer6CraftRules,
         enabled: true,
-        selectedRuleIds: ["anti-ai-slop"],
+        selectedRuleIds: [...DEFAULT_FULL_CRAFT_RULE_IDS],
       },
     }))
   }
@@ -415,18 +416,14 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                     <span>L6: Craft Discipline</span>
                     <Badge
                       data-slot="layer-badge-l6"
-                      variant={
-                        config.layer6CraftRules.enabled ? "default" : "outline"
-                      }
+                      variant="default"
                       className="ml-1 font-mono text-[10px] capitalize"
                     >
-                      {!config.layer6CraftRules.enabled
-                        ? "Off"
-                        : `${config.layer6CraftRules.selectedRuleIds.length} rule${
-                            config.layer6CraftRules.selectedRuleIds.length === 1
-                              ? ""
-                              : "s"
-                          }`}
+                      {`${config.layer6CraftRules.selectedRuleIds.length} rule${
+                        config.layer6CraftRules.selectedRuleIds.length === 1
+                          ? ""
+                          : "s"
+                      }`}
                     </Badge>
                   </div>
                 </AccordionTrigger>
@@ -435,10 +432,10 @@ export function ComposerManager({ className }: ComposerManagerProps) {
                 data-slot="layer-toggle-l6"
                 size="sm"
                 checked={config.layer6CraftRules.enabled}
-                onCheckedChange={(checked) =>
-                  updateLayer("layer6CraftRules", { enabled: checked })
-                }
-                aria-label="Toggle Layer 6 Craft Discipline"
+                disabled={true}
+                aria-disabled="true"
+                aria-label="Layer 6 Craft Discipline is always enabled"
+                title="Layer 6 is always applied and enabled"
               />
             </div>
             <AccordionContent className="border-t border-border/40 bg-background/50 p-3.5">

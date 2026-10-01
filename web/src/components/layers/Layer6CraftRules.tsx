@@ -6,11 +6,21 @@ import { cn } from "cn"
 
 const FALLBACK_CRAFT_RULES = [
   { id: "anti-ai-slop", name: "Anti-AI-Slop Discipline" },
+  { id: "accessibility-baseline", name: "Accessibility & WCAG Baseline" },
   { id: "accessibility-contrast", name: "Accessibility & WCAG Contrast" },
+  { id: "color", name: "Color Discipline" },
+  { id: "typography", name: "Typography System" },
+  { id: "typography-hierarchy", name: "Typography Hierarchy" },
+  { id: "typography-hierarchy-editorial", name: "Editorial Typography" },
+  { id: "animation-discipline", name: "Animation Discipline" },
+  { id: "form-validation", name: "Form Validation" },
+  { id: "laws-of-ux", name: "Laws of UX" },
+  { id: "state-coverage", name: "State Coverage" },
+  { id: "rtl-and-bidi", name: "RTL & Bidirectional" },
 ]
 
 export function Layer6CraftRules() {
-  const { config, updateLayer, toggleCraftRule } = useComposer()
+  const { config, updateLayer } = useComposer()
   const { catalog } = useCatalog()
 
   const { selectedRuleIds, customCraftDirectives } = config.layer6CraftRules
@@ -54,31 +64,33 @@ export function Layer6CraftRules() {
       {/* Recommended Rules Chip Grid */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
             <Sparkles className="size-3.5 text-primary" />
             <span>Recommended Craft Rulebooks</span>
           </span>
           <span className="text-[11px] text-muted-foreground">
             {selectedRuleIds.length} rule
-            {selectedRuleIds.length === 1 ? "" : "s"} active
+            {selectedRuleIds.length === 1 ? "" : "s"} active (Full rules enforced)
           </span>
         </div>
 
         <div className="flex flex-wrap gap-2">
           {craftRulesList.map((rule) => {
-            const isSelected = selectedRuleIds.includes(rule.id)
+            const isSelected = selectedRuleIds.includes(rule.id) || true
             return (
               <button
                 key={rule.id}
                 type="button"
                 data-slot="l6-craft-rule-chip"
                 data-rule-id={rule.id}
-                onClick={() => toggleCraftRule(rule.id)}
+                disabled={true}
+                aria-disabled="true"
+                title="Craft rule is permanently enabled"
                 className={cn(
-                  "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all select-none",
+                  "inline-flex cursor-default items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-all select-none opacity-90",
                   isSelected
-                    ? "border-primary bg-primary/15 text-primary"
-                    : "border-border/70 bg-input/20 text-muted-foreground hover:bg-input/40 hover:text-foreground"
+                    ? "border-primary/60 bg-primary/15 text-primary"
+                    : "border-border/70 bg-input/20 text-muted-foreground"
                 )}
               >
                 {isSelected && <Check className="size-3 shrink-0" />}
@@ -87,6 +99,17 @@ export function Layer6CraftRules() {
             )
           })}
         </div>
+      </div>
+
+      <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-2.5 py-1.5 text-xs text-muted-foreground">
+        <Sparkles className="size-3.5 shrink-0 text-primary" />
+        <span>
+          Full craft discipline rules are permanently applied and encapsulated in strict{" "}
+          <code className="font-mono text-[11px] text-primary">
+            &lt;craft-discipline&gt;
+          </code>{" "}
+          tags.
+        </span>
       </div>
 
       {/* Custom Craft Directives Section */}
